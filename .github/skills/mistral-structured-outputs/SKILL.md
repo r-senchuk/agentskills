@@ -2,7 +2,7 @@
 name: mistral-structured-outputs
 description: "Use when you need Mistral models to return guaranteed JSON-conformant responses: define Pydantic or JSON schemas, use response_format to enforce structure, handle validation errors, and extract typed data from unstructured text."
 argument-hint: "Target data shape (field names and types), model to use, and the text or prompt to extract from"
-user-invocable: true
+user-invocable: false
 ---
 
 # Mistral Structured Outputs
@@ -189,4 +189,4 @@ def extract_with_retry(text: str, model: str = "mistral-large-latest", max_retri
 - Tested with: well-formed input (should extract cleanly), partial input (should handle missing optional fields), and malformed input (should retry or raise gracefully).
 
 ## References
-None — this skill is self-contained.
+- [Shared Mistral cross-cutting guidance](../../references/mistral-cross-cutting-guidance.md)

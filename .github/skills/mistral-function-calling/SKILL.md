@@ -2,7 +2,7 @@
 name: mistral-function-calling
 description: "Use when you need to wire Mistral models to external functions or APIs: define tool schemas, run the agentic tool-call loop, handle parallel and successive calls, and safely execute tool results back into the model."
 argument-hint: "List of functions to expose (name, description, parameters), model to use, and whether parallel calling is needed"
-user-invocable: true
+user-invocable: false
 ---
 
 # Mistral Function Calling
@@ -102,6 +102,7 @@ TOOL_REGISTRY = {
 
 ```python
 import json
+import os
 from mistralai import Mistral
 
 client = Mistral(api_key=os.environ["MISTRAL_API_KEY"])
@@ -198,3 +199,4 @@ system → user → assistant [fc.1, fc.2] → tool r.1 → tool r.2 → assista
 
 ## References
 - [Tool schema patterns](./references/tool-schema-patterns.md)
+- [Shared Mistral cross-cutting guidance](../../references/mistral-cross-cutting-guidance.md)

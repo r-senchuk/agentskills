@@ -2,7 +2,7 @@
 name: mistral-vibe-expert
 description: "Use when you need expert use of Mistral Vibe CLI: setup, configuration, interactive and programmatic usage, agent and subagent delegation, tool permissions, local/offline models, and clear synthesis of Vibe results into actionable summaries."
 argument-hint: "Goal, repository path, constraints (time/cost/tools), and desired output format"
-user-invocable: true
+user-invocable: false
 ---
 
 # Mistral Vibe Expert
@@ -112,3 +112,4 @@ Vibe Outcome:
 
 ## References
 - [Vibe playbook and command examples](./references/vibe-playbook.md)
+- [Shared Mistral cross-cutting guidance](../../references/mistral-cross-cutting-guidance.md)

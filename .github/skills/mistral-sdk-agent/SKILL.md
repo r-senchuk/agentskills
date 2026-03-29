@@ -2,7 +2,7 @@
 name: mistral-sdk-agent
 description: "Use as the entry point for any task involving Mistral's API or SDK: routes to the correct specialized skill (agent builder, function calling, embeddings/RAG, structured outputs, document AI, or Vibe CLI) based on what you need to build or operate."
 argument-hint: "What you want to build or accomplish with Mistral (describe your goal, not the API surface)"
-user-invocable: true
+user-invocable: false
 ---
 
 # Mistral SDK Agent
@@ -90,49 +90,9 @@ If the task spans multiple skills, complete the primary skill first, then pass i
 
 ## 4) Cross-Cutting Concerns
 
-Apply these regardless of which skill handles the task:
+Apply these regardless of which skill handles the task by following the shared policy in:
 
-**API key security:**
-- Store in environment variable `MISTRAL_API_KEY` or in `~/.vibe/.env` for Vibe CLI.
-- Never commit API keys to source control.
-
-**Model selection quick guide:**
-
-| Use case | Recommended model |
-|---|---|
-| Complex reasoning, multi-step tasks | `mistral-large-latest` |
-| Code generation and review | `devstral-latest` or `codestral-latest` |
-| Fast, cost-efficient tasks | `mistral-small-latest` or `ministral-8b-latest` |
-| Document OCR | `mistral-ocr-latest` |
-| Embeddings (text) | `mistral-embed` |
-| Embeddings (code) | `codestral-embed` |
-| Step-by-step reasoning | `magistral-medium-latest` |
-| Multimodal (image + text) | `mistral-large-latest` or `mistral-medium-latest` |
-
-**Error handling pattern:**
-```python
-from mistralai import Mistral, APIError, RateLimitError
-import time
-
-def call_with_retry(fn, *args, max_retries=3, **kwargs):
-    for attempt in range(max_retries):
-        try:
-            return fn(*args, **kwargs)
-        except RateLimitError:
-            wait = 2 ** attempt
-            time.sleep(wait)
-        except APIError as e:
-            if e.status_code >= 500:
-                time.sleep(2 ** attempt)
-            else:
-                raise  # client errors (4xx) — do not retry
-    raise RuntimeError(f"Failed after {max_retries} retries")
-```
-
-**Cost awareness:**
-- Prefer `mistral-small-latest` for classification, routing, and extraction tasks.
-- Reserve `mistral-large-latest` for reasoning-heavy tasks.
-- Use the Batch API for 10+ documents or embeddings (50% cost reduction).
+- [Shared Mistral cross-cutting guidance](../../references/mistral-cross-cutting-guidance.md)
 
 ## Completion Checks
 - Correct skill identified and invoked.
@@ -148,3 +108,4 @@ def call_with_retry(fn, *args, max_retries=3, **kwargs):
 - [mistral-structured-outputs](../mistral-structured-outputs/SKILL.md)
 - [mistral-document-ai](../mistral-document-ai/SKILL.md)
 - [mistral-vibe-expert](../mistral-vibe-expert/SKILL.md)
+- [Shared Mistral cross-cutting guidance](../../references/mistral-cross-cutting-guidance.md)

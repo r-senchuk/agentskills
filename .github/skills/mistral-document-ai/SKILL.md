@@ -2,7 +2,7 @@
 name: mistral-document-ai
 description: "Use when you need to extract text, tables, and structure from PDF documents or images using Mistral OCR, pipe extracted content into an LLM for analysis, or run batch document processing at scale."
 argument-hint: "Document source (file path, URL, or base64), extraction options (tables, headers, footers), and downstream task (summarize, extract fields, Q&A)"
-user-invocable: true
+user-invocable: false
 ---
 
 # Mistral Document AI
@@ -233,3 +233,4 @@ print(f"Batch status: {batch_job.status}")
 
 ## References
 - [Document preprocessing patterns](./references/document-preprocessing.md)
+- [Shared Mistral cross-cutting guidance](../../references/mistral-cross-cutting-guidance.md)

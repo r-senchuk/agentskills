@@ -2,7 +2,7 @@
 name: mistral-agent-builder
 description: "Use when you need to create, configure, and orchestrate Mistral Agents via the Agents & Conversations API: persistent state, built-in tools (websearch, code interpreter, image generation, document library), handoffs between agents, MCP integration, and guardrails."
 argument-hint: "Agent purpose, required tools (websearch/code_interpreter/image_generation/document_library/function), handoff topology, and model preference"
-user-invocable: true
+user-invocable: false
 ---
 
 # Mistral Agent Builder
@@ -51,6 +51,7 @@ For MCP-based tools, configure via `mcp` tool type pointing at a registered MCP 
 ## 2) Create the Agent
 
 ```python
+import os
 from mistralai import Mistral
 
 client = Mistral(api_key=os.environ["MISTRAL_API_KEY"])
@@ -173,3 +174,4 @@ Completion checks before relying on the agent in production:
 ## References
 - [Agent topology patterns](./references/agent-topologies.md)
 - [Built-in tool reference](./references/builtin-tools.md)
+- [Shared Mistral cross-cutting guidance](../../references/mistral-cross-cutting-guidance.md)

@@ -2,7 +2,7 @@
 name: mistral-embeddings-rag
 description: "Use when you need to build a retrieval-augmented generation (RAG) pipeline with Mistral embeddings: chunking strategy, embedding text or code, vector storage, similarity search, and grounding LLM answers in retrieved context."
 argument-hint: "Document source (file path, URL, or raw text), chunk size preference, vector store choice (faiss/in-memory/external), and query or question to answer"
-user-invocable: true
+user-invocable: false
 ---
 
 # Mistral Embeddings & RAG
@@ -182,3 +182,4 @@ print(answer)
 
 ## References
 - [Chunking strategy guide](./references/chunking-strategies.md)
+- [Shared Mistral cross-cutting guidance](../../references/mistral-cross-cutting-guidance.md)
