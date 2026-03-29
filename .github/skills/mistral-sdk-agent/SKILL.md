@@ -1,0 +1,150 @@
+---
+name: mistral-sdk-agent
+description: "Use as the entry point for any task involving Mistral's API or SDK: routes to the correct specialized skill (agent builder, function calling, embeddings/RAG, structured outputs, document AI, or Vibe CLI) based on what you need to build or operate."
+argument-hint: "What you want to build or accomplish with Mistral (describe your goal, not the API surface)"
+user-invocable: true
+---
+
+# Mistral SDK Agent
+
+Meta-agent that triages any Mistral API or SDK task and delegates to the correct specialized skill. Start here when the right skill is not obvious.
+
+## When To Use
+- You have a Mistral-related task but are unsure which API surface or skill applies.
+- You want a single entry point that covers the full Mistral SDK.
+- You are starting a new integration and need a structured checklist before diving into specifics.
+
+## Inputs To Collect First
+1. Goal: what outcome you need (in plain language, not API terminology).
+2. Input data: what you have (documents, text, code, function list, etc.).
+3. Output needed: text answer, structured JSON, embedded vectors, generated image, etc.
+4. Environment: Python SDK, REST API, or CLI (`vibe`).
+
+## Procedure
+1. Triage the task to the right skill.
+2. Verify SDK prerequisites.
+3. Delegate to the specialized skill.
+4. Apply cross-cutting concerns.
+
+## 1) Task Triage
+
+Use this decision table to select the correct skill:
+
+| Your goal | Skill to use |
+|---|---|
+| Build a persistent assistant with tools, handoffs, or managed conversation history | [`mistral-agent-builder`](../mistral-agent-builder/SKILL.md) |
+| Connect the model to your own functions, APIs, or databases | [`mistral-function-calling`](../mistral-function-calling/SKILL.md) |
+| Build search or Q&A over your documents using semantic retrieval | [`mistral-embeddings-rag`](../mistral-embeddings-rag/SKILL.md) |
+| Extract structured/typed data (JSON) from free-form text | [`mistral-structured-outputs`](../mistral-structured-outputs/SKILL.md) |
+| Extract text, tables, or structure from PDFs or images | [`mistral-document-ai`](../mistral-document-ai/SKILL.md) |
+| Delegate a coding or agentic task to Mistral Vibe CLI | [`mistral-vibe-expert`](../mistral-vibe-expert/SKILL.md) |
+
+**Combination patterns:**
+
+| Combined task | Primary skill → secondary skill |
+|---|---|
+| Extract data from a PDF, then answer questions | `mistral-document-ai` → `mistral-embeddings-rag` |
+| Parse a PDF invoice into a typed object | `mistral-document-ai` → `mistral-structured-outputs` |
+| Agent that searches the web and stores structured results | `mistral-agent-builder` (websearch tool) → `mistral-structured-outputs` |
+| RAG over code with function-powered lookups | `mistral-embeddings-rag` (codestral-embed) → `mistral-function-calling` |
+
+## 2) Verify SDK Prerequisites
+
+Before calling any Mistral API, confirm:
+
+```bash
+# Install the SDK
+pip install mistralai
+
+# Verify API key is set
+python -c "import os; assert os.environ.get('MISTRAL_API_KEY'), 'MISTRAL_API_KEY not set'"
+
+# Test connectivity
+python -c "
+from mistralai import Mistral
+import os
+client = Mistral(api_key=os.environ['MISTRAL_API_KEY'])
+r = client.models.list()
+print('Connected. Available models:', len(r.data))
+"
+```
+
+SDK version check (use `>=1.0.0` for the current unified client):
+```bash
+pip show mistralai | grep Version
+```
+
+## 3) Delegate to the Specialized Skill
+
+Once the triage table identifies the right skill, invoke it with the following context bundle:
+
+```text
+Goal: <specific deliverable>
+Input data: <what you have>
+Constraints: <budget, latency, data sensitivity>
+Environment: <Python version, whether running in CI or interactive>
+Expected output: <format and schema if applicable>
+```
+
+If the task spans multiple skills, complete the primary skill first, then pass its output as the input to the secondary skill.
+
+## 4) Cross-Cutting Concerns
+
+Apply these regardless of which skill handles the task:
+
+**API key security:**
+- Store in environment variable `MISTRAL_API_KEY` or in `~/.vibe/.env` for Vibe CLI.
+- Never commit API keys to source control.
+
+**Model selection quick guide:**
+
+| Use case | Recommended model |
+|---|---|
+| Complex reasoning, multi-step tasks | `mistral-large-latest` |
+| Code generation and review | `devstral-latest` or `codestral-latest` |
+| Fast, cost-efficient tasks | `mistral-small-latest` or `ministral-8b-latest` |
+| Document OCR | `mistral-ocr-latest` |
+| Embeddings (text) | `mistral-embed` |
+| Embeddings (code) | `codestral-embed` |
+| Step-by-step reasoning | `magistral-medium-latest` |
+| Multimodal (image + text) | `mistral-large-latest` or `mistral-medium-latest` |
+
+**Error handling pattern:**
+```python
+from mistralai import Mistral, APIError, RateLimitError
+import time
+
+def call_with_retry(fn, *args, max_retries=3, **kwargs):
+    for attempt in range(max_retries):
+        try:
+            return fn(*args, **kwargs)
+        except RateLimitError:
+            wait = 2 ** attempt
+            time.sleep(wait)
+        except APIError as e:
+            if e.status_code >= 500:
+                time.sleep(2 ** attempt)
+            else:
+                raise  # client errors (4xx) — do not retry
+    raise RuntimeError(f"Failed after {max_retries} retries")
+```
+
+**Cost awareness:**
+- Prefer `mistral-small-latest` for classification, routing, and extraction tasks.
+- Reserve `mistral-large-latest` for reasoning-heavy tasks.
+- Use the Batch API for 10+ documents or embeddings (50% cost reduction).
+
+## Completion Checks
+- Correct skill identified and invoked.
+- API key validated before any API call.
+- Model selected matches task complexity and cost constraints.
+- Error handling and retry logic in place for production code.
+- No API keys in source code or logs.
+
+## References
+- [mistral-agent-builder](../mistral-agent-builder/SKILL.md)
+- [mistral-function-calling](../mistral-function-calling/SKILL.md)
+- [mistral-embeddings-rag](../mistral-embeddings-rag/SKILL.md)
+- [mistral-structured-outputs](../mistral-structured-outputs/SKILL.md)
+- [mistral-document-ai](../mistral-document-ai/SKILL.md)
+- [mistral-vibe-expert](../mistral-vibe-expert/SKILL.md)
