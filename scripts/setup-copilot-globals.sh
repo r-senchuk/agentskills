@@ -5,8 +5,9 @@ setopt null_glob
 # One-time bootstrap for global Copilot skills/agents via symlinks.
 # After linking, updates in this repo are reflected everywhere immediately.
 
-SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
-DEFAULT_REPO_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+# Use zsh path expansion for macOS/BSD portability (avoids GNU-only dirname flags).
+SCRIPT_DIR="${0:A:h}"
+DEFAULT_REPO_ROOT="${SCRIPT_DIR:h}"
 
 REPO_ROOT="$DEFAULT_REPO_ROOT"
 COPILOT_HOME="${COPILOT_HOME:-$HOME/.copilot}"
@@ -31,13 +32,17 @@ Options:
 
 Examples:
   ./scripts/setup-copilot-globals.sh
-  ./scripts/setup-copilot-globals.sh --repo "$HOME/src/github.com/r-senchuk/agentskills"
+  ./scripts/setup-copilot-globals.sh --repo "$HOME/path/to/agentskills"
   ./scripts/setup-copilot-globals.sh --force
 EOF
 }
 
 log() {
   printf '%s\n' "$*"
+}
+
+warn() {
+  printf '%s\n' "$*" >&2
 }
 
 run_cmd() {
@@ -51,17 +56,17 @@ run_cmd() {
 while (( $# > 0 )); do
   case "$1" in
     --repo)
-      [[ $# -ge 2 ]] || { log "Missing value for --repo"; exit 1; }
+      [[ $# -ge 2 ]] || { warn "Missing value for --repo"; exit 1; }
       REPO_ROOT="$2"
       shift 2
       ;;
     --copilot-home)
-      [[ $# -ge 2 ]] || { log "Missing value for --copilot-home"; exit 1; }
+      [[ $# -ge 2 ]] || { warn "Missing value for --copilot-home"; exit 1; }
       COPILOT_HOME="$2"
       shift 2
       ;;
     --vscode-prompts)
-      [[ $# -ge 2 ]] || { log "Missing value for --vscode-prompts"; exit 1; }
+      [[ $# -ge 2 ]] || { warn "Missing value for --vscode-prompts"; exit 1; }
       VSCODE_PROMPTS_DIR="$2"
       shift 2
       ;;
@@ -82,13 +87,14 @@ while (( $# > 0 )); do
       exit 0
       ;;
     *)
-      log "Unknown option: $1"
+      warn "Unknown option: $1"
       usage
       exit 1
       ;;
   esac
 done
 
+[[ -d "$REPO_ROOT" ]] || { warn "Missing repo root directory: $REPO_ROOT"; exit 1; }
 REPO_ROOT="$(cd -- "$REPO_ROOT" && pwd)"
 SKILLS_SRC="$REPO_ROOT/.github/skills"
 AGENTS_SRC="$REPO_ROOT/.github/agents"
@@ -96,8 +102,8 @@ COPILOT_SKILLS_DIR="$COPILOT_HOME/skills"
 COPILOT_AGENTS_DIR="$COPILOT_HOME/agents"
 VSCODE_AGENTS_DIR="$VSCODE_PROMPTS_DIR/agents"
 
-[[ -d "$SKILLS_SRC" ]] || { log "Missing directory: $SKILLS_SRC"; exit 1; }
-[[ -d "$AGENTS_SRC" ]] || { log "Missing directory: $AGENTS_SRC"; exit 1; }
+[[ -d "$SKILLS_SRC" ]] || { warn "Missing directory: $SKILLS_SRC"; exit 1; }
+[[ -d "$AGENTS_SRC" ]] || { warn "Missing directory: $AGENTS_SRC"; exit 1; }
 
 run_cmd mkdir -p "$COPILOT_SKILLS_DIR" "$COPILOT_AGENTS_DIR"
 if (( LINK_VSCODE_AGENTS )); then
@@ -113,35 +119,35 @@ link_one() {
   local dest_dir="$2"
   local name dest existing
 
-  name="$(basename -- "$src")"
+  name="${src:t}"
   dest="$dest_dir/$name"
 
   if [[ -L "$dest" ]]; then
-    existing="$(readlink -- "$dest")"
+    existing="$(readlink "$dest")"
     if [[ "$existing" == "$src" ]]; then
       log "= already linked: $dest"
       return 0
     fi
     if (( FORCE )); then
-      run_cmd rm -f "$dest"
+      run_cmd rm -f "${dest:?dest is empty}"
       replaced=$((replaced + 1))
     else
-      log "! skip (symlink exists, use --force): $dest -> $existing"
+      warn "! skip (symlink exists, use --force): $dest -> $existing"
       skipped=$((skipped + 1))
       return 0
     fi
   elif [[ -e "$dest" ]]; then
     if (( FORCE )); then
-      run_cmd rm -rf "$dest"
+      run_cmd rm -rf "${dest:?dest is empty}"
       replaced=$((replaced + 1))
     else
-      log "! skip (path exists, use --force): $dest"
+      warn "! skip (path exists, use --force): $dest"
       skipped=$((skipped + 1))
       return 0
     fi
   fi
 
-  run_cmd ln -s "$src" "$dest"
+  run_cmd ln -s -- "$src" "$dest"
   if (( DRY_RUN )); then
     log "+ would link: $dest -> $src"
   else
@@ -150,7 +156,7 @@ link_one() {
   linked=$((linked + 1))
 }
 
-for skill_dir in "$SKILLS_SRC"/*(/); do
+for skill_dir in "$SKILLS_SRC"/*(N/); do
   link_one "$skill_dir" "$COPILOT_SKILLS_DIR"
 done
 

@@ -1,6 +1,6 @@
 ---
 name: mistral-function-calling
-description: "Use when you need to wire Mistral models to external functions or APIs: define tool schemas, run the agentic tool-call loop, handle parallel and successive calls, and safely execute tool results back into the model."
+description: "Use when you need to wire Mistral models to external functions or APIs: define tool schemas, run the agentic tool-call loop, handle parallel and successive calls, and safely execute tool results back into the model. Do not use for Mistral Agents with built-in tools or for chat flows with no external function calls."
 argument-hint: "List of functions to expose (name, description, parameters), model to use, and whether parallel calling is needed"
 user-invocable: false
 ---
@@ -15,26 +15,24 @@ Complete workflow for integrating Mistral models with external functions. Covers
 - You need parallel tool calls for efficiency (model requests multiple tools in one turn).
 - You want to add custom tools to a Mistral Agent (complement to `mistral-agent-builder`).
 
+Do NOT use for:
+- Pure chat completions with no external function calls — the model handles those without tooling.
+- Mistral Agents using built-in tools (web search, code interpreter, document library) — use `mistral-agent-builder` instead.
+- Retrieval-augmented generation pipelines — use `mistral-embeddings-rag` instead.
+
 ## Inputs To Collect First
 1. Functions to expose: name, description, parameter names, types, and which are required.
-2. Model: must support function calling (see compatible models below).
+2. Model: must support function calling. Compatible models (non-exhaustive):
+   - General: `mistral-large-latest`, `mistral-medium-latest`, `mistral-small-latest`
+   - Code: `devstral-latest`, `codestral-latest`
+   - Specialized: `ministral-8b-latest`, `ministral-14b-latest`
+   - Reasoning: `magistral-medium-latest`, `magistral-small-latest`
 3. System prompt: context and instructions on when to call which tool.
 4. Loop strategy: single call, successive (serial), or parallel.
 
-## Compatible Models (non-exhaustive)
-- General: `mistral-large-latest`, `mistral-medium-latest`, `mistral-small-latest`
-- Code: `devstral-latest`, `codestral-latest`
-- Specialized: `ministral-8b-latest`, `ministral-14b-latest`
-- Reasoning: `magistral-medium-latest`, `magistral-small-latest`
-
 ## Procedure
-1. Define function schemas.
-2. Build the tool registry.
-3. Send the initial request.
-4. Detect and execute tool calls.
-5. Inject results and get the final answer.
 
-## 1) Define Function Schemas
+### Step 1 — Define Function Schemas
 
 Every function needs a JSON schema object:
 
@@ -80,7 +78,7 @@ Schema best practices:
 - Mark only truly required parameters as `required`.
 - Use `enum` for parameters with a fixed set of valid values.
 
-## 2) Build the Tool Registry
+### Step 2 — Build the Tool Registry
 
 Map function names to callables so you can dispatch dynamically:
 
@@ -98,7 +96,7 @@ TOOL_REGISTRY = {
 }
 ```
 
-## 3) Send the Initial Request
+### Step 3 — Send the Initial Request
 
 ```python
 import json
@@ -125,7 +123,7 @@ response = client.chat.complete(
 - `"any"` — model must call at least one tool.
 - `"none"` — disable tool calling for this request.
 
-## 4) Detect and Execute Tool Calls
+### Step 4 — Detect and Execute Tool Calls
 
 The agentic loop handles both single and parallel tool calls:
 
@@ -171,7 +169,7 @@ def run_tool_loop(client, model, messages, tools, max_rounds=10):
     return "Max tool rounds reached without a final answer."
 ```
 
-## 5) Inject Results and Get Final Answer
+### Step 5 — Inject Results and Get Final Answer
 
 ```python
 answer = run_tool_loop(
@@ -190,12 +188,12 @@ system → user → assistant [fc.1, fc.2] → tool r.1 → tool r.2 → assista
 ```
 
 ## Completion Checks
-- All tool schemas have clear `description` fields — not just name.
-- `TOOL_REGISTRY` maps every defined tool name to a callable.
-- Loop has a `max_rounds` cap — prevents infinite tool chains.
-- Each tool call `id` is preserved in the matching `tool` message.
-- Error paths in tool execution return structured JSON, not raw exceptions.
-- Tested with: single call, parallel calls, and a prompt that should NOT trigger any tool.
+- [ ] All tool schemas have clear `description` fields — not just name.
+- [ ] `TOOL_REGISTRY` maps every defined tool name to a callable.
+- [ ] Loop has a `max_rounds` cap — prevents infinite tool chains.
+- [ ] Each tool call `id` is preserved in the matching `tool` message.
+- [ ] Error paths in tool execution return structured JSON, not raw exceptions.
+- [ ] Tested with: single call, parallel calls, and a prompt that should NOT trigger any tool.
 
 ## References
 - [Tool schema patterns](./references/tool-schema-patterns.md)

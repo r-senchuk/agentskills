@@ -1,6 +1,6 @@
 ---
 name: mistral-embeddings-rag
-description: "Use when you need to build a retrieval-augmented generation (RAG) pipeline with Mistral embeddings: chunking strategy, embedding text or code, vector storage, similarity search, and grounding LLM answers in retrieved context."
+description: "Use when you need to build a retrieval-augmented generation (RAG) pipeline with Mistral embeddings: chunking strategy, embedding text or code, vector storage, similarity search, and grounding LLM answers in retrieved context. Do NOT use for general chat completions, fine-tuning, or tasks solvable from model knowledge without document retrieval."
 argument-hint: "Document source (file path, URL, or raw text), chunk size preference, vector store choice (faiss/in-memory/external), and query or question to answer"
 user-invocable: false
 ---
@@ -15,6 +15,11 @@ End-to-end workflow for building retrieval-augmented generation pipelines using 
 - You need to cluster, classify, or find duplicates in large text datasets.
 - You want to ground model responses in specific source material and reduce hallucinations.
 
+**Do NOT use for:**
+- General chat completions or prompt engineering without document retrieval.
+- Fine-tuning or training Mistral models.
+- Tasks fully solvable from the model's parametric knowledge (no external documents needed).
+
 ## Inputs To Collect First
 1. Document source: file paths, URLs, or raw text strings to index.
 2. Embedding model: `mistral-embed` (general text) or `codestral-embed` (code).
@@ -24,13 +29,8 @@ End-to-end workflow for building retrieval-augmented generation pipelines using 
 6. Generation model: which Mistral model to use for the final answer.
 
 ## Procedure
-1. Ingest and chunk documents.
-2. Generate embeddings.
-3. Store in a vector index.
-4. Retrieve relevant chunks for a query.
-5. Generate a grounded answer.
 
-## 1) Ingest and Chunk Documents
+### Step 1 — Ingest and Chunk Documents
 
 Split before embedding — chunk size directly impacts retrieval quality.
 
@@ -57,7 +57,7 @@ Chunking guidance:
 
 Overlap of 10–15% of chunk size reduces context loss at boundaries.
 
-## 2) Generate Embeddings
+### Step 2 — Generate Embeddings
 
 ```python
 import os
@@ -82,7 +82,7 @@ Models:
 
 Embed the **query** with the same model used for indexing.
 
-## 3) Store in a Vector Index (Faiss)
+### Step 3 — Store in a Vector Index (Faiss)
 
 ```python
 import numpy as np
@@ -104,7 +104,7 @@ index = faiss.IndexFlatIP(dim)
 index.add(matrix)
 ```
 
-## 4) Retrieve Relevant Chunks
+### Step 4 — Retrieve Relevant Chunks
 
 ```python
 def retrieve(
@@ -125,7 +125,7 @@ Retrieval tips:
 - Include the source document name/page in each chunk's metadata for citations.
 - Re-rank retrieved chunks with a cross-encoder if precision is critical.
 
-## 5) Generate a Grounded Answer
+### Step 5 — Generate a Grounded Answer
 
 ```python
 def rag_answer(
@@ -151,7 +151,7 @@ def rag_answer(
     return response.choices[0].message.content
 ```
 
-## Full Pipeline
+### Full Pipeline Example
 
 ```python
 # 1. Load and chunk
@@ -173,12 +173,12 @@ print(answer)
 ```
 
 ## Completion Checks
-- Chunks and query use the same embedding model.
-- Chunk size and overlap tuned for the content type (not left at defaults).
-- Vector store populated before any retrieval call.
-- Retrieved context fits within the generation model's context window.
-- Generation prompt instructs the model to stay grounded in context.
-- Tested with: an in-context question (should answer), an out-of-context question (should say so).
+- [ ] Chunks and query use the same embedding model.
+- [ ] Chunk size and overlap tuned for the content type (not left at defaults).
+- [ ] Vector store populated before any retrieval call.
+- [ ] Retrieved context fits within the generation model's context window.
+- [ ] Generation prompt instructs the model to stay grounded in context.
+- [ ] Tested with an in-context question (answers correctly) and an out-of-context question (says it doesn't know).
 
 ## References
 - [Chunking strategy guide](./references/chunking-strategies.md)

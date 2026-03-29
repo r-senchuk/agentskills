@@ -1,6 +1,6 @@
 ---
 name: mistral-document-ai
-description: "Use when you need to extract text, tables, and structure from PDF documents or images using Mistral OCR, pipe extracted content into an LLM for analysis, or run batch document processing at scale."
+description: "Use when you need to extract text, tables, and structure from PDF documents or images using Mistral OCR, pipe extracted content into an LLM for analysis, or run batch document processing at scale. Do not use for plain-text inputs, web scraping, or tasks that do not require document parsing."
 argument-hint: "Document source (file path, URL, or base64), extraction options (tables, headers, footers), and downstream task (summarize, extract fields, Q&A)"
 user-invocable: false
 ---
@@ -15,6 +15,11 @@ End-to-end workflow for extracting structured content from PDFs and images using
 - You want to feed document content into an LLM for summarization, Q&A, or data extraction.
 - You are processing large document batches and need cost-effective async processing.
 
+Do NOT use for:
+- Plain-text or HTML inputs that don't require OCR (use the LLM directly).
+- Web scraping or URL content extraction (use a web-fetch tool instead).
+- Real-time streaming transcription of audio or video.
+
 ## Inputs To Collect First
 1. Document source: public URL, local file path (will be base64-encoded), or cloud-uploaded file ID.
 2. Document type: PDF (`document_url`) or image (`image_url`).
@@ -23,13 +28,8 @@ End-to-end workflow for extracting structured content from PDFs and images using
 5. Scale: single document (sync) or bulk (batch API).
 
 ## Procedure
-1. Prepare the document input.
-2. Run OCR extraction.
-3. Parse extracted content.
-4. Pipe content to LLM for downstream task.
-5. Scale with Batch API if needed.
 
-## 1) Prepare the Document Input
+### Step 1 — Prepare the Document Input
 
 **Public URL (simplest):**
 ```python
@@ -70,7 +70,7 @@ file_id = uploaded.id
 doc_input = {"type": "document_url", "document_url": f"file://{file_id}"}
 ```
 
-## 2) Run OCR Extraction
+### Step 2 — Run OCR Extraction
 
 ```python
 import os
@@ -102,7 +102,7 @@ ocr_response = client.ocr.process(
 - `markdown` — tables returned separately as markdown tables.
 - `html` — tables returned separately as HTML.
 
-## 3) Parse Extracted Content
+### Step 3 — Parse Extracted Content
 
 ```python
 def extract_full_text(ocr_response) -> str:
@@ -131,7 +131,7 @@ Image and table placeholders in markdown look like:
 - `![img-0.jpeg](img-0.jpeg)` — replace using `page.images[i].image_base64`
 - `[tbl-3.html](tbl-3.html)` — replace using `page.tables[i].content`
 
-## 4) Pipe Content to LLM for Downstream Tasks
+### Step 4 — Pipe Content to LLM for Downstream Tasks
 
 **Summarization:**
 ```python
@@ -180,7 +180,7 @@ response = client.chat.parse(
 contract = response.choices[0].message.parsed
 ```
 
-## 5) Scale with Batch API
+### Step 5 — Scale with Batch API
 
 For 10+ documents, use the Batch API to process in parallel at lower cost:
 
@@ -225,11 +225,11 @@ print(f"Batch status: {batch_job.status}")
 ```
 
 ## Completion Checks
-- Document URL is publicly accessible or file is uploaded before calling OCR.
-- `table_format` and header/footer options match the document type and downstream needs.
-- Page content respects the generation model's context window (truncate or chunk if needed).
-- Image and table placeholders resolved before passing markdown to downstream LLM.
-- Batch jobs polled with backoff — do not poll faster than every 10 seconds.
+- [ ] Document URL is publicly accessible or file is uploaded via the Files API before calling OCR.
+- [ ] `table_format` and header/footer options match the document type and downstream needs.
+- [ ] Page content respects the generation model's context window (truncate or chunk if needed).
+- [ ] Image and table placeholders resolved before passing markdown to the downstream LLM.
+- [ ] Batch jobs poll no faster than every 10 seconds; status checked until `SUCCESS`, `FAILED`, or `CANCELLED`.
 
 ## References
 - [Document preprocessing patterns](./references/document-preprocessing.md)

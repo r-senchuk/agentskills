@@ -15,9 +15,17 @@ Do not create skills that duplicate existing model strengths without adding spec
 
 ## Repository Structure
 
-Skills live under `.github/skills/<skill-name>/` and consist of:
-- `SKILL.md` — skill definition (required); YAML frontmatter + structured Markdown body
-- `references/` — optional supporting docs, scripts, or templates linked from `SKILL.md`
+```
+.github/
+├── skills/<skill-name>/          # One folder per skill
+│   ├── SKILL.md                  # Required. Frontmatter + procedure body.
+│   └── references/               # Optional. Loaded on-demand by the skill.
+├── agents/<name>.agent.md        # Custom agent personas
+├── references/                   # Shared cross-skill guidance (e.g. mistral-cross-cutting-guidance.md)
+└── copilot-instructions.md       # This file. Workspace-wide always-on instructions.
+scripts/
+└── setup-copilot-globals.sh     # Symlinks skills + agents to ~/.copilot/ and VS Code profile
+```
 
 ## Skill Frontmatter Schema
 
@@ -40,13 +48,29 @@ user-invocable: true             # false if the skill is internal/non-interactiv
 
 Structure the Markdown body with these sections (in order):
 
-1. **When To Use** — conditions that trigger this skill
+1. **When To Use** — trigger conditions AND at least one explicit `Do NOT use for` negative case
 2. **Inputs To Collect First** — numbered list of required context
-3. **Procedure** — numbered top-level steps, each expanded in its own `##` subsection
-4. **Completion Checks** — bullet checklist verifying the skill outcome
-5. **References** — relative links to files under `references/`
+3. **Procedure** — top-level `## Procedure` header; each step as its own `### Step N — Title` subsection
+4. **Completion Checks** — `- [ ]` checkbox format; verifiable, not subjective
+5. **References** — relative `./references/` links only
 
-Use fenced code blocks with language tags for all command examples.
+Use fenced code blocks with language tags (`bash`, `python`, etc.) for all command examples.
+
+## Agent Body Conventions
+
+Structure the Markdown body with these sections:
+
+1. **Identity statement** — "You are a specialist at X. Your job is Y." — specific bounded role
+2. **Skill Routing** (when multiple skills apply) — table: task type → `SKILL.md` path to read
+3. **Core Workflow** — numbered steps for how the agent operates
+4. **Constraints** — explicit `DO NOT` rules defining the safety boundary
+5. **Output Format** — exactly what the agent returns
+
+Frontmatter rules for agents:
+- `tools`: use minimal set; document rationale in identity if all 6 tools are used
+- Only `sara` is `user-invocable: true` — all other agents are subagents (`user-invocable: false`)
+- `description` must contain "Use when" trigger, `Do NOT use for` negative clause, and ≥3 keywords
+- `name` must match filename (kebab-case, no `.agent.md` extension)
 
 ## Adding a New Skill
 
@@ -56,6 +80,16 @@ Use fenced code blocks with language tags for all command examples.
 4. Keep the skill body self-contained — assume no prior context from the caller.
 5. Check [awesome-copilot.github.com/skills](https://awesome-copilot.github.com/skills) to confirm the skill fills a real gap before building it.
 
+Use the **`skiller`** agent (or the `skill-builder` skill directly) to research, author, and validate new skills. Always run the validation script in `skill-builder/references/quality-checklist.md` before committing.
+
+## Adding a New Agent
+
+1. Create `.github/agents/<name>.agent.md`.
+2. List all required skills first — create any that don't exist.
+3. Set `tools:` to the minimal set needed for the agent's role.
+4. Use `user-invocable: false` for subagents; `true` for top-level picker agents.
+5. Include `## Constraints` with explicit `DO NOT` rules.
+
 ## Submitting Upstream to awesome-copilot
 
 When a skill is ready to submit to [github/awesome-copilot](https://github.com/github/awesome-copilot):
@@ -64,16 +98,28 @@ When a skill is ready to submit to [github/awesome-copilot](https://github.com/g
 - Run `npm run skill:validate` in the awesome-copilot repo before opening the PR.
 - Include `🤖🤖🤖` in the PR title if submitting via an AI agent for fast-track review.
 
-## Existing Skills
+## Skill and Agent Inventory
 
-### mistral-vibe-expert
+See [README.md](../README.md) for the full current skill and agent table.
 
-End-to-end workflow for operating [Mistral Vibe CLI](https://mistral.ai/vibe/). Key behavioral defaults:
-- Safety-first profile: interactive mode with explicit approvals, least-privilege tools.
-- Programmatic runs always require `--max-turns` and `--max-price` guards.
-- All results are reported in the five-line `Vibe Outcome` format (Result / Scope / Evidence / Risks / Next step).
-- Config files: `./.vibe/config.toml` (project-local) and `~/.vibe/config.toml` (global).
-- API key: `MISTRAL_API_KEY` env var or `~/.vibe/.env`.
+### Skill Groups
+
+**Mistral SDK** (`mistral-*`)  
+Routed through the `mistral` subagent (via Sara). Covers: agent builder, function calling, embeddings/RAG, structured outputs, document AI, and Vibe CLI. The `mistral-sdk-router` skill is the entrypoint for ambiguous multi-surface tasks.
+
+**Research & Meta** (`perplexity-*`, `skill-builder`, `agent-builder`)  
+Routed through the `skiller` subagent (via Sara). Covers: Perplexity-powered research, SKILL.md authoring/auditing, and `.agent.md` design.
+
+**Shell & macOS** (`shell-script-audit`, `macos-homebrew-troubleshoot`, `zsh-config-expert`)  
+Routed through the `bashar` subagent (via Sara). Covers: shell script auditing/hardening, macOS environment troubleshooting, Homebrew diagnostics, and zsh configuration.
+
+### Agent Hierarchy
+
+`sara` is the sole user-facing agent (team lead). She delegates to `mistral`, `skiller`, and `bashar` subagents. When no existing agent can handle a task, Sara requests `skiller` to create a new agent (with user approval).
+
+### Shared References
+
+`.github/references/mistral-cross-cutting-guidance.md` — shared API key, model selection, retry, and cost policies for all Mistral skills. Link as `../../references/mistral-cross-cutting-guidance.md` from inside a skill subdirectory.
 
 ## References
 

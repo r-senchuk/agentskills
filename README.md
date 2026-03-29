@@ -14,14 +14,28 @@ This repository is where skills are drafted, refined, and validated before submi
 
 | Skill | Description |
 |-------|-------------|
-| [mistral-sdk-agent](.github/skills/mistral-sdk-agent/SKILL.md) | Entrypoint router for Mistral API and SDK tasks; delegates to the correct specialized skill. |
+| [mistral-sdk-router](.github/skills/mistral-sdk-router/SKILL.md) | Entrypoint router for Mistral API and SDK tasks; delegates to the correct specialized skill. |
 | [mistral-agent-builder](.github/skills/mistral-agent-builder/SKILL.md) | Build and operate persistent Mistral Agents with tools, handoffs, and guardrails. |
 | [mistral-function-calling](.github/skills/mistral-function-calling/SKILL.md) | Implement robust tool/function calling loops with schema design and safe execution patterns. |
 | [mistral-embeddings-rag](.github/skills/mistral-embeddings-rag/SKILL.md) | Build embeddings and RAG pipelines with chunking, retrieval, and grounded answers. |
 | [mistral-structured-outputs](.github/skills/mistral-structured-outputs/SKILL.md) | Extract guaranteed typed JSON using schema-constrained structured outputs. |
 | [mistral-document-ai](.github/skills/mistral-document-ai/SKILL.md) | OCR and structured extraction from PDFs/images, including batch processing patterns. |
 | [mistral-vibe-expert](.github/skills/mistral-vibe-expert/SKILL.md) | End-to-end workflow for operating Mistral Vibe CLI with safe delegation and clear result synthesis. |
-| [mistral-skill-governance](.github/skills/mistral-skill-governance/SKILL.md) | Audit and optimize the skill portfolio for routing quality, overlap reduction, and maintainability. |
+| [perplexity-research-assistant](.github/skills/perplexity-research-assistant/SKILL.md) | Use Perplexity APIs for source-grounded, up-to-date web research with strong query and citation discipline. |
+| [skill-builder](.github/skills/skill-builder/SKILL.md) | Create, audit, or refactor a SKILL.md: research domain, structure content, validate frontmatter and sections. |
+| [agent-builder](.github/skills/agent-builder/SKILL.md) | Design and create a `.agent.md`: define scope, identify required skills, select minimal tools, write persona and constraints. |
+| [shell-script-audit](.github/skills/shell-script-audit/SKILL.md) | Audit and harden shell scripts for stability, portability, error handling, and best practices. |
+| [macos-homebrew-troubleshoot](.github/skills/macos-homebrew-troubleshoot/SKILL.md) | Diagnose and fix macOS environment issues, Homebrew problems, PATH conflicts, and permissions. |
+| [zsh-config-expert](.github/skills/zsh-config-expert/SKILL.md) | Configure, troubleshoot, and optimize zsh: completions, startup files, prompt, glob qualifiers, performance. |
+
+## Agents
+
+| Agent | Description |
+|-------|-------------|
+| [sara](.github/agents/sara.agent.md) | Default team-lead agent. Triages requests and delegates to specialized subagents. The only user-facing agent. |
+| [mistral](.github/agents/mistral.agent.md) | Subagent: specialist for building and operating Mistral SDK apps; routes to the correct Mistral skill. |
+| [skiller](.github/agents/skiller.agent.md) | Subagent: researches domains, builds skills, and designs agents. Creates all dependency skills before writing the agent file. |
+| [bashar](.github/agents/bashar.agent.md) | Subagent: macOS & shell specialist — script auditing, macOS/Homebrew troubleshooting, zsh configuration, PATH debugging. |
 
 ## Global Bootstrap (Mac)
 
@@ -49,7 +63,7 @@ What it does:
 
 # 4) Optional: make it callable globally
 mkdir -p ~/bin
-ln -sf "$HOME/src/github.com/r-senchuk/agentskills/scripts/setup-copilot-globals.sh" ~/bin/setup-copilot-globals.sh
+ln -sf "$HOME/path/to/agentskills/scripts/setup-copilot-globals.sh" ~/bin/setup-copilot-globals.sh
 ```
 
 ### Troubleshooting
@@ -64,9 +78,9 @@ ls -la "$HOME/Library/Application Support/Code/User/prompts/agents"
 ./scripts/setup-copilot-globals.sh --force
 
 # Validate that links still point to this repo
-readlink ~/.copilot/skills/mistral-sdk-agent
-readlink ~/.copilot/agents/mistral-sdk-agent.agent.md
-readlink "$HOME/Library/Application Support/Code/User/prompts/agents/mistral-sdk-agent.agent.md"
+readlink ~/.copilot/skills/mistral-sdk-router
+readlink ~/.copilot/agents/mistral.agent.md
+readlink "$HOME/Library/Application Support/Code/User/prompts/agents/mistral.agent.md"
 ```
 
 If links look correct but capabilities do not appear, restart VS Code and run the bootstrap script again with `--force`.

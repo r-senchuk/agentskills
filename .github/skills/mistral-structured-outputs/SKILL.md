@@ -1,6 +1,6 @@
 ---
 name: mistral-structured-outputs
-description: "Use when you need Mistral models to return guaranteed JSON-conformant responses: define Pydantic or JSON schemas, use response_format to enforce structure, handle validation errors, and extract typed data from unstructured text."
+description: "Use when you need Mistral models to return guaranteed JSON-conformant responses: define Pydantic or JSON schemas, use response_format to enforce structure, handle validation errors, and extract typed data from unstructured text. Do NOT use for plain text generation, conversational responses, or tasks where free-form output is acceptable."
 argument-hint: "Target data shape (field names and types), model to use, and the text or prompt to extract from"
 user-invocable: false
 ---
@@ -15,6 +15,11 @@ Workflow for extracting guaranteed, schema-conformant JSON from Mistral models u
 - You are building pipelines where model output feeds directly into typed data structures.
 - You want to avoid prompt-engineering JSON formatting and handle it at the API level.
 
+Do NOT use for:
+- Plain text generation or conversational tasks where no downstream schema consumption occurs.
+- Streaming responses — `response_format` with schema enforcement requires non-streaming calls.
+- Models that do not support structured output mode (check the Mistral model docs for compatibility).
+
 ## Inputs To Collect First
 1. Target schema: field names, types, optional vs required, and nested structures.
 2. Model: any Mistral model supporting structured outputs (see note below).
@@ -27,7 +32,7 @@ Workflow for extracting guaranteed, schema-conformant JSON from Mistral models u
 3. Parse and validate the response.
 4. Handle validation errors.
 
-## 1) Define the Schema
+### Step 1 — Define the Schema
 
 **Option A — Pydantic (recommended for Python)**
 
@@ -82,7 +87,7 @@ Schema design rules:
 - Keep nesting shallow when possible; deep schemas increase error rates.
 - Use `enum` for fields with a fixed set of values.
 
-## 2) Call the API With `response_format`
+### Step 2 — Call the API With `response_format`
 
 **Using Pydantic:**
 
@@ -130,7 +135,7 @@ data = json.loads(response.choices[0].message.content)
 
 Note: `response_format={"type": "json_object"}` guarantees valid JSON but does NOT enforce a specific schema. Use Pydantic or `client.chat.parse()` for schema enforcement.
 
-## 3) Parse and Validate the Response
+### Step 3 — Parse and Validate the Response
 
 ```python
 from pydantic import ValidationError
@@ -149,7 +154,7 @@ def extract_invoice(text: str) -> Invoice | None:
 
 The `.parsed` attribute is `None` if parsing failed — always check before use.
 
-## 4) Handle Validation Errors
+### Step 4 — Handle Validation Errors
 
 Retry with the validation error as feedback:
 
@@ -182,11 +187,11 @@ def extract_with_retry(text: str, model: str = "mistral-large-latest", max_retri
 ```
 
 ## Completion Checks
-- Schema has `description` on any ambiguous field.
-- Required vs optional fields correctly reflect what the model might not find in source text.
-- `.parsed` result checked for `None` before use downstream.
-- Retry logic has a bounded attempt count.
-- Tested with: well-formed input (should extract cleanly), partial input (should handle missing optional fields), and malformed input (should retry or raise gracefully).
+- [ ] Schema has `description` on any ambiguous field.
+- [ ] Required vs optional fields correctly reflect what the model might not find in source text.
+- [ ] `.parsed` result checked for `None` before use downstream.
+- [ ] Retry logic has a bounded attempt count (`max_retries`).
+- [ ] Tested with: well-formed input (should extract cleanly), partial input (missing optional fields handled), and malformed input (retry or raise gracefully).
 
 ## References
 - [Shared Mistral cross-cutting guidance](../../references/mistral-cross-cutting-guidance.md)

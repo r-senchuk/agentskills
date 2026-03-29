@@ -1,6 +1,6 @@
 ---
 name: mistral-vibe-expert
-description: "Use when you need expert use of Mistral Vibe CLI: setup, configuration, interactive and programmatic usage, agent and subagent delegation, tool permissions, local/offline models, and clear synthesis of Vibe results into actionable summaries."
+description: "Use when you need expert use of Mistral Vibe CLI: setup, configuration, interactive and programmatic usage, agent and subagent delegation, tool permissions, local/offline models, and clear synthesis of Vibe results into actionable summaries. Do NOT use for general Mistral API calls, SDK usage, embeddings, fine-tuning, or structured outputs — those are handled by other Mistral skills."
 argument-hint: "Goal, repository path, constraints (time/cost/tools), and desired output format"
 user-invocable: false
 ---
@@ -18,6 +18,8 @@ Default operating profile for this skill: safety-first (interactive mode, explic
 - You need to switch between cloud and local/offline model backends.
 - You want this behavior available as a workspace-scoped skill in this repository.
 
+Do NOT use for: general Mistral API or SDK tasks, embeddings/RAG pipeline design, structured output generation, fine-tuning, or document AI — use the dedicated Mistral skills for those. Do NOT use for tasks that do not involve running the Vibe CLI.
+
 ## Inputs To Collect First
 1. Objective: what deliverable is required.
 2. Repo context: working directory and branch constraints.
@@ -26,20 +28,27 @@ Default operating profile for this skill: safety-first (interactive mode, explic
 5. Output style: text summary, JSON artifact, or streamed events.
 
 ## Procedure
-1. Verify prerequisites.
-2. Choose execution mode.
-3. Apply guardrails and tool scope.
-4. Run Vibe with a prompt structure that improves task quality.
-5. Validate output against completion checks.
-6. Present results in the Vibe-result summary format.
 
-## 1) Verify Prerequisites
-- Confirm CLI availability: `command -v vibe`.
-- Confirm version: `vibe --version`.
-- Ensure API key exists (`MISTRAL_API_KEY` or `~/.vibe/.env`) and configuration is readable at `./.vibe/config.toml` or `~/.vibe/config.toml`.
-- Ensure execution is inside a trusted working directory.
+### Step 1 — Verify Prerequisites
 
-## 2) Choose Execution Mode
+Confirm CLI availability and configuration before proceeding:
+
+```bash
+command -v vibe
+vibe --version
+```
+
+Ensure the API key is set and config is readable:
+
+```bash
+echo "$MISTRAL_API_KEY"   # or check ~/.vibe/.env
+cat ~/.vibe/config.toml 2>/dev/null || cat ./.vibe/config.toml
+```
+
+Ensure execution is inside a trusted working directory.
+
+### Step 2 — Choose Execution Mode
+
 - Interactive mode (`vibe`) for exploratory, iterative tasks with approvals.
 - Programmatic mode (`vibe --prompt ...`) for deterministic CI/scripting or bounded single-task runs.
 
@@ -47,17 +56,27 @@ Decision rule:
 - If requirements are evolving or code understanding is incomplete: use interactive mode.
 - If requirements are fixed and measurable: use programmatic mode with hard caps.
 
-## 3) Apply Guardrails
+### Step 3 — Apply Guardrails
+
 For programmatic execution, always define limits:
-- `--max-turns N`
-- `--max-price DOLLARS`
-- `--output text|json|streaming`
+
+```bash
+vibe --prompt "<task>" \
+  --max-turns N \
+  --max-price DOLLARS \
+  --output text|json|streaming
+```
 
 Narrow tool scope for sensitive work:
-- Use `--enabled-tools` in programmatic mode.
-- For persistent policy, define `enabled_tools` or `disabled_tools` in `config.toml` (supports exact, glob, and `re:` regex patterns).
 
-## 4) Prompt Pattern For High-Quality Delegation
+```bash
+vibe --prompt "<task>" --enabled-tools read_file,list_dir
+```
+
+For persistent policy, define `enabled_tools` or `disabled_tools` in `config.toml` (supports exact, glob, and `re:` regex patterns).
+
+### Step 4 — Craft a High-Quality Delegation Prompt
+
 Use this structure:
 1. Task: desired end state.
 2. Context: files/modules and constraints.
@@ -66,6 +85,7 @@ Use this structure:
 5. Output contract: exact sections required in the final answer.
 
 Example skeleton:
+
 ```text
 Goal: <deliverable>
 Context: <repo path, files, stack>
@@ -74,7 +94,8 @@ Acceptance: <tests/commands and expected behavior>
 Return format: <summary, changed files, risks, next steps>
 ```
 
-## 5) Delegation Strategy With Agents/Subagents
+### Step 5 — Delegate to Agents or Subagents
+
 - Prefer built-in `plan` agent for read-only exploration and planning.
 - Use `default` for approval-driven execution.
 - Use `accept-edits` or `auto-approve` only in controlled environments.
@@ -85,7 +106,8 @@ Subagent guidance:
 - Keep subagent prompts narrow and objective.
 - Remember subagents return text and cannot ask clarifying questions.
 
-## 6) Present Vibe Results (Required Output Contract)
+### Step 6 — Present Vibe Results
+
 When reporting Vibe-delivered work, always include:
 1. Outcome: one-sentence result.
 2. Scope: what was analyzed or changed.
@@ -94,6 +116,7 @@ When reporting Vibe-delivered work, always include:
 5. Recommended next action: smallest safe follow-up.
 
 Use this compact template:
+
 ```text
 Vibe Outcome:
 - Result: ...
@@ -104,11 +127,13 @@ Vibe Outcome:
 ```
 
 ## Completion Checks
-- The selected mode matches task volatility (interactive vs programmatic).
-- Guardrails are explicitly set for non-trivial runs.
-- Tool permissions are least-privilege for the task.
-- Output includes evidence and unresolved risks, not only conclusions.
-- Follow-up action is specific and executable.
+
+- [ ] CLI verified with `command -v vibe` and `vibe --version` before execution.
+- [ ] Execution mode matches task volatility (interactive vs programmatic).
+- [ ] `--max-turns` and `--max-price` are explicitly set for all programmatic runs.
+- [ ] Tool permissions are least-privilege for the task (`--enabled-tools` or `config.toml`).
+- [ ] Output includes evidence (commands/tests run) and unresolved risks, not only conclusions.
+- [ ] Follow-up action is specific and executable.
 
 ## References
 - [Vibe playbook and command examples](./references/vibe-playbook.md)
