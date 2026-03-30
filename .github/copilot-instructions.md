@@ -61,10 +61,11 @@ Use fenced code blocks with language tags (`bash`, `python`, etc.) for all comma
 Structure the Markdown body with these sections:
 
 1. **Identity statement** — "You are a specialist at X. Your job is Y." — specific bounded role
-2. **Skill Routing** (when multiple skills apply) — table: task type → `SKILL.md` path to read
-3. **Core Workflow** — numbered steps for how the agent operates
-4. **Constraints** — explicit `DO NOT` rules defining the safety boundary
-5. **Output Format** — exactly what the agent returns
+2. **Task Complexity Rubric** (for orchestrator agents) — define what counts as trivial vs non-trivial so the agent knows when to act directly vs delegate
+3. **Skill Routing** (when multiple skills apply) — table: task type → `SKILL.md` path to read
+4. **Core Workflow** — numbered steps for how the agent operates
+5. **Constraints** — explicit `DO NOT` rules defining the safety boundary
+6. **Output Format** — exactly what the agent returns
 
 Frontmatter rules for agents:
 - `tools`: use minimal set; document rationale in identity if all 6 tools are used
@@ -115,7 +116,7 @@ Routed through the `bashar` subagent (via Sara). Covers: shell script auditing/h
 
 ### Agent Hierarchy
 
-`sara` is the sole user-facing agent (team lead). She delegates to `mistral`, `skiller`, and `bashar` subagents. When no existing agent can handle a task, Sara requests `skiller` to create a new agent (with user approval).
+`sara` is the sole user-facing agent (team lead). She handles trivial tasks (conversational, read-only lookups, reformatting) directly. For non-trivial tasks she delegates to `mistral`, `skiller`, or `bashar` subagents based on domain. When no existing agent can handle a non-trivial task, Sara informs the user and immediately delegates to `skiller` to create the required agent — no manual approval gate.
 
 ### Shared References
 

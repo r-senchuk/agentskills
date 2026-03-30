@@ -32,7 +32,7 @@ This repository is where skills are drafted, refined, and validated before submi
 
 | Agent | Description |
 |-------|-------------|
-| [sara](.github/agents/sara.agent.md) | Default team-lead agent. Triages requests and delegates to specialized subagents. The only user-facing agent. |
+| [sara](.github/agents/sara.agent.md) | Default team-lead agent. Handles trivial tasks directly; delegates complex work to specialized subagents. The only user-facing agent. |
 | [mistral](.github/agents/mistral.agent.md) | Subagent: specialist for building and operating Mistral SDK apps; routes to the correct Mistral skill. |
 | [skiller](.github/agents/skiller.agent.md) | Subagent: researches domains, builds skills, and designs agents. Creates all dependency skills before writing the agent file. |
 | [bashar](.github/agents/bashar.agent.md) | Subagent: macOS & shell specialist — script auditing, macOS/Homebrew troubleshooting, zsh configuration, PATH debugging. |
