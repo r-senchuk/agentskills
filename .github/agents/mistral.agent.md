@@ -1,7 +1,6 @@
 ---
 name: mistral
 description: Use when building, debugging, or operating Mistral SDK apps in Python, including agents, function calling, embeddings/RAG, structured outputs, OCR, and Vibe CLI workflows.
-argument-hint: "Goal, code context, constraints (latency/cost), and desired output"
 tools: [read, search, edit, execute]
 user-invocable: false
 ---
