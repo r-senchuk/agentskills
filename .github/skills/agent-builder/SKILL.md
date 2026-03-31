@@ -128,6 +128,25 @@ TOOL_COUNT=$(grep '^tools:' "$AGENT" | grep -oE '\b(read|edit|search|execute|web
 [ "$TOOL_COUNT" -lt 6 ] && echo "✅ tools=$TOOL_COUNT (focused)" || echo "⚠️  tools=$TOOL_COUNT — verify each is essential"
 ```
 
+### Step 6 — Sync to Active Environment
+
+After creating the `.agent.md` and all dependency skills, run `agent-sync` to symlink the new files into `~/.copilot/` and VS Code's prompts directory. Without this step, the new agent and skills won't be available to Copilot in the current session.
+
+```bash
+source "$(git rev-parse --show-toplevel)/scripts/agent-sync.zsh" && agent-sync
+```
+
+Flags:
+- `--dry-run` — preview what will be linked without making changes (use first to verify)
+- `--force` — replace existing symlinks if they already exist
+
+The sync script creates symlinks from:
+- `~/.copilot/agents/` → agent source files
+- `~/.copilot/skills/` → skill source files
+- `~/Library/Application Support/Code/User/prompts/agents/` → VS Code prompts directory
+
+**Always run sync after creating or modifying any agent or skill file.**
+
 ## Completion Checks
 
 - [ ] Agent name is kebab-case and matches the filename (without `.agent.md`)
@@ -138,6 +157,7 @@ TOOL_COUNT=$(grep '^tools:' "$AGENT" | grep -oE '\b(read|edit|search|execute|web
 - [ ] Body has: identity statement, constraints (DO NOT rules), output format
 - [ ] Identity statement names a specific, bounded role (not "helpful assistant", "assistant", or "agent")
 - [ ] At least one adjacent task is explicitly excluded in the Constraints section (scope boundary is documented)
+- [ ] `agent-sync` was run and new agent/skills are symlinked in `~/.copilot/`
 
 ## References
 

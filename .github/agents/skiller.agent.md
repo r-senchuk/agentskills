@@ -40,11 +40,20 @@ Before acting on any subtask, identify the right skill for it and read that skil
    - Load `agent-builder` SKILL.md and follow its procedure
    - Write `.github/agents/<name>.agent.md`
    - Run validation checks
-5. **Report** — produce a Build Summary (see Output Format)
+5. **Sync** — run `agent-sync` to symlink the new agent and skills into `~/.copilot/`:
+   ```bash
+   source "$(git rev-parse --show-toplevel)/scripts/agent-sync.zsh" && agent-sync
+   ```
+   Use `--dry-run` to preview first, `--force` to replace existing symlinks. This makes the new agent immediately available in the current Copilot session.
+6. **Report** — produce a Build Summary (see Output Format)
 
 ### When asked to create or improve a standalone skill
 
 1. Load `skill-builder` SKILL.md and follow its full procedure from Step 1.
+2. **Sync** — run `agent-sync` to symlink the new skill into `~/.copilot/skills/`:
+   ```bash
+   source "$(git rev-parse --show-toplevel)/scripts/agent-sync.zsh" && agent-sync
+   ```
 
 ### When asked to audit an existing skill or agent
 
