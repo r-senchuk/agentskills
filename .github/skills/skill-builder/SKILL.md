@@ -1,6 +1,6 @@
 ---
 name: skill-builder
-description: "Use when creating a new SKILL.md from scratch, auditing an existing skill for gaps or stale content, or refactoring a skill to meet quality standards. Covers research (Perplexity, GitHub), structure, frontmatter validation, and completion checks. Use for: skill creation, skill audit, skill refactor, fill skill gaps, improve skill quality. Do not use for general coding tasks, debugging, or feature implementation."
+description: "Use when creating a new SKILL.md from scratch, auditing an existing skill for gaps or stale content, or refactoring a skill to meet quality standards. Covers research (Perplexity, GitHub), structure, frontmatter validation, and completion checks. Use for: skill creation, skill audit, skill refactor, fill skill gaps, improve skill quality. Do not use for coding tasks, application debugging, or feature implementation."
 argument-hint: "Skill name or domain, goal (create|audit|refactor), and any constraints or quality bar."
 user-invocable: false
 ---
@@ -42,7 +42,7 @@ Identify: gaps the new skill fills, overlap to avoid, related skills to link.
 
 ### Step 2 — Research Domain
 
-Use `perplexity-research-assistant` to gather domain knowledge:
+Use the `web` tool to gather domain knowledge:
 - Best practices and common patterns
 - Anti-patterns and failure modes
 - Authoritative references (official docs, RFCs, widely-used guides)
@@ -57,7 +57,7 @@ Read top 2–3 results for structure and content patterns. Record:
 - **What NOT to include**: rules the model handles well by default, vague generic advice
 - **References to cite**: official docs, authoritative guides
 
-Load `./references/research-queries.md` for Perplexity + GitHub query templates.
+Load `./references/research-queries.md` for GitHub query templates.
 
 ### Step 3 — Design Structure
 

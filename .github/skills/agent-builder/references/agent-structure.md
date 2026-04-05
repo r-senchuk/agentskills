@@ -81,7 +81,6 @@ Skills are NOT assigned in frontmatter — they are loaded when the agent body e
 
 | Task | Skill |
 |---|---|
-| Researching domain best practices | `.github/skills/perplexity-research-assistant/SKILL.md` |
 | Creating or auditing a SKILL.md | `.github/skills/skill-builder/SKILL.md` |
 | Designing a new .agent.md | `.github/skills/agent-builder/SKILL.md` |
 ```

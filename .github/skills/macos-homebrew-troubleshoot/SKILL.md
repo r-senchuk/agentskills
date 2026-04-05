@@ -1,6 +1,6 @@
 ---
 name: macos-homebrew-troubleshoot
-description: "Use when diagnosing and fixing macOS environment issues, Homebrew problems, PATH conflicts, binary version mismatches, permissions errors, quarantine attributes, code signing, and launchd service configuration. Do not use for writing new scripts, non-macOS platforms, or general application debugging."
+description: "Use when diagnosing and fixing macOS environment issues, Homebrew problems, PATH conflicts, binary version mismatches, permissions errors, quarantine attributes, code signing, and launchd service configuration. Do not use for writing new scripts, non-macOS platforms, or application debugging unrelated to the macOS environment."
 argument-hint: "Symptom description, macOS version, relevant command output or error message."
 user-invocable: false
 ---

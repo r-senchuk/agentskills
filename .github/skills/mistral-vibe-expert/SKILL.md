@@ -1,6 +1,6 @@
 ---
 name: mistral-vibe-expert
-description: "Use when you need expert use of Mistral Vibe CLI: setup, configuration, interactive and programmatic usage, agent and subagent delegation, tool permissions, local/offline models, and clear synthesis of Vibe results into actionable summaries. Do NOT use for general Mistral API calls, SDK usage, embeddings, fine-tuning, or structured outputs — those are handled by other Mistral skills."
+description: "Use when you need expert use of Mistral Vibe CLI: setup, configuration, interactive and programmatic usage, agent and subagent delegation, tool permissions, local/offline models, and clear synthesis of Vibe results into actionable summaries. Do NOT use for direct Mistral API calls, SDK usage, embeddings, fine-tuning, or structured outputs — those are handled by other Mistral skills."
 argument-hint: "Goal, repository path, constraints (time/cost/tools), and desired output format"
 user-invocable: false
 ---

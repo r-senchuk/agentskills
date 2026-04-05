@@ -21,7 +21,6 @@ This repository is where skills are drafted, refined, and validated before submi
 | [mistral-structured-outputs](.github/skills/mistral-structured-outputs/SKILL.md) | Extract guaranteed typed JSON using schema-constrained structured outputs. |
 | [mistral-document-ai](.github/skills/mistral-document-ai/SKILL.md) | OCR and structured extraction from PDFs/images, including batch processing patterns. |
 | [mistral-vibe-expert](.github/skills/mistral-vibe-expert/SKILL.md) | End-to-end workflow for operating Mistral Vibe CLI with safe delegation and clear result synthesis. |
-| [perplexity-research-assistant](.github/skills/perplexity-research-assistant/SKILL.md) | Use Perplexity APIs for source-grounded, up-to-date web research with strong query and citation discipline. |
 | [skill-builder](.github/skills/skill-builder/SKILL.md) | Create, audit, or refactor a SKILL.md: research domain, structure content, validate frontmatter and sections. |
 | [agent-builder](.github/skills/agent-builder/SKILL.md) | Design and create a `.agent.md`: define scope, identify required skills, select minimal tools, write persona and constraints. |
 | [shell-script-audit](.github/skills/shell-script-audit/SKILL.md) | Audit and harden shell scripts for stability, portability, error handling, and best practices. |

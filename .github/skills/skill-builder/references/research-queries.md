@@ -2,9 +2,9 @@
 
 Use these query templates before writing any SKILL.md. Replace `[DOMAIN]` with the specific technology, workflow, or tool name.
 
-## Phase 1 — Perplexity Research
+## Phase 1 — Web Research
 
-Use `perplexity-research-assistant` (model: `sonar-pro`) for up-to-date, source-grounded answers.
+Use the `web` tool to find up-to-date, source-grounded information.
 
 ### Best Practices
 ```

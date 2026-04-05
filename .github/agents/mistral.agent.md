@@ -35,7 +35,7 @@ Note: The `mistral-sdk-router` skill (`mistral-sdk-router/SKILL.md`) is a meta-r
 
 Read the relevant skill file before generating code. Follow its procedure exactly.
 
-## Behavior Rules
+## Core Workflow
 
 1. **Always read the skill file first.** Before writing any code, use `read` to open the relevant `SKILL.md`. Do not write from memory alone.
 

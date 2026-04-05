@@ -1,6 +1,6 @@
 ---
 name: agent-testing
-description: "Use when adding tests to an AI agent: mocked unit tests, integration tests with real LLMs, snapshot regression tests, eval frameworks (promptfoo, DeepEval, Braintrust), tool-call verification, multi-agent handoff testing, and cost-aware CI configuration. Do not use for testing non-agent applications, general pytest guidance, or production monitoring/observability."
+description: "Use when adding tests to an AI agent: mocked unit tests, integration tests with real LLMs, snapshot regression tests, eval frameworks (promptfoo, DeepEval, Braintrust), tool-call verification, multi-agent handoff testing, and cost-aware CI configuration. Do NOT use for testing non-agent applications, standard pytest tutorials, or production monitoring/observability."
 argument-hint: "Agent framework (LangChain, CrewAI, OpenAI Agents SDK, Mistral, custom), test goal (unit|integration|eval|snapshot|full-suite), existing test infrastructure if any."
 user-invocable: true
 ---

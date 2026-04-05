@@ -1,6 +1,6 @@
 ---
 name: agent-builder
-description: "Use when creating a new .agent.md file or improving an existing agent: define scope and persona, identify and create required skills, select minimal tools, write constraints and workflow. Use for: agent creation, agent design, custom agent, subagent, agent.md, tool restrictions, persona, handoffs, agent improvement."
+description: "Use when creating a new .agent.md file or improving an existing agent: define scope and persona, identify and create required skills, select minimal tools, write constraints and workflow. Use for: agent creation, agent design, custom agent, subagent, agent.md, tool restrictions, persona, handoffs, agent improvement. Do NOT use for coding tasks, debugging, or feature implementation — those belong to the default agent."
 argument-hint: "Agent name, purpose, tool preferences, and known skills to assign."
 user-invocable: false
 ---

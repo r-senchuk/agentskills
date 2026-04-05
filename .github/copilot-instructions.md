@@ -108,8 +108,8 @@ See [README.md](../README.md) for the full current skill and agent table.
 **Mistral SDK** (`mistral-*`)  
 Routed through the `mistral` subagent (via Sara). Covers: agent builder, function calling, embeddings/RAG, structured outputs, document AI, and Vibe CLI. The `mistral-sdk-router` skill is the entrypoint for ambiguous multi-surface tasks.
 
-**Research & Meta** (`perplexity-*`, `skill-builder`, `agent-builder`)  
-Routed through the `skiller` subagent (via Sara). Covers: Perplexity-powered research, SKILL.md authoring/auditing, and `.agent.md` design.
+**Research & Meta** (`skill-builder`, `agent-builder`)  
+Routed through the `skiller` subagent (via Sara). Covers: web-powered research, SKILL.md authoring/auditing, and `.agent.md` design.
 
 **Shell & macOS** (`shell-script-audit`, `macos-homebrew-troubleshoot`, `zsh-config-expert`)  
 Routed through the `bashar` subagent (via Sara). Covers: shell script auditing/hardening, macOS environment troubleshooting, Homebrew diagnostics, and zsh configuration.
