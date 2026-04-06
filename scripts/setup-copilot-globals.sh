@@ -12,7 +12,9 @@ DEFAULT_REPO_ROOT="${SCRIPT_DIR:h}"
 REPO_ROOT="$DEFAULT_REPO_ROOT"
 COPILOT_HOME="${COPILOT_HOME:-$HOME/.copilot}"
 VSCODE_PROMPTS_DIR="${VSCODE_PROMPTS_DIR:-$HOME/Library/Application Support/Code/User/prompts}"
+VIBE_HOME="${VIBE_HOME:-$HOME/.vibe}"
 LINK_VSCODE_AGENTS=1
+LINK_VIBE=1
 FORCE=0
 DRY_RUN=0
 
@@ -25,7 +27,9 @@ Options:
                           Default: parent directory of this script.
   --copilot-home <path>   Global Copilot home. Default: ~/.copilot
   --vscode-prompts <path> VS Code prompts dir. Default: ~/Library/Application Support/Code/User/prompts
+  --vibe-home <path>      Mistral Vibe home. Default: ~/.vibe
   --no-vscode-agents      Skip linking agents into VS Code prompts profile.
+  --no-vibe               Skip linking skills/agents into Mistral Vibe.
   --force                 Replace existing files/symlinks at target paths.
   --dry-run               Show actions without making changes.
   -h, --help              Show this help.
@@ -74,6 +78,15 @@ while (( $# > 0 )); do
       LINK_VSCODE_AGENTS=0
       shift
       ;;
+    --no-vibe)
+      LINK_VIBE=0
+      shift
+      ;;
+    --vibe-home)
+      [[ $# -ge 2 ]] || { warn "Missing value for --vibe-home"; exit 1; }
+      VIBE_HOME="$2"
+      shift 2
+      ;;
     --force)
       FORCE=1
       shift
@@ -101,6 +114,8 @@ AGENTS_SRC="$REPO_ROOT/.github/agents"
 COPILOT_SKILLS_DIR="$COPILOT_HOME/skills"
 COPILOT_AGENTS_DIR="$COPILOT_HOME/agents"
 VSCODE_AGENTS_DIR="$VSCODE_PROMPTS_DIR/agents"
+VIBE_SKILLS_DIR="$VIBE_HOME/skills"
+VIBE_AGENTS_DIR="$VIBE_HOME/agents"
 
 [[ -d "$SKILLS_SRC" ]] || { warn "Missing directory: $SKILLS_SRC"; exit 1; }
 [[ -d "$AGENTS_SRC" ]] || { warn "Missing directory: $AGENTS_SRC"; exit 1; }
@@ -108,6 +123,9 @@ VSCODE_AGENTS_DIR="$VSCODE_PROMPTS_DIR/agents"
 run_cmd mkdir -p "$COPILOT_SKILLS_DIR" "$COPILOT_AGENTS_DIR"
 if (( LINK_VSCODE_AGENTS )); then
   run_cmd mkdir -p "$VSCODE_AGENTS_DIR"
+fi
+if (( LINK_VIBE )); then
+  run_cmd mkdir -p "$VIBE_SKILLS_DIR" "$VIBE_AGENTS_DIR"
 fi
 
 linked=0
@@ -158,12 +176,18 @@ link_one() {
 
 for skill_dir in "$SKILLS_SRC"/*(N/); do
   link_one "$skill_dir" "$COPILOT_SKILLS_DIR"
+  if (( LINK_VIBE )); then
+    link_one "$skill_dir" "$VIBE_SKILLS_DIR"
+  fi
 done
 
 for agent_file in "$AGENTS_SRC"/*.agent.md(.N); do
   link_one "$agent_file" "$COPILOT_AGENTS_DIR"
   if (( LINK_VSCODE_AGENTS )); then
     link_one "$agent_file" "$VSCODE_AGENTS_DIR"
+  fi
+  if (( LINK_VIBE )); then
+    link_one "$agent_file" "$VIBE_AGENTS_DIR"
   fi
 done
 
@@ -179,4 +203,8 @@ log "Global skills: $COPILOT_SKILLS_DIR"
 log "Global agents: $COPILOT_AGENTS_DIR"
 if (( LINK_VSCODE_AGENTS )); then
   log "VS Code agents: $VSCODE_AGENTS_DIR"
+fi
+if (( LINK_VIBE )); then
+  log "Mistral Vibe skills: $VIBE_SKILLS_DIR"
+  log "Mistral Vibe agents: $VIBE_AGENTS_DIR"
 fi
