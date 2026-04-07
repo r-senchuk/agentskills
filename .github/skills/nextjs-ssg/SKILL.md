@@ -1,8 +1,14 @@
 ---
 name: nextjs-ssg
-description: "Use when scaffolding, configuring, or troubleshooting Next.js 15 App Router projects with static export (output: 'export'). Covers project setup, directory structure, next.config.ts, generateStaticParams, build verification, and static export limitations. Do not use for server-side rendering, API routes, database integration, or non-Next.js frameworks."
+description: "Use when scaffolding, configuring, or troubleshooting Next.js 15 App Router projects with static export (output: 'export'). Covers project setup, directory structure, next.config.ts, generateStaticParams, build verification, and static export limitations. Use when user asks to 'create static Next.js site', 'set up Next.js static export', 'fix Next.js build errors', or 'configure next.config.ts for SSG'. Do not use for server-side rendering, API routes, database integration, or non-Next.js frameworks."
 argument-hint: "Project path or name, target features (i18n, SEO, etc.), current error or goal."
 user-invocable: false
+license: MIT
+compatibility: "Requires Node.js 18+, Next.js 15+, and pnpm/npm/yarn for package management."
+metadata:
+  author: "Roman Senchuk"
+  version: "1.1.0"
+  last-updated: "2024-07-15"
 ---
 
 # Next.js 15 Static Site Generation (SSG)

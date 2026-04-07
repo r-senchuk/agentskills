@@ -1,8 +1,14 @@
 ---
 name: mistral-vibe-expert
-description: "Use when you need expert use of Mistral Vibe CLI: setup, configuration, interactive and programmatic usage, agent and subagent delegation, tool permissions, local/offline models, and clear synthesis of Vibe results into actionable summaries. Do NOT use for direct Mistral API calls, SDK usage, embeddings, fine-tuning, or structured outputs — those are handled by other Mistral skills."
+description: "Use when you need expert use of Mistral Vibe CLI: setup, configuration, interactive and programmatic usage, agent and subagent delegation, tool permissions, local/offline models, and clear synthesis of Vibe results into actionable summaries. Use when user asks to 'set up Mistral Vibe', 'configure Vibe CLI', 'delegate tasks to Vibe', or 'synthesize Vibe results'. Do NOT use for direct Mistral API calls, SDK usage, embeddings, fine-tuning, or structured outputs — those are handled by other Mistral skills."
 argument-hint: "Goal, repository path, constraints (time/cost/tools), and desired output format"
 user-invocable: false
+license: MIT
+compatibility: "Requires Mistral Vibe CLI installation, Python 3.9+, and appropriate model access."
+metadata:
+  author: "Roman Senchuk"
+  version: "1.1.0"
+  last-updated: "2024-07-15"
 ---
 
 # Mistral Vibe Expert

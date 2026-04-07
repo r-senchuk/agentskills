@@ -1,8 +1,14 @@
 ---
 name: agent-testing
-description: "Use when adding tests to an AI agent: mocked unit tests, integration tests with real LLMs, snapshot regression tests, eval frameworks (promptfoo, DeepEval, Braintrust), tool-call verification, multi-agent handoff testing, and cost-aware CI configuration. Do NOT use for testing non-agent applications, standard pytest tutorials, or production monitoring/observability."
+description: "Use when adding tests to an AI agent: mocked unit tests, integration tests with real LLMs, snapshot regression tests, eval frameworks (promptfoo, DeepEval, Braintrust), tool-call verification, multi-agent handoff testing, and cost-aware CI configuration. Use when user asks to 'add tests to agent', 'test agent workflows', 'set up agent test suite', or 'verify agent tool calls'. Do NOT use for testing non-agent applications, standard pytest tutorials, or production monitoring/observability."
 argument-hint: "Agent framework (LangChain, CrewAI, OpenAI Agents SDK, Mistral, custom), test goal (unit|integration|eval|snapshot|full-suite), existing test infrastructure if any."
 user-invocable: true
+license: MIT
+compatibility: "Works with Python 3.9+, requires pytest, pytest-asyncio, and optional eval frameworks (promptfoo, deepeval)."
+metadata:
+  author: "Roman Senchuk"
+  version: "1.1.0"
+  last-updated: "2024-07-15"
 ---
 
 # Agent Testing

@@ -1,8 +1,14 @@
 ---
 name: mistral-embeddings-rag
-description: "Use when you need to build a retrieval-augmented generation (RAG) pipeline with Mistral embeddings: chunking strategy, embedding text or code, vector storage, similarity search, and grounding LLM answers in retrieved context. Do NOT use for plain chat completions, fine-tuning, or tasks solvable from model knowledge without document retrieval."
+description: "Use when you need to build a retrieval-augmented generation (RAG) pipeline with Mistral embeddings: chunking strategy, embedding text or code, vector storage, similarity search, and grounding LLM answers in retrieved context. Use when user asks to 'build RAG pipeline', 'set up document retrieval', 'create semantic search', or 'ground LLM answers in documents'. Do NOT use for plain chat completions, fine-tuning, or tasks solvable from model knowledge without document retrieval."
 argument-hint: "Document source (file path, URL, or raw text), chunk size preference, vector store choice (faiss/in-memory/external), and query or question to answer"
 user-invocable: false
+license: MIT
+compatibility: "Requires Python 3.9+, Mistral embeddings API access, and optional vector stores (FAISS, Pinecone, Qdrant, etc.)."
+metadata:
+  author: "Roman Senchuk"
+  version: "1.1.0"
+  last-updated: "2024-07-15"
 ---
 
 # Mistral Embeddings & RAG
