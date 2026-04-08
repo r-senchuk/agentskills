@@ -5,25 +5,11 @@ argument-hint: "target page or section, conversion problem, current CTA copy and
 user-invocable: true
 ---
 
-# Skill: Conversion Rate Optimisation (CRO) UI Patterns — Home Services
+# CRO UI Patterns for Home Services
 
-## Purpose
+Design and implement high-converting UX patterns specific to residential renovation and home services businesses on the Garnebo website. Business model: B2C renovation project management in Bologna, Italy — primary conversion goal is quote form submissions. Audience: homeowners (75%+ mobile), high intent, low patience for friction. Trust-deficit is the #1 conversion blocker.
 
-Design and implement high-converting UX patterns specific to residential renovation and home services businesses on the Garnebo website, using evidence-backed conversion architecture.
-
-## Context
-
-**Business model:** B2C renovation project management in Bologna, Italy. Primary conversion goal: visitor submits quote request (reaches `/quote` page and completes Typeform/Tally embed).
-**Audience:** Homeowners planning renovations. Pain points: fear of unreliable contractors, project chaos, hidden costs, compliance issues. Trust-deficit is the #1 conversion blocker.
-**Traffic profile:** 75%+ mobile, high intent (searching for renovation services). Low patience for friction.
-
-## CRO Principles for Home Services
-
-1. **Trust before action** — Establish credibility before showing the primary CTA
-2. **Reduce perceived risk** — Show compliance, insurance, portfolio before asking for commitment
-3. **One clear next step** — Every section ends with a single unambiguous action
-4. **Friction removal** — Fewer fields, photo upload, WhatsApp option, no account creation
-5. **Social proof density** — Multiple trust signals across the entire page journey
+**Core principles:** Trust before action → Reduce perceived risk → One clear next step per section → Friction removal → Dense social proof throughout.
 
 ## When To Use
 
@@ -112,11 +98,7 @@ High-converting hero for home services:
 </section>
 ```
 
-**Key principles applied:**
-- Left-aligned text (not centred) performs better on desktop for service businesses
-- Outcome-focused headline (what they GET, not what you DO)
-- Primary CTA uses arrow → to imply forward momentum
-- Micro-copy below CTA addresses the 3 biggest hesitations: cost, commitment, wait time
+**Key principles:** Left-aligned text on desktop outperforms centred for service businesses. Outcome-focused H1. Arrow `→` implies forward momentum. Micro-copy below CTA addresses the 3 biggest hesitations (cost, commitment, wait time).
 
 ### Step 3 — Pain Agitation Section
 
@@ -126,7 +108,6 @@ High-converting hero for home services:
     <p className="text-center text-[13px] font-semibold uppercase tracking-wider text-accent-sage">
       Sound familiar?
     </p>
-    
     {/* Pain points as italicised "internal monologue" */}
     <div className="mt-8 space-y-4">
       {painPoints.map((pain, i) => (
@@ -135,14 +116,9 @@ High-converting hero for home services:
         </p>
       ))}
     </div>
-    
     {/* Pivot: we understand → we solve */}
     <p className="mt-10 text-center text-[20px] font-semibold text-brand-primary md:text-[24px]">
       There's a better way.
-    </p>
-    <p className="mx-auto mt-4 max-w-xl text-center text-[16px] font-normal leading-relaxed text-brand-secondary">
-      Garnebo acts as your single point of contact — we manage every trade,
-      every deadline, every permit, so you don't have to.
     </p>
   </div>
 </section>
@@ -150,30 +126,25 @@ High-converting hero for home services:
 
 ### Step 4 — Social Proof Modules
 
-**Numbered outcomes block** (highly effective for home services):
+**Numbered outcomes block:**
 ```tsx
-<section className="px-4 py-16 sm:px-6 md:py-24 lg:px-8">
-  <div className="mx-auto max-w-5xl">
-    <div className="grid gap-8 md:grid-cols-3">
-      {[
-        { stat: '120+', label: 'Renovations completed in Bologna' },
-        { stat: '4.9★', label: 'Average client satisfaction rating' },
-        { stat: '0', label: 'Projects without a signed fixed-price quote' },
-      ].map((item) => (
-        <div key={item.stat} className="text-center">
-          <p className="text-[52px] font-bold leading-none text-brand-primary">{item.stat}</p>
-          <p className="mt-3 text-[16px] font-normal text-brand-secondary">{item.label}</p>
-        </div>
-      ))}
+<div className="grid gap-8 md:grid-cols-3">
+  {[
+    { stat: '120+', label: 'Renovations completed in Bologna' },
+    { stat: '4.9★', label: 'Average client satisfaction rating' },
+    { stat: '0', label: 'Projects without a signed fixed-price quote' },
+  ].map((item) => (
+    <div key={item.stat} className="text-center">
+      <p className="text-[52px] font-bold leading-none text-brand-primary">{item.stat}</p>
+      <p className="mt-3 text-[16px] font-normal text-brand-secondary">{item.label}</p>
     </div>
-  </div>
-</section>
+  ))}
+</div>
 ```
 
-**Testimonial card** (with photo for higher conversion):
+**Testimonial card (with photo for higher conversion):**
 ```tsx
 <div className="rounded-lg bg-bg-white p-8 shadow-sm">
-  {/* Star rating */}
   <div className="flex gap-1 text-[#F59E0B]" aria-label="5 out of 5 stars">
     {Array.from({ length: 5 }).map((_, i) => (
       <svg key={i} className="h-5 w-5 fill-current" viewBox="0 0 20 20">
@@ -182,12 +153,10 @@ High-converting hero for home services:
     ))}
   </div>
   <blockquote className="mt-4 text-[16px] font-normal italic leading-relaxed text-brand-secondary">
-    "Garnebo handled everything — from the permit to the final coat of paint.
-    I didn't have to make a single phone call to a contractor."
+    "Garnebo handled everything — from the permit to the final coat of paint."
   </blockquote>
   <div className="mt-6 flex items-center gap-3">
-    <img src="/testimonials/marco-b.webp" alt="Marco B." 
-      className="h-10 w-10 rounded-full object-cover" />
+    <img src="/testimonials/marco-b.webp" alt="Marco B." className="h-10 w-10 rounded-full object-cover" />
     <div>
       <p className="text-[16px] font-semibold text-brand-primary">Marco B.</p>
       <p className="text-[13px] font-light text-accent-blue">3-room renovation, Bologna Centro</p>
@@ -196,41 +165,21 @@ High-converting hero for home services:
 </div>
 ```
 
-### Step 5 — Value Proposition / Process Steps
+### Step 5 — Process Steps and Urgency
 
-The "How It Works" 3-step pattern reduces fear of commitment:
+**How It Works step labels (verb-first, outcome-focused):**
+- Step 1: "Share Your Vision" (low effort)
+- Step 2: "We Build the Plan" (we do the work)
+- Step 3: "Move in to Your New Space" (outcome they want)
 
+**Honest urgency (no fake timers):**
 ```tsx
-{/* Existing TimelineStep component handles this well */}
-{/* Key: steps must feel easy and low-risk */}
-{/* Step labels must be verbs: "Tell us", "We plan", "You move in" */}
-```
-
-Good step copy formula:
-- **Step 1:** "Share Your Vision" (low effort: just talk to us)
-- **Step 2:** "We Build the Plan" (we do the work)
-- **Step 3:** "Move in to Your New Space" (outcome they want)
-
-### Step 6 — Urgency & Scarcity (Without Being Fake)
-
-Honest urgency that works in home services:
-
-```tsx
-{/* Seasonal capacity note */}
 <p className="rounded-md bg-accent-sage/10 px-4 py-3 text-[13px] font-normal text-brand-secondary">
-  📅 We typically book 3–4 weeks in advance. Request your free quote now to 
-  secure your preferred start date.
+  📅 We typically book 3–4 weeks in advance. Request your free quote now to secure your preferred start date.
 </p>
 ```
 
-**Do NOT:**
-- Use fake countdown timers
-- Claim "only 2 slots left" unless it's true
-- Use "Limited time offer" without a real end date
-
-### Step 7 — Secondary CTA / WhatsApp Alternative
-
-For users not ready to fill a form (high in home services):
+### Step 6 — Secondary CTA and WhatsApp Alternative
 
 ```tsx
 <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
@@ -241,73 +190,33 @@ For users not ready to fill a form (high in home services):
   <a href="https://wa.me/393517443151?text=Hi%2C%20I'm%20interested%20in%20a%20renovation%20quote"
     target="_blank" rel="noopener noreferrer"
     className="flex items-center gap-2 text-[16px] font-semibold text-brand-primary underline underline-offset-4 hover:text-accent-blue transition-colors">
-    <svg className="h-5 w-5 fill-[#25D366]" viewBox="0 0 32 32">...</svg>
     Or message us on WhatsApp
   </a>
 </div>
 ```
 
-### Step 8 — CTA Placement Rules
+### Step 7 — Reducing Form Anxiety
 
-| Section position      | CTA type               | Notes                                   |
-|-----------------------|------------------------|-----------------------------------------|
-| Hero (above fold)     | Primary button         | Full-width mobile, auto desktop         |
-| After proof section   | Primary button         | Repeat after trust has been established |
-| Bottom of every page  | `CTABanner` component  | Dark bg, high contrast, always present  |
-| Mobile bottom         | `MobileStickyBar`      | Appears after 300px scroll              |
-| Desktop fixed         | Header "Get a Quote"   | Always visible in sticky nav            |
-
-### Step 9 — Reducing Form Anxiety
-
-Before linking to the `/quote` form, set expectations:
-
+Set expectations before linking to `/quote`:
 ```tsx
 <div className="mt-6 flex flex-wrap justify-center gap-x-8 gap-y-2">
-  {[
-    '✓ 2-minute process',
-    '✓ No account needed',
-    '✓ Upload photos from your phone',
-    '✓ Free, no obligation',
-  ].map((item) => (
-    <span key={item} className="text-[13px] font-normal text-accent-blue">
-      {item}
-    </span>
+  {['✓ 2-minute process', '✓ No account needed', '✓ Upload photos from your phone', '✓ Free, no obligation'].map((item) => (
+    <span key={item} className="text-[13px] font-normal text-accent-blue">{item}</span>
   ))}
 </div>
 ```
 
-## Conversion Hierarchy Summary
+### Step 8 — CTA Placement Rules
 
-```
-HIGHEST IMPACT
-├── Before/After slider with real project photos
-├── Fixed-price promise (remove financial risk perception)
-├── Local team photo + names (humanise the brand)
-├── Compliance/legal badges (DM 37/2008, VAT number)
-├── Numbered project stats (social proof)
-├── Client testimonials with real names + neighbourhood
-├── Step-by-step process (reduces fear of commitment)
-└── WhatsApp alternative CTA (removes form friction)
-LOWEST IMPACT (still worth doing)
-```
+| Section position | CTA type | Notes |
+|---|---|---|
+| Hero (above fold) | Primary button | Full-width mobile, auto desktop |
+| After proof section | Primary button | Repeat after trust is established |
+| Bottom of every page | `CTABanner` component | Dark bg, always present |
+| Mobile bottom | `MobileStickyBar` | Appears after 300px scroll |
+| Desktop fixed | Header "Get a Quote" | Always visible in sticky nav |
 
-## Constraints & Anti-Patterns
-
-- **DO NOT** use generic stock photography (workers, blueprints, handshakes) — kills trust
-- **DO NOT** have more than 1 primary CTA per section
-- **DO NOT** use "Submit" as button copy — use action-outcome language
-- **DO NOT** show a native multi-field form — link to Typeform/Tally embed on `/quote`
-- **DO NOT** use fake urgency — dishonest scarcity destroys trust in home services
-- **DO NOT** put trust signals below the fold on mobile — at least one badge/proof above fold
-
-## Invocation Examples
-
-- "Improve the conversion rate of the home page hero section"
-- "Add social proof stats block to the Services page"
-- "Write better CTA copy for the quote button"
-- "Create a WhatsApp alternative CTA below the primary button"
-- "Review the home page flow against CRO best practices"
-- "Add an urgency note about booking availability to the hero"
+> **Constraints:** Do NOT use more than 1 primary CTA per section. Do NOT use "Submit" as button copy. Do NOT use fake countdown timers or unverifiable urgency claims. Do NOT show a native multi-field form — link to Typeform/Tally embed on `/quote`. Do NOT use generic stock photography.
 
 ## Completion Checks
 

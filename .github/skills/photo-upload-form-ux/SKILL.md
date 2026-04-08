@@ -5,25 +5,13 @@ argument-hint: "form tool (Typeform/Tally/Fillout), locale, funnel step to build
 user-invocable: true
 ---
 
-# Skill: Photo-Upload Form UX for Mobile Quote Funnels
+# Photo-Upload Form UX for Mobile Quote Funnels
 
-## Purpose
+Design and implement the quote request funnel UX for the Garnebo `/quote` page — optimising for mobile users uploading smartphone photos, minimising form friction, and maximising completions.
 
-Design and implement the quote request funnel UX for the Garnebo `/quote` page — optimising specifically for mobile users uploading smartphone photos, minimising form friction, and maximising quote form completions.
+**Architecture:** Static export (no API routes, no backend). All form handling delegated to third-party embed: Typeform, Tally, or Fillout. Most users arrive from Google Maps/Instagram/WhatsApp with renovation photos already in their camera roll.
 
-## Context
-
-**Architecture:** The Garnebo site is a static export (no API routes, no server actions, no backend form processing). All form handling is delegated to a third-party embed: **Typeform, Tally, or Fillout**.
-**Primary conversion goal:** Visitor reaches `/quote`, sees embedded form, completes and submits it.
-**Mobile reality:** Most users arrive from Google Maps, Instagram, or WhatsApp on their phone. They have renovation photos already in their camera roll. The UX must make uploading those photos feel natural and easy.
-**Photo upload purpose:** Garners scope information that allows Garnebo to provide accurate quotes without a site visit.
-
-## Why Photos Matter for Conversion
-
-- Submitting photos signals high intent (visitor is serious)
-- Photos allow Garnebo to give a ballpark quote faster
-- The photo upload step itself acts as a commitment device — once a user uploads, completion rate rises sharply
-- Forms asking for photos outperform 15-field text-only forms in home services (avg +23% quote quality, lower drop-off)
+**Why photos matter:** Submitting photos signals high intent. The photo upload step acts as a commitment device — completion rate rises sharply once a user uploads. Forms with photo steps outperform 15-field text-only forms in home services.
 
 ## When To Use
 
@@ -44,32 +32,19 @@ Design and implement the quote request funnel UX for the Garnebo `/quote` page �
 
 ## Procedure
 
-### Step 1 — Page Structure for `/quote`
+### Step 1 — Page Structure for /quote
 
-The quote page (`src/app/[locale]/quote/page.tsx`) should follow this sequence:
-
-```
-1. Minimal header (just logo + "Back" link)
+The quote page follows this sequence:
+1. Minimal header (just logo + "Back" link — remove nav distractions)
 2. Trust bar (compact — 3 badges in one line)
 3. Page headline + expectation-setting sub-copy
 4. "What to photograph" instruction block
-5. Embedded form (Typeform/Tally/Fillout) — full width, tall
+5. Embedded form (full width, tall)
 6. WhatsApp alternative (for users who abandon the form)
 7. FAQ accordion (2–3 objection-handling questions)
-```
-
-### Step 2 — Quote Page Header (Stripped Navigation)
-
-On conversion pages, remove nav distractions:
 
 ```tsx
 // src/app/[locale]/quote/page.tsx
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
-import { QuoteForm } from '@/components/QuoteForm';
-import { TrustBadgeRow } from '@/components/TrustBadgeRow';
-import { FAQAccordion } from '@/components/FAQAccordion';
-
 export default async function QuotePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -80,23 +55,13 @@ export default async function QuotePage({ params }: Props) {
       {/* Stripped nav */}
       <div className="border-b border-accent-sage/30 bg-bg-primary px-4 py-4">
         <div className="mx-auto flex max-w-5xl items-center justify-between">
-          <Link href="/" className="text-xl font-bold uppercase tracking-wider text-brand-primary">
-            GARNEBO
-          </Link>
+          <Link href="/" className="text-xl font-bold uppercase tracking-wider text-brand-primary">GARNEBO</Link>
           <Link href="/" className="text-[13px] font-normal text-accent-blue hover:text-brand-primary">
             ← {t('backToSite')}
           </Link>
         </div>
       </div>
-
-      {/* Trust bar */}
-      <div className="border-b border-accent-sage/20 bg-bg-white">
-        <div className="mx-auto max-w-3xl">
-          <TrustBadgeRow />
-        </div>
-      </div>
-
-      {/* Page heading */}
+      <TrustBadgeRow />
       <section className="px-4 pb-8 pt-12 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
           <h1 className="text-[26px] font-bold leading-tight text-brand-primary md:text-[36px]">
@@ -107,45 +72,18 @@ export default async function QuotePage({ params }: Props) {
           </p>
         </div>
       </section>
-
-      {/* Photo guidance block */}
       <PhotoUploadGuide />
-
-      {/* Embedded form */}
       <section className="px-4 pb-12 sm:px-6">
-        <div className="mx-auto max-w-2xl">
-          <QuoteForm />
-        </div>
+        <div className="mx-auto max-w-2xl"><QuoteForm /></div>
       </section>
-
       {/* WhatsApp fallback */}
       <section className="border-t border-accent-sage/20 bg-bg-white px-4 py-12 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-[16px] font-normal text-brand-secondary">
-            {t('preferWhatsapp')}
-          </p>
-          <a
-            href="https://wa.me/393517443151"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-2 text-[16px] font-semibold text-brand-primary underline underline-offset-4 hover:text-accent-blue transition-colors"
-          >
+          <p className="text-[16px] font-normal text-brand-secondary">{t('preferWhatsapp')}</p>
+          <a href="https://wa.me/393517443151" target="_blank" rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 text-[16px] font-semibold text-brand-primary underline underline-offset-4 hover:text-accent-blue transition-colors">
             {t('whatsappCta')}
           </a>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="px-4 py-12 sm:px-6">
-        <div className="mx-auto max-w-2xl">
-          <h2 className="text-[20px] font-semibold text-brand-primary md:text-[24px]">
-            {t('faqHeading')}
-          </h2>
-          <div className="mt-6 space-y-0">
-            {quoteFAQs.map((faq) => (
-              <FAQAccordion key={faq.q} question={faq.q} answer={faq.a} />
-            ))}
-          </div>
         </div>
       </section>
     </>
@@ -153,41 +91,28 @@ export default async function QuotePage({ params }: Props) {
 }
 ```
 
-### Step 3 — Photo Upload Guidance Block
+### Step 2 — Photo Upload Guidance Block
 
-This is the highest-impact UX addition for mobile photo uploads. Show users exactly what to photograph before they hit the form:
+Highest-impact UX addition: show users exactly what to photograph before the form.
 
 ```tsx
 // src/components/PhotoUploadGuide.tsx
 export function PhotoUploadGuide() {
   const t = useTranslations('quote.photoGuide');
-
   const tips = [
-    {
-      icon: '📸',
-      title: t('tip1Title'),   // "Wide room shot"
-      body: t('tip1Body'),     // "Stand in the doorway. Capture the whole room."
-    },
-    {
-      icon: '🔍',
-      title: t('tip2Title'),   // "Close-up of the problem"
-      body: t('tip2Body'),     // "Cracked tiles, peeling paint, damaged areas."
-    },
-    {
-      icon: '📐',
-      title: t('tip3Title'),   // "Include a measurement if possible"
-      body: t('tip3Body'),     // "A tape measure or phone for scale helps us quote accurately."
-    },
+    { icon: '📸', title: t('tip1Title'), body: t('tip1Body') },
+    { icon: '🔍', title: t('tip2Title'), body: t('tip2Body') },
+    { icon: '📐', title: t('tip3Title'), body: t('tip3Body') },
   ];
 
   return (
     <section className="bg-bg-white px-4 py-10 sm:px-6">
       <div className="mx-auto max-w-2xl">
         <p className="text-center text-[13px] font-semibold uppercase tracking-wider text-accent-sage">
-          {t('eyebrow')}   {/* "Before you start" */}
+          {t('eyebrow')}
         </p>
         <h2 className="mt-3 text-center text-[20px] font-semibold text-brand-primary md:text-[24px]">
-          {t('heading')}   {/* "3 photos that help us quote faster" */}
+          {t('heading')}
         </h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           {tips.map((tip) => (
@@ -198,184 +123,76 @@ export function PhotoUploadGuide() {
             </div>
           ))}
         </div>
-        <p className="mt-6 text-center text-[13px] font-light text-accent-blue">
-          {t('footnote')}  {/* "2–3 photos from your camera roll are enough. Quality doesn't matter." */}
-        </p>
+        <p className="mt-6 text-center text-[13px] font-light text-accent-blue">{t('footnote')}</p>
       </div>
     </section>
   );
 }
 ```
 
-### Step 4 — Typeform Embed Component
+### Step 3 — Form Embed Component
 
-Typeform, Tally, and Fillout all provide embed codes. The pattern for static-export-compatible embedding:
+**Tally (iframe approach):**
+```tsx
+'use client';
+export function QuoteForm() {
+  return (
+    <iframe
+      data-tally-src="https://tally.so/embed/YOUR_FORM_ID?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+      loading="lazy" width="100%" height="500" frameBorder={0} marginHeight={0} marginWidth={0}
+      title="Request a renovation quote" className="w-full" style={{ minHeight: '500px' }}
+    />
+  );
+}
+```
 
 **Typeform:**
 ```tsx
-// src/components/QuoteForm.tsx
 'use client';
-
 import { useEffect } from 'react';
-
-const FORM_ID = 'your-typeform-id'; // e.g. 'aB1cD2eF'
-
+const FORM_ID = 'your-typeform-id';
 export function QuoteForm() {
   useEffect(() => {
-    // Load Typeform embed script
     const script = document.createElement('script');
     script.src = 'https://embed.typeform.com/next/embed.js';
     script.async = true;
     document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
+    return () => { document.body.removeChild(script); };
   }, []);
-
-  return (
-    <div
-      data-tf-live={FORM_ID}
-      style={{ minHeight: '600px', width: '100%' }}
-    />
-  );
+  return <div data-tf-live={FORM_ID} style={{ minHeight: '600px', width: '100%' }} />;
 }
 ```
 
-**Tally (simpler, iframe approach):**
-```tsx
-// src/components/QuoteForm.tsx
-'use client';
+### Step 4 — Form Question Order
 
-export function QuoteForm() {
-  return (
-    <iframe
-      data-tally-src={`https://tally.so/embed/YOUR_FORM_ID?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1`}
-      loading="lazy"
-      width="100%"
-      height="500"
-      frameBorder={0}
-      marginHeight={0}
-      marginWidth={0}
-      title="Request a renovation quote"
-      className="w-full"
-      style={{ minHeight: '500px' }}
-    />
-  );
-}
-```
+Optimal order for commitment and completion:
+1. **Service type** — "What do you need?" (radio, low effort)
+2. **Room/area** — "Which room(s)?" (multi-select)
+3. **Photo upload** — "Add 2–3 photos from your phone" (commitment device)
+4. **Brief description** — "Anything specific?" (optional free text)
+5. **Contact info** — Name, phone/WhatsApp (last — after commitment established)
 
-**Fillout:**
-```tsx
-// src/components/QuoteForm.tsx
-'use client';
+> Photo step BEFORE contact info removes "why are they asking for my number?" anxiety.
 
-import { useEffect } from 'react';
+### Step 5 — Confirmation Page (Post-Submit)
 
-export function QuoteForm() {
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://server.fillout.com/embed/v1/';
-    script.async = true;
-    document.body.appendChild(script);
-    return () => document.body.removeChild(script);
-  }, []);
-
-  return (
-    <div
-      style={{ width: '100%', height: '600px' }}
-      data-fillout-id="your-fillout-id"
-      data-fillout-embed-type="standard"
-      data-fillout-inherit-parameters
-      data-fillout-dynamic-resize
-    />
-  );
-}
-```
-
-### Step 5 — Form UX Design Principles for Photo Uploads
-
-When configuring the form inside Typeform/Tally/Fillout:
-
-**Question order (optimised for commitment + completion):**
-1. **Service type** — "What do you need?" (radio, low effort, establishes scope)
-2. **Room/area** — "Which room(s)?" (multi-select, low effort)
-3. **Photo upload** — "Add 2–3 photos from your phone" (MOBILE: this triggers camera roll picker)
-4. **Brief description** — "Anything specific you'd like us to know?" (optional free text)
-5. **Contact info** — Name, phone/WhatsApp (last — after commitment is established)
-
-**Form UX principles:**
-- Photo step BEFORE contact info (removes "why are they asking for my phone number?" anxiety)
-- Mark contact fields as "We'll call you to discuss" to reduce resistance
-- One question per screen/step (Typeform does this natively)
-- Progress indicator visible throughout
-- "Optional" label on non-essential fields
-
-### Step 6 — Mobile-Specific Form Configuration
-
-In Typeform/Tally settings:
-- Enable **"Mobile-optimised"** mode
-- Set **file upload** step to accept `image/*` (not just `application/pdf`)
-- Set **max file size** to 20MB per photo (smartphone images can be 5–12MB each)
-- Allow **multiple file upload** in one step (minimum 1, prompt for up to 5)
-- Use **"From camera roll"** phrasing in Italian: "Dalla tua galleria foto"
-
-### Step 7 — Quote Page Meta & SEO
+Configure the form tool to redirect to `/[locale]/grazie` or `/[locale]/thank-you` after submission.
 
 ```tsx
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'quote' });
-  return {
-    title: t('metaTitle'),      // "Get Your Free Renovation Quote | Garnebo Bologna"
-    description: t('metaDesc'), // "Request a free renovation quote in 2 minutes. Upload photos..."
-    robots: 'noindex',          // Quote pages should not be indexed (prevents duplicate leads)
-  };
-}
-```
-
-### Step 8 — Confirmation State (Post-Submit)
-
-Configure the form tool to redirect to a thank-you URL after submission:
-
-```
-Redirect URL: https://garnebo.com/{locale}/grazie   (or /en/thank-you)
-```
-
-Create a minimal thank-you page:
-```tsx
-// src/app/[locale]/grazie/page.tsx  (for Italian)
-// Confirm submission, set expectations, offer WhatsApp for urgent questions
+// src/app/[locale]/grazie/page.tsx
 <section className="px-4 py-24 text-center">
   <div className="mx-auto max-w-md">
     <div className="text-5xl">✅</div>
-    <h1 className="mt-6 text-[26px] font-bold text-brand-primary">
-      {t('thankYouHeading')}  {/* "Richiesta ricevuta!" */}
-    </h1>
-    <p className="mt-4 text-[16px] font-normal leading-relaxed text-brand-secondary">
-      {t('thankYouBody')}     {/* "Ti contatteremo entro 24 ore..." */}
-    </p>
-    <Link href="/" className="mt-8 inline-block ... ">
-      {t('backToHome')}
-    </Link>
+    <h1 className="mt-6 text-[26px] font-bold text-brand-primary">{t('thankYouHeading')}</h1>
+    <p className="mt-4 text-[16px] font-normal leading-relaxed text-brand-secondary">{t('thankYouBody')}</p>
+    <Link href="/" className="mt-8 inline-block ...">{t('backToHome')}</Link>
   </div>
 </section>
 ```
 
-## Quote Form FAQ Content
-
-Suggested FAQ items for the quote page:
-
-| Q | A |
-|---|---|
-| "How long does it take to get a quote?" | "We typically respond within 24 hours on business days. Urgent? Message us on WhatsApp." |
-| "Do I need to be at home for the quote?" | "No. Photos are enough for an initial estimate. We'll arrange a brief site visit only if needed for complex work." |
-| "Is the quote really free?" | "Always. There is no obligation and no fee for our initial estimate." |
-| "What if I don't know what I want yet?" | "Tell us what's bothering you about the space. We'll suggest options." |
-
-## Translation Keys Required
+### Step 6 — Italian Translation Keys
 
 ```json
-// messages/it.json — add under "quote":
 {
   "quote": {
     "heading": "Richiedi un preventivo gratuito",
@@ -401,37 +218,20 @@ Suggested FAQ items for the quote page:
 }
 ```
 
-## Constraints & Anti-Patterns
-
-- **DO NOT** build a native HTML form with file upload — static export has no backend to receive it
-- **DO NOT** ask for contact details before the photo upload step — inverts commitment psychology
-- **DO NOT** show the full site navigation on the `/quote` page — it distracts and creates exit paths
-- **DO NOT** use `iframe` with a fixed height for dynamic form embeds — use `dynamicHeight` options
-- **DO NOT** index the `/quote` page — use `robots: 'noindex'` in `generateMetadata`
-- **DO NOT** use emojis as the only way to distinguish tip cards — pair with text for screen readers
-- **ALWAYS** provide a WhatsApp fallback on the quote page — some users will not complete forms
-
-## Invocation Examples
-
-- "Build the quote page with a Tally form embed"
-- "Create the photo upload guidance component for the quote page"
-- "Write the FAQ content for the quote page"
-- "How should I structure the quote form to maximise photo upload completion?"
-- "Create a thank-you page for after the quote form is submitted"
-- "Add the Italian translations for the quote page"
+> **Constraints:** Do NOT build a native HTML form with file upload — static export has no backend. Do NOT ask for contact details before the photo upload step. Do NOT show full site navigation on `/quote` — remove exit paths. Do NOT use `iframe` with a fixed height for dynamic embeds — use `dynamicHeight` options. Do NOT index `/quote` — use `robots: 'noindex'` in `generateMetadata`.
 
 ## Completion Checks
 
-- [ ] `/quote` page uses stripped navigation (logo + back link only — full site nav removed)
-- [ ] `TrustBadgeRow` component appears directly below the stripped header
-- [ ] `PhotoUploadGuide` component appears before the embedded form — not after
-- [ ] Embedded form uses dynamic height configuration (`dynamicHeight=1`, `data-fillout-dynamic-resize`, etc.)
+- [ ] `/quote` page uses stripped navigation (logo + back link only)
+- [ ] `TrustBadgeRow` appears directly below the stripped header
+- [ ] `PhotoUploadGuide` appears before the embedded form
+- [ ] Embedded form uses dynamic height configuration
 - [ ] Form question order puts contact info AFTER the photo upload step
-- [ ] WhatsApp fallback `<a>` link present below the form section with `target="_blank" rel="noopener noreferrer"`
+- [ ] WhatsApp fallback link present with `target="_blank" rel="noopener noreferrer"`
 - [ ] `generateMetadata` returns `robots: 'noindex'` for the quote page
-- [ ] Post-submit redirect URL configured in the form tool to point to the thank-you page
-- [ ] Thank-you page (`/grazie` or `/thank-you`) exists with expected delivery time and WhatsApp option
-- [ ] All visible strings on the page use `useTranslations` or `getTranslations` — no hardcoded copy
+- [ ] Post-submit redirect URL configured in the form tool to the thank-you page
+- [ ] Thank-you page exists with expected delivery time and WhatsApp option
+- [ ] All visible strings use `useTranslations` or `getTranslations` — no hardcoded copy
 
 ## References
 

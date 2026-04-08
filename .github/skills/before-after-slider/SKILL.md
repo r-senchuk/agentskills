@@ -5,27 +5,9 @@ argument-hint: "before image path, after image path, aspect ratio, page section 
 user-invocable: true
 ---
 
-# Skill: Before/After Image Slider Component
+# Before/After Image Slider
 
-## Purpose
-
-Implement an accessible, touch-friendly, static-export-compatible Before/After image comparison slider — the highest-converting visual asset for home renovation businesses.
-
-## Context
-
-**Static export constraint:** No server-side code, no API routes. The slider must be a pure client-side React component using `'use client'`.
-**Images:** `images.unoptimized: true` — use `<img>` tags with explicit dimensions or `next/image` with `unoptimized` prop.
-**No external libraries allowed** without explicit approval — implement with native pointer/touch events and CSS.
-**Where to use:** Home page (hero section replacement or below hero), portfolio/project pages.
-
-## How It Works
-
-The slider reveals a "before" image on the left and an "after" image on the right, split by a draggable divider line. The split position is controlled by:
-- Mouse drag (desktop)
-- Touch drag (mobile)
-- Keyboard arrow keys (accessibility)
-
-Implementation uses a single `<div>` overlay technique: the "after" image is full-width underneath, and the "before" image is clipped via `clip-path` or `width` CSS on an overlay container.
+Implement an accessible, touch-friendly, static-export-compatible Before/After image comparison slider — the highest-converting visual asset for home renovation businesses. Uses `'use client'` React with native pointer/touch events; no external slider libraries needed. The "after" image sits full-width underneath; the "before" image clips via `style.width` on an overlay container controlled by a draggable handle.
 
 ## When To Use
 
@@ -347,58 +329,32 @@ Images in the slider should lazy-load unless in the viewport:
 
 For sliders above the fold (e.g. hero replacement), use `loading="eager"` or omit the attribute.
 
-### Step 6 — Multiple Sliders on One Page
+### Step 6 — Multiple Sliders and Image Requirements
 
-If using multiple sliders, each manages its own state independently — no global state needed. The component is fully self-contained.
+Multiple sliders on one page are fully self-contained — each manages its own state. Image requirements:
 
-## Prevent Scroll Interference on Mobile
+| Property | Requirement |
+|---|---|
+| Format | `.webp` preferred |
+| Dimensions | At least 1200×900 for 4:3 ratio |
+| Before/After pair | Same angle, same framing, same time-of-day lighting |
+| File location | `/public/projects/<project-name>-before.webp` |
 
-The `e.preventDefault()` in `handleTouchMove` prevents the page from scrolling while the user is dragging the slider. However, this requires the event listener to be non-passive. React's synthetic `onTouchMove` is passive by default in some environments.
-
-If scroll interference occurs, use a `useEffect` with a direct DOM listener:
+**Scroll interference on mobile:** React's synthetic `onTouchMove` may be passive. If scroll interference occurs, use a direct DOM listener instead:
 
 ```tsx
 useEffect(() => {
   const container = containerRef.current;
   if (!container) return;
-
   const onTouchMove = (e: TouchEvent) => {
     if (isDragging) e.preventDefault();
   };
-
   container.addEventListener('touchmove', onTouchMove, { passive: false });
   return () => container.removeEventListener('touchmove', onTouchMove);
 }, [isDragging]);
 ```
 
-## Image File Requirements
-
-| Property        | Requirement                                     |
-|-----------------|-------------------------------------------------|
-| Format          | `.webp` preferred (best compression + quality)  |
-| Dimensions      | At least 1200×900 for 4:3 ratio (2× for retina)|
-| Before/After pair | Must be same angle, same framing, same time of day lighting |
-| File location   | `/public/projects/<project-name>-before.webp`  |
-| Alt text        | Descriptive: room type + what changed           |
-
-## Constraints & Anti-Patterns
-
-- **DO NOT** use third-party slider libraries (react-before-after-slider, etc.) without checking bundle impact on static export
-- **DO NOT** use `next/image` with `fill` prop inside the slider — the clipping technique requires `<img>` with explicit `style.width`
-- **DO NOT** forget `draggable={false}` on images — without it, browsers start a native image drag instead of the slider drag
-- **DO NOT** place the slider inside a container with `overflow: hidden` set at a level above — it will clip the drag handle
-- **DO NOT** hardcode "Before" / "After" strings — use translation keys
-- **ALWAYS** provide descriptive `alt` text on both images (screen readers announce both)
-- **ALWAYS** implement keyboard support (`ArrowLeft`/`ArrowRight`) for accessibility
-- **ALWAYS** add `role="slider"` with `aria-valuenow` to the drag handle
-
-## Invocation Examples
-
-- "Add a before/after slider to the home page"
-- "Create a portfolio section with 2 before/after comparison sliders"
-- "Build a BeforeAfterSlider component that works on mobile"
-- "Why is my before/after slider causing scroll issues on iPhone?"
-- "Make the slider labels show 'Prima' and 'Dopo' in Italian"
+> **Constraints:** Do NOT use `next/image` with `fill` inside the slider — clipping requires `<img>` with explicit `style.width`. Do NOT omit `draggable={false}` — browsers will hijack drag. Do NOT place the slider inside an ancestor with `overflow: hidden` — clips the drag handle. Do NOT hardcode label strings — accept `beforeLabel`/`afterLabel` props.
 
 ## Completion Checks
 
