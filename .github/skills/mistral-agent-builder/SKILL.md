@@ -164,6 +164,24 @@ Completion checks before relying on the agent in production:
 - [ ] Tested with at least one happy-path and one edge-case conversation.
 - [ ] `store=False` used for sensitive or ephemeral workloads.
 
+
+### Step 7 — Troubleshoot Common Issues
+
+**`404 Not Found` on agent call**
+- The agent ID was not persisted; the agent no longer exists. Re-create it and store the new ID.
+
+**`400 Bad Request` — tool schema rejected**
+- Check that `parameters` uses JSON Schema (`type`, `properties`, `required`). Mistral rejects non-standard schemas.
+
+**Handoff never triggers**
+- The model decides when to hand off. Add an explicit instruction: `"When the task involves X, transfer to agent Y."` in `instructions`.
+
+**Conversation history grows too large**
+- Switch to `store=True` (server-side history) and pass only `conversation_id` instead of the full `messages` array.
+
+**Agent not using the tool**
+- Verify `tool_choice` is not set to `"none"`. For guaranteed tool use on first turn, set `tool_choice = {"type": "function", "function": {"name": "your_tool"}}`.
+
 ## Completion Checks
 - [ ] Agent created once and ID stored for reuse.
 - [ ] Tools match the agent's stated purpose (least-privilege).

@@ -463,6 +463,27 @@ And referenced in `@theme`:
 
 For static export, `next-sitemap` should run after `next build`. Set `outDir: './out'` in the config and use the `postbuild` script.
 
+
+### Step 9 — Troubleshoot Common Issues
+
+**Tailwind classes not applying**
+- Ensure `globals.css` starts with `@import "tailwindcss"` (Tailwind v4 CSS-first, no `tailwind.config.ts`).
+- Verify `globals.css` is imported in the root layout `app/layout.tsx`.
+
+**`@theme` custom tokens not available as utilities**
+- Token names must follow `--color-*`, `--font-*`, `--spacing-*` convention for auto-mapped utilities.
+- Check for typos in the token name vs the utility class used.
+
+**`generateMetadata` not showing in `<head>`**
+- Only works in Server Components. If the file has `'use client'` at the top, move metadata to a separate server-side parent.
+
+**JSON-LD not indexed by Google**
+- Use `<script type="application/ld+json">` inside a Server Component, not a Client Component.
+- Validate at https://search.google.com/test/rich-results.
+
+**`next-sitemap` generating 404 paths**
+- Ensure `generateStaticParams` is defined for all dynamic routes before running `next build`.
+
 ## Completion Checks
 
 - [ ] `@import "tailwindcss"` in `globals.css` with `@theme` tokens

@@ -132,6 +132,24 @@ Vibe Outcome:
 - Next step: ...
 ```
 
+
+### Troubleshoot Common Issues
+
+**`command not found: vibe`**
+- Vibe CLI is not installed or not on PATH. Run `pip install vibe-cli` or check `which vibe`.
+
+**`MISTRAL_API_KEY not set`**
+- Export the key: `export MISTRAL_API_KEY=sk-...` or add it to `.env` in the project root.
+
+**Tool permission denied**
+- The tool requires explicit permission in the Vibe config. Add it to `allowed_tools` in `vibe.config.yaml`.
+
+**Agent runs but produces no output**
+- Check `vibe logs` for silent failures. Common cause: model returned an empty `content` field due to a tool call not resolving.
+
+**Results are non-deterministic across runs**
+- Set `temperature: 0` in the agent config for reproducible outputs.
+
 ## Completion Checks
 
 - [ ] CLI verified with `command -v vibe` and `vibe --version` before execution.

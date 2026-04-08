@@ -147,6 +147,27 @@ The sync script creates symlinks from:
 
 **Always run sync after creating or modifying any agent or skill file.**
 
+
+### Step 7 — Troubleshoot Common Issues
+
+**Agent skill not loading — "failed to load" error**
+- Check that the `.agent.md` filename exactly matches the `name:` field in frontmatter (kebab-case, no extension).
+- Ensure `---` delimiters are present at lines 1 and N, with no leading spaces.
+
+**Agent triggers for unrelated queries**
+- Tighten the `description` field. Add an explicit `Do NOT use for:` clause with specific exclusions.
+- Check that `user-invocable: false` is set for subagents not meant to be directly invoked.
+
+**Agent ignores skill routing instructions**
+- The skill referenced in the routing table must be enabled. Verify with `/skills` in the CLI.
+- Use the exact skill name as it appears in the skill's `name:` frontmatter field.
+
+**Agent runs sub-agent but never returns a result**
+- Sub-agent handoff requires the parent agent to await and surface results. Add an explicit step: "Return the sub-agent output to the user."
+
+**Tool calls blocked**
+- The tool is not in the agent's `tools:` list. Add it. Prefer the minimal set — only add what the agent actively uses.
+
 ## Completion Checks
 
 - [ ] Agent name is kebab-case and matches the filename (without `.agent.md`)

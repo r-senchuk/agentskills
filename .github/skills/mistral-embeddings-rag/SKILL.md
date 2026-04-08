@@ -178,6 +178,31 @@ answer = rag_answer("What is Mistral's approach to safety?", relevant)
 print(answer)
 ```
 
+
+### Step 6 — Troubleshoot Common Issues
+
+**Retrieval returns irrelevant chunks**
+- Check that query and document chunks are embedded with the **same model** (`mistral-embed`).
+- Increase `chunk_overlap` (try 128–256 tokens) so context isn't lost at boundaries.
+- Reduce `chunk_size` to keep chunks semantically tight.
+
+**Embedding API returns `422 Unprocessable Entity`**
+- Input exceeds token limit. Chunk text before embedding; do not pass the entire document in one call.
+
+**Faiss `IndexFlatL2.search` returns all zeros**
+- Index is empty or not populated before search. Call `index.add(embeddings)` before `index.search`.
+
+**LLM answer ignores retrieved context**
+- Context may be too long. Pass the top 3–5 chunks only, not all retrieved results.
+- Wrap the context in a clear delimiter: `"Context:
+---
+{context}
+---
+Question: {query}"`.
+
+**Rate limit errors during batch embedding**
+- Use batches of ≤512 strings per request. Add exponential backoff: start at 1 s, double on each retry.
+
 ## Completion Checks
 - [ ] Chunks and query use the same embedding model.
 - [ ] Chunk size and overlap tuned for the content type (not left at defaults).
