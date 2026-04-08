@@ -7,8 +7,8 @@ license: MIT
 compatibility: "Works with any text editor, requires web access for research (Perplexity, GitHub), and YAML validation tools."
 metadata:
   author: "Roman Senchuk"
-  version: "1.1.0"
-  last-updated: "2024-07-15"
+  version: "1.2.0"
+  last-updated: "2026-04-08"
 ---
 
 # Skill Builder
@@ -70,7 +70,7 @@ Load `./references/research-queries.md` for GitHub query templates.
 Lay out the skill using this section order (required):
 1. When To Use
 2. Inputs To Collect First
-3. Procedure (numbered steps, each with its own `##` subsection)
+3. Procedure (numbered steps, each with its own `### Step N` subsection)
 4. Completion Checks
 5. References
 
@@ -108,28 +108,65 @@ Run structural validation:
 
 ```bash
 SKILL=".github/skills/<skill-name>/SKILL.md"
-FOLDER=$(basename $(dirname "$SKILL"))
-NAME=$(grep -m1 "^name:" "$SKILL" | sed 's/name: *//')
+ROOT=$(git rev-parse --show-toplevel)
+SKILL_ABS="$ROOT/$SKILL"
+FOLDER=$(basename $(dirname "$SKILL_ABS"))
+NAME=$(grep -m1 "^name:" "$SKILL_ABS" | sed 's/name: *//')
 
 # 1. Name/folder match
 [ "$FOLDER" = "$NAME" ] && echo "✅ name match" || echo "❌ mismatch: folder=$FOLDER name=$NAME"
 
 # 2. Required frontmatter fields
 for F in name description argument-hint user-invocable; do
-  grep -q "^$F:" "$SKILL" && echo "✅ $F" || echo "❌ missing: $F"
+  grep -q "^$F:" "$SKILL_ABS" && echo "✅ $F" || echo "❌ missing: $F"
 done
 
-# 3. Required sections
+# 3. No XML tags in frontmatter (security: forbidden per spec)
+FM=$(sed -n '/^---$/,/^---$/p' "$SKILL_ABS" | head -20)
+echo "$FM" | grep -q '[<>]' && echo "❌ XML tags in frontmatter" || echo "✅ no XML tags"
+
+# 4. No README.md in skill folder
+[ -f "$(dirname "$SKILL_ABS")/README.md" ] && echo "❌ README.md found (remove it)" || echo "✅ no README.md"
+
+# 5. Description has trigger phrase
+grep -m1 "^description:" "$SKILL_ABS" | grep -qi "use when\|when user\|use for"   && echo "✅ description has trigger phrase" || echo "❌ description missing trigger phrase"
+
+# 6. Required sections
 for S in "When To Use" "Inputs To Collect First" "Procedure" "Completion Checks" "References"; do
-  grep -q "^## $S" "$SKILL" && echo "✅ $S" || echo "❌ missing section: $S"
+  grep -q "^## $S" "$SKILL_ABS" && echo "✅ $S" || echo "❌ missing section: $S"
 done
 
-# 4. Line count
-LINES=$(wc -l < "$SKILL")
-[ "$LINES" -le 500 ] && echo "✅ $LINES lines" || echo "❌ $LINES lines (limit 500)"
+# 7. Troubleshooting content present
+grep -qi "troubleshoot\|common issue\|error\|fail" "$SKILL_ABS"   && echo "✅ troubleshooting/error content present" || echo "⚠  no troubleshooting content"
+
+# 8. Word count (PDF: keep under 5,000 words)
+WC=$(wc -w < "$SKILL_ABS")
+[ "$WC" -le 5000 ] && echo "✅ $WC words" || echo "❌ $WC words (limit 5000)"
 ```
 
 Load `./references/quality-checklist.md` for the full validation matrix including content checks.
+
+### Step 6 — Troubleshoot Common Issues
+
+**Skill fails to load — "missing or malformed YAML frontmatter"**
+- Open the file and verify `---` appears on lines 1 and N with no leading spaces or BOM characters.
+- Check for non-standard sections before `## When To Use` (e.g., `## Purpose`, `## Context`) — remove them; these break parsers.
+- Run `python3 -c "import yaml; yaml.safe_load(open('SKILL.md').read().split('---')[1])"` to surface YAML parse errors.
+
+**Skill never auto-triggers**
+- The `description` field is too generic. Add domain-specific nouns and the exact phrase pattern users say.
+- Ask Claude: "When would you use the `<name>` skill?" — it quotes the description back. Edit based on what's missing.
+
+**Skill triggers for unrelated queries (overtriggering)**
+- Add or strengthen the "Do NOT use for" clause in both `description` and `## When To Use`.
+- Make the trigger more specific — replace broad verbs ("help", "build") with domain-specific ones.
+
+**`./references/<file>` not found**
+- The reference file doesn't exist or is misnamed. Create it or fix the path.
+- Paths are relative to the `SKILL.md` file, not the repo root.
+
+**Step 5 validation script fails on `git rev-parse`**
+- You are not in a git repo. Either `cd` to the repo root or replace `$ROOT` with an absolute path for local testing.
 
 ## Completion Checks
 
@@ -144,6 +181,9 @@ Load `./references/quality-checklist.md` for the full validation matrix includin
 - [ ] All `./references/<file>` paths resolve to real files
 - [ ] No hardcoded personal paths, API keys, or user-specific values
 - [ ] Skills that duplicate existing model defaults have been removed or strengthened with specific workflow
+- [ ] No XML tags (`< >`) anywhere in the frontmatter block
+- [ ] No `README.md` file inside the skill folder
+- [ ] Troubleshooting or error-handling content is present (inline guards, common issues step, or completion check)
 
 ## References
 

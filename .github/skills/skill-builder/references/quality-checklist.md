@@ -35,6 +35,20 @@ grep -oE "'\./references/[^']+'\.md|\./references/[^)]+" "$SKILL" | tr -d "'" | 
   BASE=$(dirname "$SKILL")
   [ -f "$BASE/$F" ] && echo "✅ $F" || echo "❌ missing reference file: $F"
 done
+
+# 7. No XML tags in frontmatter (forbidden: security restriction per spec)
+FM=$(sed -n '/^---$/,/^---$/p' "$SKILL" | head -20)
+echo "$FM" | grep -q '[<>]' && echo "❌ XML tags in frontmatter" || echo "✅ no XML tags"
+
+# 8. No README.md inside skill folder
+[ -f "$(dirname "$SKILL")/README.md" ] && echo "❌ README.md found (forbidden in skill folder)" || echo "✅ no README.md"
+
+# 9. Word count (PDF guide: keep under 5,000 words)
+WC=$(wc -w < "$SKILL")
+[ "$WC" -le 5000 ] && echo "✅ $WC words (≤5000)" || echo "❌ $WC words (exceeds 5000-word limit)"
+
+# 10. Description has trigger phrase
+grep -m1 "^description:" "$SKILL" | grep -qi "use when\|when user\|use for"   && echo "✅ description has trigger phrase" || echo "❌ description missing 'Use when' / trigger phrase"
 ```
 
 ## Content Quality Checks (manual)
@@ -56,6 +70,7 @@ done
 - [ ] No hardcoded personal values (usernames, paths, API keys)
 - [ ] References to external files use relative `./references/` paths
 - [ ] No steps that say "if needed" without specifying when
+- [ ] Skill includes error handling or troubleshooting content (inline guards, common issues step, or explicit error cases)
 
 ### Completion Checks
 - [ ] Uses `- [ ]` checkbox format
@@ -75,6 +90,14 @@ Only applies when submitting to [github/awesome-copilot](https://github.com/gith
 - [ ] No overlap with existing skills in the upstream collection
 - [ ] `npm run skill:validate` passes in the awesome-copilot repo
 - [ ] `🤖🤖🤖` included in PR title if submitted via AI agent
+
+### PDF Guide Compliance (from *The Complete Guide to Building Skills for Claude*)
+- [ ] `description` includes WHAT the skill does + WHEN to use it (trigger conditions)
+- [ ] `description` under 1024 characters and contains no XML tags (`< >`)
+- [ ] No `README.md` inside the skill folder (README lives at repo level only)
+- [ ] SKILL.md under 5,000 words (PDF threshold for context efficiency)
+- [ ] At least one troubleshooting or error-handling section in the body
+- [ ] Progressive disclosure applied: heavy reference content extracted to `./references/`
 
 ## Common Failure Modes
 

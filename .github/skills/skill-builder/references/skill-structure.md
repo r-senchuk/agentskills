@@ -1,5 +1,8 @@
 # Skill Structure Reference
 
+> Reference: *The Complete Guide to Building Skills for Claude* (Anthropic, 2026).
+> This document aligns with that guide's Technical Requirements and Best Practices chapters.
+
 ## Canonical SKILL.md Frontmatter
 
 ```yaml
@@ -32,13 +35,17 @@ user-invocable: false           # false = auto-triggered only; true = also shows
 
 ```
 .github/skills/<skill-name>/
-├── SKILL.md                    # Required, max 500 lines
+├── SKILL.md                    # Required. Max 5,000 words; keep focused.
 ├── references/
 │   ├── topic-a.md              # Loaded only when referenced
 │   └── topic-b.md
 └── scripts/
     └── validate.sh             # Executable helpers
 ```
+
+> **No `README.md` inside the skill folder.** Skill folders must not contain a `README.md` — all
+> documentation belongs in `SKILL.md` or `references/`. A repo-level `README.md` is fine.
+> (Source: *The Complete Guide to Building Skills for Claude*, Technical Requirements.)
 
 ## Progressive Loading Design
 
@@ -59,6 +66,8 @@ Rule of thumb: if a section is >80 lines, extract to a reference file.
 | Description without trigger words | Add "Use when...", "Use for...", domain-specific nouns |
 | Description without NOT clause | Add "Do not use for X" to prevent false positives |
 | `name` field > 64 chars | Shorten to max 64 alphanumeric + hyphen characters |
+| XML tags (`< >`) in frontmatter | Remove all angle brackets — security restriction; frontmatter appears in system prompt |
+| `name` contains "claude" or "anthropic" | Rename — these prefixes are reserved by Anthropic |
 | Step headings using `## Step N` | Use `### Step N` — steps live under `## Procedure`, so `###` is correct |
 
 ## Slash Command Behavior
