@@ -116,7 +116,7 @@ Routed through the `bashar` subagent (via Sara). Covers: shell script auditing/h
 
 ### Agent Hierarchy
 
-`sara` is the sole user-facing agent (team lead). She handles trivial tasks (conversational, read-only lookups, reformatting) directly. For non-trivial tasks she delegates to `mistral`, `skiller`, or `bashar` subagents based on domain. When no existing agent can handle a non-trivial task, Sara informs the user and immediately delegates to `skiller` to create the required agent — no manual approval gate.
+`sara` is the sole user-facing agent (team lead). She handles trivial tasks directly and may do bounded orchestration work such as classification, decomposition, comparison, and status synthesis. For non-trivial specialist work she delegates to `mistral`, `skiller`, or `bashar` based on domain. When no existing agent can handle a non-trivial task, Sara informs the user and immediately delegates to `skiller` to create the required agent — no manual approval gate.
 
 ### Shared References
 

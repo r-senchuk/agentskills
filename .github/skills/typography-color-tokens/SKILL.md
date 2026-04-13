@@ -1,7 +1,7 @@
 ---
 name: typography-color-tokens
-description: "Use when designing, extending, auditing, or documenting the visual identity system — covering color palette decisions, semantic token naming, type scale, font weight assignments, line height, letter spacing, and spacing conventions. Do NOT use for Tailwind CSS v4 config mechanics, component markup changes, or layout pattern work."
-argument-hint: "design area (color/typography/spacing/interactive-states), specific token or violation to address"
+description: "Use when designing, extending, auditing, or documenting a visual identity system, including color palette decisions, semantic token naming, type scale, font weights, line height, letter spacing, and spacing conventions. Do NOT use for Tailwind CSS v4 config mechanics, markup changes, or layout work."
+argument-hint: "design area, specific token or violation to address"
 user-invocable: true
 ---
 

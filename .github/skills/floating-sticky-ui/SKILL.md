@@ -1,7 +1,7 @@
 ---
 name: floating-sticky-ui
-description: "Use when implementing or debugging sticky navigation, floating mobile CTA bars, WhatsApp widgets, scroll-triggered visibility, or z-index layering conflicts on the Garnebo site. Do NOT use for static page layout sections, grid design, or non-fixed component styling."
-argument-hint: "component name (header/mobile-bar/whatsapp/sub-nav), issue type (z-index/positioning/scroll-trigger), target breakpoint"
+description: "Use when implementing or debugging sticky navigation, floating mobile CTA bars, WhatsApp widgets, scroll-triggered visibility, or z-index layering conflicts. Do NOT use for static page layout sections, grid design, or non-fixed component styling."
+argument-hint: "component name, issue type, target breakpoint"
 user-invocable: true
 ---
 

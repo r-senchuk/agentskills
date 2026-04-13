@@ -1,7 +1,7 @@
 ---
 name: tailwind-v4-theming
-description: "Use when adding, modifying, or debugging Tailwind CSS v4 design tokens inside the @theme block, extracting repeated utility patterns with @layer components, or troubleshooting a missing or broken utility class in globals.css. Do NOT use for Tailwind v3 projects, tailwind.config.ts changes, general CSS layout work, or component markup authoring."
-argument-hint: "token type (color/font/spacing), token name and value, intended utility class"
+description: "Use when adding, modifying, or debugging Tailwind CSS v4 design tokens in the @theme block, extracting repeated utility patterns with @layer components, or troubleshooting a broken utility class in globals.css. Do NOT use for Tailwind v3 projects, tailwind.config.ts changes, general layout work, or component markup authoring."
+argument-hint: "token type, token name and value, intended utility class"
 user-invocable: true
 ---
 

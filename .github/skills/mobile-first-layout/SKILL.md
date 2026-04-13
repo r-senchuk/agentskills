@@ -1,7 +1,7 @@
 ---
 name: mobile-first-layout
-description: "Use when designing or implementing responsive page layouts, grid systems, section shells, touch targets, CTA button stacking, or viewport-edge handling for a Tailwind CSS v4 Next.js site targeting 75%+ mobile traffic. Do NOT use for component-level styling, design token changes, z-index or sticky UI work."
-argument-hint: "layout pattern (hero/grid/sidebar/timeline), desktop column count, background treatment"
+description: "Use when designing or implementing responsive page layouts, grid systems, section shells, touch targets, CTA button stacking, or viewport-edge handling for a mobile-first Tailwind CSS v4 Next.js site. Do NOT use for component styling, design token changes, or sticky UI work."
+argument-hint: "layout pattern, desktop column count, background treatment"
 user-invocable: true
 ---
 

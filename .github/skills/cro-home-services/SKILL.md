@@ -1,7 +1,7 @@
 ---
 name: cro-home-services
-description: "Use when designing or auditing conversion rate optimisation UX patterns for a home services renovation website — including hero headlines, CTA placement, social proof blocks, urgency copy, and quote funnel friction reduction. Do NOT use for backend analytics setup, A/B test infrastructure, or general marketing copy unrelated to home services."
-argument-hint: "target page or section, conversion problem, current CTA copy and destination"
+description: "Use when designing or auditing conversion-focused UX patterns for a home services renovation website, including hero messaging, CTA placement, social proof, urgency copy, and quote funnel friction reduction. Do NOT use for backend analytics, A/B test infrastructure, or generic marketing copy."
+argument-hint: "target page or section, conversion problem, current CTA copy, CTA destination"
 user-invocable: true
 ---
 

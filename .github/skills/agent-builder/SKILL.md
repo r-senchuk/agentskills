@@ -130,22 +130,24 @@ TOOL_COUNT=$(grep '^tools:' "$AGENT" | grep -oE '\b(read|edit|search|execute|web
 
 ### Step 6 — Sync to Active Environment
 
-After creating the `.agent.md` and all dependency skills, run `agent-sync` to symlink the new files into `~/.copilot/` and VS Code's prompts directory. Without this step, the new agent and skills won't be available to Copilot in the current session.
+After creating the `.agent.md` and all dependency skills, run the repo bootstrap script to refresh symlinks into `~/.copilot/`, VS Code's prompts directory, and optional Vibe directories. Without this step, the new agent and skills won't be available to Copilot in the current session.
 
 ```bash
-source "$(git rev-parse --show-toplevel)/scripts/agent-sync.zsh" && agent-sync
+ROOT="$(git rev-parse --show-toplevel)"
+"$ROOT/scripts/setup-copilot-globals.sh" --dry-run
+"$ROOT/scripts/setup-copilot-globals.sh" --force
 ```
 
 Flags:
 - `--dry-run` — preview what will be linked without making changes (use first to verify)
 - `--force` — replace existing symlinks if they already exist
 
-The sync script creates symlinks from:
+The bootstrap script creates symlinks from:
 - `~/.copilot/agents/` → agent source files
 - `~/.copilot/skills/` → skill source files
 - `~/Library/Application Support/Code/User/prompts/agents/` → VS Code prompts directory
 
-**Always run sync after creating or modifying any agent or skill file.**
+**Always run the bootstrap script after creating or modifying any agent or skill file.**
 
 
 ### Step 7 — Troubleshoot Common Issues
@@ -178,7 +180,7 @@ The sync script creates symlinks from:
 - [ ] Body has: identity statement, constraints (DO NOT rules), output format
 - [ ] Identity statement names a specific, bounded role (not "helpful assistant", "assistant", or "agent")
 - [ ] At least one adjacent task is explicitly excluded in the Constraints section (scope boundary is documented)
-- [ ] `agent-sync` was run and new agent/skills are symlinked in `~/.copilot/`
+- [ ] `setup-copilot-globals.sh` was run and new agent/skills are symlinked in `~/.copilot/`
 
 ## References
 

@@ -1,7 +1,7 @@
 ---
 name: visual-design-audit
-description: "Use when systematically auditing pages or components against brand directives — checking color fidelity, typography consistency, mobile-first compliance, accessibility, and CRO patterns to generate a prioritised Critical/High/Low findings report. Do NOT use for implementing design fixes, building new components, SEO audits, or performance profiling."
-argument-hint: "audit scope (page name, component name, or all), audit depth (quick/full)"
+description: "Use when systematically auditing pages or components against brand directives, checking color fidelity, typography consistency, mobile-first compliance, accessibility, and CRO patterns to generate a prioritized findings report. Do NOT use for implementing fixes, building new components, SEO audits, or performance profiling."
+argument-hint: "audit scope, audit depth"
 user-invocable: true
 ---
 

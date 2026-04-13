@@ -14,27 +14,45 @@ This repository is where skills are drafted, refined, and validated before submi
 
 | Skill | Description |
 |-------|-------------|
-| [mistral-sdk-router](.github/skills/mistral-sdk-router/SKILL.md) | Entrypoint router for Mistral API and SDK tasks; delegates to the correct specialized skill. |
-| [mistral-agent-builder](.github/skills/mistral-agent-builder/SKILL.md) | Build and operate persistent Mistral Agents with tools, handoffs, and guardrails. |
-| [mistral-function-calling](.github/skills/mistral-function-calling/SKILL.md) | Implement robust tool/function calling loops with schema design and safe execution patterns. |
-| [mistral-embeddings-rag](.github/skills/mistral-embeddings-rag/SKILL.md) | Build embeddings and RAG pipelines with chunking, retrieval, and grounded answers. |
-| [mistral-structured-outputs](.github/skills/mistral-structured-outputs/SKILL.md) | Extract guaranteed typed JSON using schema-constrained structured outputs. |
-| [mistral-document-ai](.github/skills/mistral-document-ai/SKILL.md) | OCR and structured extraction from PDFs/images, including batch processing patterns. |
-| [mistral-vibe-expert](.github/skills/mistral-vibe-expert/SKILL.md) | End-to-end workflow for operating Mistral Vibe CLI with safe delegation and clear result synthesis. |
-| [skill-builder](.github/skills/skill-builder/SKILL.md) | Create, audit, or refactor a SKILL.md: research domain, structure content, validate frontmatter and sections. |
 | [agent-builder](.github/skills/agent-builder/SKILL.md) | Design and create a `.agent.md`: define scope, identify required skills, select minimal tools, write persona and constraints. |
-| [shell-script-audit](.github/skills/shell-script-audit/SKILL.md) | Audit and harden shell scripts for stability, portability, error handling, and best practices. |
+| [agent-testing](.github/skills/agent-testing/SKILL.md) | Add mocked, integration, or eval-based tests for AI agents, tool calls, and multi-agent workflows. |
+| [before-after-slider](.github/skills/before-after-slider/SKILL.md) | Build accessible before/after image comparison sliders with drag, touch, and keyboard support. |
+| [context-engineering](.github/skills/context-engineering/SKILL.md) | Design token-budgeted context assembly, memory, and tool-result injection for LLM systems. |
+| [cro-home-services](.github/skills/cro-home-services/SKILL.md) | Design and audit conversion-focused UX patterns for home-services renovation websites. |
+| [floating-sticky-ui](.github/skills/floating-sticky-ui/SKILL.md) | Implement and debug sticky navigation, floating CTAs, widgets, and z-index layering. |
+| [harness-engineering](.github/skills/harness-engineering/SKILL.md) | Design guardrails, feedback loops, state, observability, and error recovery for agent workflows. |
+| [imagery-art-direction](.github/skills/imagery-art-direction/SKILL.md) | Select, optimize, and place renovation-site photography and visual assets for static Next.js export. |
 | [macos-homebrew-troubleshoot](.github/skills/macos-homebrew-troubleshoot/SKILL.md) | Diagnose and fix macOS environment issues, Homebrew problems, PATH conflicts, and permissions. |
+| [mistral-agent-builder](.github/skills/mistral-agent-builder/SKILL.md) | Build and operate persistent Mistral Agents with tools, handoffs, and guardrails. |
+| [mistral-document-ai](.github/skills/mistral-document-ai/SKILL.md) | Extract text, tables, and structure from PDFs and images with Mistral OCR workflows. |
+| [mistral-embeddings-rag](.github/skills/mistral-embeddings-rag/SKILL.md) | Build embeddings and RAG pipelines with chunking, retrieval, and grounded answers. |
+| [mistral-function-calling](.github/skills/mistral-function-calling/SKILL.md) | Implement robust Mistral tool/function-calling loops with safe execution patterns. |
+| [mistral-sdk-router](.github/skills/mistral-sdk-router/SKILL.md) | Route any Mistral API or SDK task to the correct specialized skill. |
+| [mistral-structured-outputs](.github/skills/mistral-structured-outputs/SKILL.md) | Extract guaranteed typed JSON using schema-constrained structured outputs. |
+| [mistral-vibe-expert](.github/skills/mistral-vibe-expert/SKILL.md) | Operate Mistral Vibe CLI with safe delegation, tool permissions, and clear result synthesis. |
+| [mobile-first-layout](.github/skills/mobile-first-layout/SKILL.md) | Build responsive mobile-first page layouts, grids, and section shells for Tailwind/Next.js sites. |
+| [nextjs-intl](.github/skills/nextjs-intl/SKILL.md) | Configure and troubleshoot `next-intl` internationalization in Next.js App Router projects. |
+| [nextjs-ssg](.github/skills/nextjs-ssg/SKILL.md) | Scaffold and troubleshoot static-export Next.js App Router projects. |
+| [nextjs-tailwind-seo](.github/skills/nextjs-tailwind-seo/SKILL.md) | Set up Tailwind CSS, SEO metadata, fonts, and structured data for Next.js projects. |
+| [photo-upload-form-ux](.github/skills/photo-upload-form-ux/SKILL.md) | Design mobile-first quote funnels with embedded forms, photo guidance, and thank-you flows. |
+| [shell-script-audit](.github/skills/shell-script-audit/SKILL.md) | Audit and harden shell scripts for stability, portability, error handling, and best practices. |
+| [skill-builder](.github/skills/skill-builder/SKILL.md) | Create, audit, or refactor a SKILL.md with research, structure, and validation checks. |
+| [tailwind-v4-theming](.github/skills/tailwind-v4-theming/SKILL.md) | Add and debug Tailwind CSS v4 theme tokens and extracted component utilities. |
+| [trust-signal-components](.github/skills/trust-signal-components/SKILL.md) | Design trust-building UI components such as badges, guarantees, and compliance blocks. |
+| [typography-color-tokens](.github/skills/typography-color-tokens/SKILL.md) | Design and audit visual identity tokens for color, typography, and spacing systems. |
+| [visual-design-audit](.github/skills/visual-design-audit/SKILL.md) | Audit pages and components for brand consistency, accessibility, and CRO issues. |
 | [zsh-config-expert](.github/skills/zsh-config-expert/SKILL.md) | Configure, troubleshoot, and optimize zsh: completions, startup files, prompt, glob qualifiers, performance. |
 
 ## Agents
 
 | Agent | Description |
 |-------|-------------|
-| [sara](.github/agents/sara.agent.md) | Default team-lead agent. Handles trivial tasks directly; delegates complex work to specialized subagents. The only user-facing agent. |
+| [sara](.github/agents/sara.agent.md) | Default team-lead agent. Handles trivial tasks and bounded orchestration work directly; delegates specialist work to subagents. The only user-facing agent. |
+| [bashar](.github/agents/bashar.agent.md) | Subagent: macOS and shell specialist for script audits, Homebrew troubleshooting, zsh configuration, and PATH debugging. |
 | [mistral](.github/agents/mistral.agent.md) | Subagent: specialist for building and operating Mistral SDK apps; routes to the correct Mistral skill. |
+| [nexter](.github/agents/nexter.agent.md) | Subagent: Next.js specialist for App Router, static export, Tailwind, i18n, SEO, and component implementation. |
 | [skiller](.github/agents/skiller.agent.md) | Subagent: researches domains, builds skills, and designs agents. Creates all dependency skills before writing the agent file. |
-| [bashar](.github/agents/bashar.agent.md) | Subagent: macOS & shell specialist — script auditing, macOS/Homebrew troubleshooting, zsh configuration, PATH debugging. |
+| [uix-designer](.github/agents/uix-designer.agent.md) | Subagent: senior UIX designer for vivid, trust-building, conversion-focused renovation website improvements. |
 
 ## Global Bootstrap (Mac)
 

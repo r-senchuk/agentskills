@@ -1,7 +1,7 @@
 ---
 name: photo-upload-form-ux
-description: "Use when designing or implementing the quote request funnel for a static Next.js site — including the /quote page structure, embedded Typeform/Tally/Fillout form, photo upload guidance component, WhatsApp fallback, FAQ accordion, or post-submission thank-you page. Do NOT use for native HTML form creation, backend form processing, or non-quote contact pages."
-argument-hint: "form tool (Typeform/Tally/Fillout), locale, funnel step to build (page/embed/photo-guide/thank-you/i18n)"
+description: "Use when designing or implementing a quote request funnel for a static Next.js site, including the quote page, embedded form, photo upload guidance, WhatsApp fallback, FAQ, or thank-you page. Do NOT use for native HTML forms, backend form processing, or non-quote contact pages."
+argument-hint: "form tool, locale, funnel step to build"
 user-invocable: true
 ---
 

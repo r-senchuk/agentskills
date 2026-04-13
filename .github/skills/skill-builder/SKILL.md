@@ -1,10 +1,10 @@
 ---
 name: skill-builder
-description: "Use when creating a new SKILL.md from scratch, auditing an existing skill for gaps or stale content, or refactoring a skill to meet quality standards. Covers research (Perplexity, GitHub), structure, frontmatter validation, and completion checks. Use when user asks to 'create new skill', 'audit existing skill', 'refactor skill structure', or 'improve skill quality'. Do not use for coding tasks, application debugging, or feature implementation."
+description: "Use when creating a new SKILL.md from scratch, auditing an existing skill for gaps or stale content, or refactoring a skill to meet quality standards. Covers web and GitHub research, structure, frontmatter validation, and completion checks. Use when user asks to 'create new skill', 'audit existing skill', 'refactor skill structure', or 'improve skill quality'. Do not use for coding tasks, application debugging, or feature implementation."
 argument-hint: "Skill name or domain, goal (create|audit|refactor), and any constraints or quality bar."
 user-invocable: false
 license: MIT
-compatibility: "Works with any text editor, requires web access for research (Perplexity, GitHub), and YAML validation tools."
+compatibility: "Works with any text editor, requires web access for research and YAML validation tools."
 metadata:
   author: "Roman Senchuk"
   version: "1.2.0"

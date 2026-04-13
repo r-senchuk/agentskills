@@ -1,7 +1,7 @@
 ---
 name: imagery-art-direction
-description: "Use when selecting, sourcing, optimising, placing, or writing alt text for photography and visual assets across a renovation website with static Next.js export. Covers webp conversion, image specifications, and next/image usage. Do NOT use for SVG icon creation, CSS background patterns, or brand logo design."
-argument-hint: "image use case (hero/before-after/service-card/team/gallery), source type, target page section"
+description: "Use when selecting, sourcing, optimizing, placing, or writing alt text for photography and visual assets on a renovation website with static Next.js export. Do NOT use for SVG icons, CSS background patterns, or logo design."
+argument-hint: "image use case, source type, target page section"
 user-invocable: true
 ---
 
