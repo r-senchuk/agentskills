@@ -6,7 +6,6 @@ user-invocable: true
 ---
 
 # Imagery Strategy and Art Direction
-
 Guide selection, art direction, optimisation, and placement of photography and visual assets across the Garnebo website. Imagery must reinforce brand trust and drive conversions. Static export on S3/CloudFront: `images.unoptimized: true`, all images pre-built into `/public/`, primary format `.webp`.
 
 **Brand personality:** Clean, precise, tech-enabled, premium-organised. Think architect's presentation folder — not a TV home improvement show.

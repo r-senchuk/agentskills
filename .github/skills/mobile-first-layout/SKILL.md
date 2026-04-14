@@ -6,7 +6,6 @@ user-invocable: true
 ---
 
 # Mobile-First Responsive Layout Patterns
-
 Design and implement responsive layouts for the Garnebo site that work flawlessly on mobile (375px+) first, then scale gracefully to tablet and desktop using Tailwind CSS v4 with the project token system.
 
 **Traffic split:** 75%+ mobile. Every layout decision must start from a single-column, thumb-friendly mobile state. Breakpoints: no prefix = mobile (0px+), `sm:` = 640px+, `md:` = 768px+, `lg:` = 1024px+. Max content width: `max-w-7xl` for nav/shell, `max-w-5xl` for content grids, `max-w-3xl` for centered copy blocks.

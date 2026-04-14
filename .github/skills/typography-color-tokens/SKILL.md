@@ -6,7 +6,6 @@ user-invocable: true
 ---
 
 # Typography and Color Token System Design
-
 Design, document, and extend the Garnebo visual identity system — covering color palette decisions, token naming conventions, type scale, font weight usage, and spacing — so every UI element is visually consistent and on-brand.
 
 **Config location:** `src/app/globals.css` — `@theme {}` block is the single source of truth. **Font:** Inter via `next/font/google`, mapped to `--font-sans`. **Current palette:** Muted, earthy, professional — "precision craftwork", not "budget renovation".

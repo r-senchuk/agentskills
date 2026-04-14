@@ -6,7 +6,6 @@ user-invocable: true
 ---
 
 # Before/After Image Slider
-
 Implement an accessible, touch-friendly, static-export-compatible Before/After image comparison slider — the highest-converting visual asset for home renovation businesses. Uses `'use client'` React with native pointer/touch events; no external slider libraries needed. The "after" image sits full-width underneath; the "before" image clips via `style.width` on an overlay container controlled by a draggable handle.
 
 ## When To Use

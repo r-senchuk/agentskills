@@ -6,7 +6,6 @@ user-invocable: true
 ---
 
 # Tailwind CSS v4 Theming and Component Styling
-
 Author, extend, and debug Tailwind CSS v4 design tokens and utility classes for the Garnebo site using the CSS-first `@theme {}` configuration approach — no `tailwind.config.ts` involved.
 
 **Config file:** `src/app/globals.css` — single source of truth for all design tokens. **Import:** `@import "tailwindcss"` (replaces v3 directives). **PostCSS:** `postcss.config.mjs` with `@tailwindcss/postcss` plugin.

@@ -6,7 +6,6 @@ user-invocable: true
 ---
 
 # Photo-Upload Form UX for Mobile Quote Funnels
-
 Design and implement the quote request funnel UX for the Garnebo `/quote` page — optimising for mobile users uploading smartphone photos, minimising form friction, and maximising completions.
 
 **Architecture:** Static export (no API routes, no backend). All form handling delegated to third-party embed: Typeform, Tally, or Fillout. Most users arrive from Google Maps/Instagram/WhatsApp with renovation photos already in their camera roll.

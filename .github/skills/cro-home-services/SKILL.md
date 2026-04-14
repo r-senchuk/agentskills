@@ -6,7 +6,6 @@ user-invocable: true
 ---
 
 # CRO UI Patterns for Home Services
-
 Design and implement high-converting UX patterns specific to residential renovation and home services businesses on the Garnebo website. Business model: B2C renovation project management in Bologna, Italy — primary conversion goal is quote form submissions. Audience: homeowners (75%+ mobile), high intent, low patience for friction. Trust-deficit is the #1 conversion blocker.
 
 **Core principles:** Trust before action → Reduce perceived risk → One clear next step per section → Friction removal → Dense social proof throughout.

@@ -6,7 +6,6 @@ user-invocable: true
 ---
 
 # Trust Signal UI Components
-
 Design and implement trust signal components (compliance badges, legal credentials, guarantees, team portraits, shield/checkmark iconography) that reduce visitor anxiety and increase quote request conversions for the Garnebo renovation business.
 
 **Trust blockers in home services:** Fear of unlicensed workers, hidden costs, project abandonment, non-compliance with building codes.
