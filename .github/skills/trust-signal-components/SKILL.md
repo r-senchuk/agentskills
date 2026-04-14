@@ -228,4 +228,7 @@ export function TeamMember({ name, role, bio, imageSrc }: TeamMemberProps) {
 
 ## References
 
-No external references required.
+- [Nielsen Norman Group — Trust and Credibility](https://www.nngroup.com/articles/trust-and-credibility-guidelines-for-the-web/)
+- [MDN — ARIA: img role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/img_role)
+- [Tailwind CSS — Flex utilities](https://tailwindcss.com/docs/flex)
+- [Google Fonts — Icon fonts](https://fonts.google.com/icons)

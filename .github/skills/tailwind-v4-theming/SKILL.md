@@ -181,4 +181,7 @@ body {
 
 ## References
 
-No external references required.
+- [Tailwind CSS v4 — Documentation](https://tailwindcss.com/docs)
+- [Tailwind CSS v4 — Upgrade Guide](https://tailwindcss.com/docs/upgrade-guide)
+- [Tailwind CSS — CSS-first configuration](https://tailwindcss.com/docs/configuration)
+- [MDN — CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)

@@ -180,4 +180,7 @@ Italian and English strings differ in length:
 
 ## References
 
-No external references required.
+- [Tailwind CSS — Responsive Design](https://tailwindcss.com/docs/responsive-design)
+- [MDN — CSS Grid Layout](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout)
+- [MDN — Viewport meta tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag)
+- [WCAG — Touch Target Size guideline](https://www.w3.org/WAI/WCAG21/Understanding/target-size.html)

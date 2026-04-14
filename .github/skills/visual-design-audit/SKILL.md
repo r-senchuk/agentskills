@@ -141,4 +141,7 @@ For each `Critical` and `High` finding:
 
 ## References
 
-No external references required.
+- [Nielsen Norman Group — Visual Design](https://www.nngroup.com/topic/visual-design/)
+- [WCAG 2.1 — Contrast guidelines](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html)
+- [Tailwind CSS — Documentation](https://tailwindcss.com/docs)
+- [MDN — CSS Color](https://developer.mozilla.org/en-US/docs/Web/CSS/color)

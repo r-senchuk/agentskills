@@ -231,4 +231,7 @@ function useScrollTrigger(threshold: number = 300) {
 
 ## References
 
-No external references required.
+- [MDN — position: sticky](https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky)
+- [MDN — Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
+- [MDN — z-index stacking context](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context)
+- [Tailwind CSS — Position utilities](https://tailwindcss.com/docs/position)

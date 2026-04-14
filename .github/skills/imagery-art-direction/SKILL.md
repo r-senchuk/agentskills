@@ -162,4 +162,7 @@ Use `kebab-case`. No Italian accents (breaks some S3 configs). No spaces.
 
 ## References
 
-No external references required.
+- [Next.js — next/image component](https://nextjs.org/docs/app/api-reference/components/image)
+- [Unsplash — Free high-resolution photos](https://unsplash.com/)
+- [MDN — Responsive images](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/HTML_images#responsive_images)
+- [WebAIM — Alt text guide](https://webaim.org/techniques/alttext/)
