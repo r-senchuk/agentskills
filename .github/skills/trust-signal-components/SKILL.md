@@ -1,6 +1,6 @@
 ---
 name: trust-signal-components
-description: "Use when designing or implementing trust signal UI components such as compliance badges, legal credentials, guarantee blocks, team modules, shield icons, and trust badge rows for a home services renovation site. Do NOT use for CTA design, quote form UX, analytics, or generic social proof copywriting."
+description: "Use when designing or implementing trust signal UI components such as compliance badges, legal credentials, guarantee blocks, team modules, shield icons, and trust badge rows for a home services renovation site. Use when user asks to 'add trust badges', 'show credentials', 'add guarantee section', 'display team members', or 'build social proof row'. Covers compliance badge markup, shield/check icon patterns, guarantee block copy, and team card layouts. Do NOT use for hero CTA design, quote form UX, backend analytics, SEO metadata, or generic social proof copywriting unrelated to renovation trust signals."
 argument-hint: "trust signal type, target page section, available credentials"
 user-invocable: true
 ---

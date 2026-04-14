@@ -1,6 +1,6 @@
 ---
 name: mobile-first-layout
-description: "Use when designing or implementing responsive page layouts, grid systems, section shells, touch targets, CTA button stacking, or viewport-edge handling for a mobile-first Tailwind CSS v4 Next.js site. Do NOT use for component styling, design token changes, or sticky UI work."
+description: "Use when designing or implementing responsive page layouts, grid systems, section shells, touch targets, CTA button stacking, or viewport-edge handling for a mobile-first Tailwind CSS v4 Next.js site. Use when user asks to 'create page layout', 'fix mobile layout', 'add grid section', 'stack CTAs on mobile', or 'set max-width container'. Covers Tailwind v4 responsive variants, safe-area insets, touch-target sizing (44px), and section padding conventions. Do NOT use for component-level styling, design token changes, sticky UI elements, or non-Next.js frameworks."
 argument-hint: "layout pattern, desktop column count, background treatment"
 user-invocable: true
 ---

@@ -1,6 +1,6 @@
 ---
 name: imagery-art-direction
-description: "Use when selecting, sourcing, optimizing, placing, or writing alt text for photography and visual assets on a renovation website with static Next.js export. Do NOT use for SVG icons, CSS background patterns, or logo design."
+description: "Use when selecting, sourcing, optimizing, placing, or writing alt text for photography and visual assets on a renovation website with static Next.js export. Use when user asks to 'add hero image', 'optimize photos', 'write alt text', 'choose renovation photos', or 'set up next/image'. Covers Unsplash sourcing, next/image sizing, WebP conversion, focal-point cropping, and WCAG alt text patterns. Do NOT use for SVG icons, CSS background patterns, logo design, video embeds, or non-photography illustration work."
 argument-hint: "image use case, source type, target page section"
 user-invocable: true
 ---

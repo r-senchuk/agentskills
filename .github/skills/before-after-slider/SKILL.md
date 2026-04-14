@@ -1,6 +1,6 @@
 ---
 name: before-after-slider
-description: "Use when building an accessible before/after image comparison slider with drag, touch, and keyboard support for static Next.js pages. Do NOT use for carousels, lightboxes, or static side-by-side image layouts."
+description: "Use when building an accessible before/after image comparison slider with drag, touch, and keyboard support for static Next.js pages. Use when user asks to 'add before after slider', 'image comparison component', 'reveal slider', or 'renovation photo comparison'. Covers keyboard accessibility, touch events, ARIA labels, and Tailwind CSS styling. Do NOT use for carousels, lightboxes, video comparisons, or static side-by-side image layouts."
 argument-hint: "before image path, after image path, aspect ratio, section placement"
 user-invocable: true
 ---

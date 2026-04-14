@@ -1,6 +1,6 @@
 ---
 name: floating-sticky-ui
-description: "Use when implementing or debugging sticky navigation, floating mobile CTA bars, WhatsApp widgets, scroll-triggered visibility, or z-index layering conflicts. Do NOT use for static page layout sections, grid design, or non-fixed component styling."
+description: "Use when implementing or debugging sticky navigation, floating mobile CTA bars, WhatsApp widgets, scroll-triggered visibility, or z-index layering conflicts in a Tailwind CSS v4 Next.js site. Use when user asks to 'add sticky header', 'floating CTA bar', 'WhatsApp button', 'scroll visibility', or 'fix z-index'. Covers CSS position sticky/fixed patterns, Intersection Observer, Tailwind utilities, and mobile-first breakpoint rules. Do NOT use for static page layout sections, grid system design, non-fixed component styling, or design token changes."
 argument-hint: "component name, issue type, target breakpoint"
 user-invocable: true
 ---

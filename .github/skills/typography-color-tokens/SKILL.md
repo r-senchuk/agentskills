@@ -1,6 +1,6 @@
 ---
 name: typography-color-tokens
-description: "Use when designing, extending, auditing, or documenting a visual identity system, including color palette decisions, semantic token naming, type scale, font weights, line height, letter spacing, and spacing conventions. Do NOT use for Tailwind CSS v4 config mechanics, markup changes, or layout work."
+description: "Use when designing, extending, auditing, or documenting a visual identity system, including color palette decisions, semantic token naming, type scale, font weights, line height, letter spacing, and spacing conventions. Use when user asks to 'define color palette', 'create type scale', 'name design tokens', 'audit brand colors', or 'set font weights'. Covers semantic token hierarchies, WCAG contrast ratios, typographic rhythm, and spacing scale design. Do NOT use for Tailwind CSS v4 config mechanics, CSS utility class authoring, component markup changes, or layout implementation work."
 argument-hint: "design area, specific token or violation to address"
 user-invocable: true
 ---
