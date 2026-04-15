@@ -180,6 +180,7 @@ body {
 
 ## References
 
+- [Local implementation notes](./references/local-implementation-notes.md)
 - [Tailwind CSS v4 — Documentation](https://tailwindcss.com/docs)
 - [Tailwind CSS v4 — Upgrade Guide](https://tailwindcss.com/docs/upgrade-guide)
 - [Tailwind CSS — CSS-first configuration](https://tailwindcss.com/docs/configuration)

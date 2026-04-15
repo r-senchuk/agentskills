@@ -140,6 +140,7 @@ For each `Critical` and `High` finding:
 
 ## References
 
+- [Local implementation notes](./references/local-implementation-notes.md)
 - [Nielsen Norman Group — Visual Design](https://www.nngroup.com/topic/visual-design/)
 - [WCAG 2.1 — Contrast guidelines](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html)
 - [Tailwind CSS — Documentation](https://tailwindcss.com/docs)

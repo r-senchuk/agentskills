@@ -234,6 +234,7 @@ Configure the form tool to redirect to `/[locale]/grazie` or `/[locale]/thank-yo
 
 ## References
 
+- [Local implementation notes](./references/local-implementation-notes.md)
 - [Tally — Form builder documentation](https://tally.so/help)
 - [Typeform — Embed SDK documentation](https://www.typeform.com/developers/embed/)
 - [MDN — HTML file input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file)

@@ -179,6 +179,7 @@ Italian and English strings differ in length:
 
 ## References
 
+- [Local implementation notes](./references/local-implementation-notes.md)
 - [Tailwind CSS — Responsive Design](https://tailwindcss.com/docs/responsive-design)
 - [MDN — CSS Grid Layout](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout)
 - [MDN — Viewport meta tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag)

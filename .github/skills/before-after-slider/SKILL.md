@@ -370,6 +370,7 @@ useEffect(() => {
 
 ## References
 
+- [Local implementation notes](./references/local-implementation-notes.md)
 - [MDN — Pointer Events API](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events)
 - [MDN — Touch Events](https://developer.mozilla.org/en-US/docs/Web/API/Touch_events)
 - [MDN — ARIA: img role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/img_role)

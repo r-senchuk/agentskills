@@ -197,6 +197,7 @@ className="text-[#4C6170]"  // should be: text-brand-primary
 
 ## References
 
+- [Local implementation notes](./references/local-implementation-notes.md)
 - [Tailwind CSS v4 — Documentation](https://tailwindcss.com/docs)
 - [MDN — font-size](https://developer.mozilla.org/en-US/docs/Web/CSS/font-size)
 - [MDN — CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)

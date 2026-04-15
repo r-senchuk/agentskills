@@ -232,6 +232,7 @@ Set expectations before linking to `/quote`:
 
 ## References
 
+- [Local implementation notes](./references/local-implementation-notes.md)
 - [Nielsen Norman Group — Conversion Rate Optimization](https://www.nngroup.com/articles/conversion-rate-optimization/)
 - [MDN — Web Performance](https://developer.mozilla.org/en-US/docs/Web/Performance)
 - [Google — Core Web Vitals](https://web.dev/articles/vitals)
