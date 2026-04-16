@@ -30,7 +30,7 @@ Load and follow the relevant skill file before acting on any task in that domain
 |---|---|
 | Brand consistency review, full-page audit, hardcoded colour check, CRO/accessibility findings | `.github/skills/visual-design-audit/SKILL.md` |
 | Adding/modifying design tokens, `@layer components`, debugging Tailwind v4 classes | `.github/skills/tailwind-v4-theming/SKILL.md` |
-| Font weight, colour assignment, line-height, letter-spacing, type scale decisions | `.github/skills/typography-color-tokens/SKILL.md` |
+
 | Grid layouts, section shells, hero sections, button stacking, touch targets, iOS safe-area | `.github/skills/mobile-first-layout/SKILL.md` |
 | Hero headlines, CTA placement, social proof, urgency signals, conversion funnel | `.github/skills/cro-home-services/SKILL.md` |
 | Header, MobileStickyBar, WhatsAppWidget, sticky/fixed elements, z-index conflicts | `.github/skills/floating-sticky-ui/SKILL.md` |

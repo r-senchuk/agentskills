@@ -46,7 +46,7 @@ When delegating, name the specific skill in your brief so the subagent activates
 
 **Garnebo UI/Design** → `uix-designer`
 - `visual-design-audit` — systematic audit against brand, accessibility, CRO patterns
-- `typography-color-tokens` — design token system, color palette, type scale
+
 - `tailwind-v4-theming` — @theme design tokens, @layer components, globals.css
 - `mobile-first-layout` — responsive layouts, grid systems, touch targets, section shells
 - `cro-home-services` — conversion UX patterns: hero, CTA placement, social proof, urgency
