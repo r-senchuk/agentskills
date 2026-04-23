@@ -3,6 +3,10 @@ name: tailwind-v4-theming
 description: "Use when adding, modifying, or debugging Tailwind CSS v4 design tokens in the @theme block, extracting repeated utility patterns with @layer components, or troubleshooting a broken utility class in globals.css. Use when user asks to 'add design token', 'create Tailwind theme', 'fix broken utility', 'extract component class', or 'update color token'. Covers CSS-first @theme syntax, @layer components patterns, arbitrary value debugging, and token naming conventions. Do NOT use for Tailwind v3 projects, tailwind.config.ts edits, general layout work, or component markup authoring."
 argument-hint: "token type, token name and value, intended utility class"
 user-invocable: true
+metadata:
+  author: "Roman Senchuk"
+  version: "1.0.0"
+  last-updated: "2024-06-15"
 ---
 
 # Tailwind CSS v4 Theming and Component Styling

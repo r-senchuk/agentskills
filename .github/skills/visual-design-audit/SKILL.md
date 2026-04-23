@@ -3,6 +3,10 @@ name: visual-design-audit
 description: "Use when systematically auditing pages or components against brand directives, checking color fidelity, typography consistency, mobile-first compliance, accessibility, and CRO patterns to generate a prioritized findings report. Use when user asks to 'audit this page', 'review design', 'check brand compliance', 'find visual inconsistencies', or 'generate design findings'. Covers brand color/token fidelity, Tailwind v4 utility correctness, WCAG contrast checks, CRO anti-patterns, and mobile breakpoint review. Do NOT use for implementing fixes, building new components, SEO audits, performance profiling, or writing copy."
 argument-hint: "audit scope, audit depth"
 user-invocable: true
+metadata:
+  author: "Roman Senchuk"
+  version: "1.0.0"
+  last-updated: "2024-06-15"
 ---
 
 # Visual Design Audit and Brand Consistency Review

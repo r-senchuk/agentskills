@@ -39,7 +39,6 @@ This repository is where skills are drafted, refined, and validated before submi
 | [skill-builder](.github/skills/skill-builder/SKILL.md) | Create, audit, or refactor a SKILL.md with research, structure, and validation checks. |
 | [tailwind-v4-theming](.github/skills/tailwind-v4-theming/SKILL.md) | Add and debug Tailwind CSS v4 theme tokens and extracted component utilities. |
 | [trust-signal-components](.github/skills/trust-signal-components/SKILL.md) | Design trust-building UI components such as badges, guarantees, and compliance blocks. |
-| [typography-color-tokens](.github/skills/typography-color-tokens/SKILL.md) | Design and audit visual identity tokens for color, typography, and spacing systems. |
 | [visual-design-audit](.github/skills/visual-design-audit/SKILL.md) | Audit pages and components for brand consistency, accessibility, and CRO issues. |
 | [zsh-config-expert](.github/skills/zsh-config-expert/SKILL.md) | Configure, troubleshoot, and optimize zsh: completions, startup files, prompt, glob qualifiers, performance. |
 

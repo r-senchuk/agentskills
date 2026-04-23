@@ -3,6 +3,10 @@ name: photo-upload-form-ux
 description: "Use when designing or implementing a quote request funnel for a static Next.js site, including the quote page, embedded form, photo upload guidance, WhatsApp fallback, FAQ, or thank-you page. Use when user asks to 'build quote form', 'add photo upload', 'create thank-you page', 'add WhatsApp CTA', or 'design quote funnel'. Covers Typeform/Tally embed patterns, file upload UX copy, trust signals near CTAs, and confirmation page design. Do NOT use for native HTML form submissions, backend form processing, CRM integration, or generic non-quote contact pages."
 argument-hint: "form tool, locale, funnel step to build"
 user-invocable: true
+metadata:
+  author: "Roman Senchuk"
+  version: "1.0.0"
+  last-updated: "2024-06-15"
 ---
 
 # Photo-Upload Form UX for Mobile Quote Funnels

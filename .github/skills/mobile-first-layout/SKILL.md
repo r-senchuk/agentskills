@@ -3,6 +3,10 @@ name: mobile-first-layout
 description: "Use when designing or implementing responsive page layouts, grid systems, section shells, touch targets, CTA button stacking, or viewport-edge handling for a mobile-first Tailwind CSS v4 Next.js site. Use when user asks to 'create page layout', 'fix mobile layout', 'add grid section', 'stack CTAs on mobile', or 'set max-width container'. Covers Tailwind v4 responsive variants, safe-area insets, touch-target sizing (44px), and section padding conventions. Do NOT use for component-level styling, design token changes, sticky UI elements, or non-Next.js frameworks."
 argument-hint: "layout pattern, desktop column count, background treatment"
 user-invocable: true
+metadata:
+  author: "Roman Senchuk"
+  version: "1.0.0"
+  last-updated: "2024-06-15"
 ---
 
 # Mobile-First Responsive Layout Patterns
@@ -18,7 +22,7 @@ Design and implement responsive layouts for the Garnebo site that work flawlessl
 - A hero section needs `min-height`, background image layer, and text overlay at all breakpoints
 - A layout is causing horizontal scroll or overflowing its container on narrow viewports
 
-**Do NOT use for:** design token changes (use `tailwind-v4-theming`), z-index or sticky element work (use `floating-sticky-ui`), or typography token audits (use `typography-color-tokens`).
+**Do NOT use for:** design token changes (use `tailwind-v4-theming`), z-index or sticky element work (use `floating-sticky-ui`).
 
 ## Inputs To Collect First
 
