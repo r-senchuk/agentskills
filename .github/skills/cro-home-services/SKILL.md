@@ -3,6 +3,8 @@ name: cro-home-services
 description: "Use when designing or auditing conversion-focused UX patterns for a home services renovation website, including hero messaging, CTA placement, social proof, urgency copy, and quote funnel friction reduction. Use when user asks to 'improve conversion rate', 'fix CTA', 'add social proof', or 'reduce quote funnel drop-off'. Covers above-the-fold hierarchy, trust signals, urgency triggers, and mobile CTA optimisation. Do NOT use for backend analytics, A/B test infrastructure, performance monitoring, or generic marketing copy unrelated to home services."
 argument-hint: "target page or section, conversion problem, current CTA copy, CTA destination"
 user-invocable: true
+license: MIT
+compatibility: "Works with Next.js 15+, Tailwind CSS v4, and static export sites for home services businesses."
 metadata:
   author: "Roman Senchuk"
   version: "1.0.0"
