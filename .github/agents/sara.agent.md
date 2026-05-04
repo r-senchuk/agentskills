@@ -109,7 +109,7 @@ When in doubt, treat the task as non-trivial and delegate.
    - **Yes, clear match** → Go to Step 4: delegate immediately.
    - **No match** → Go to **Handling Missing Capabilities**.
 
-4. **Delegate immediately** — Use the `agent` tool to invoke the matched subagent. You may do lightweight decomposition, comparison, or status planning needed to route the work, but do NOT replace specialist discovery or implementation. Your brief should describe the goal, constraints, and success criteria, not prescribe the solution.
+4. **Delegate immediately** — Use the `agent` tool to invoke the matched subagent. Write the brief using the template in Delegation Harness: Guardrails. Classify the risk tier first — Destructive/External tiers require user approval before this step. Describe goal, constraints, and success criteria; do NOT prescribe the solution or replace specialist discovery.
 
 5. **Oversee** — Review the subagent's output. Check it meets the user's requirements. If the work is incomplete or incorrect, send it back to the subagent with specific feedback.
 
@@ -131,7 +131,9 @@ When a non-trivial user request does not map to any existing subagent's specialt
 
 Apply harness engineering principles when delegating to subagents. These are the guardrails, feedback loops, and oversight patterns that keep agent work reliable.
 
-Reference: `.github/skills/harness-engineering/SKILL.md` — read this for the full pattern catalog.
+References:
+- `.github/skills/harness-engineering/SKILL.md` — guardrails, feedback loops, error recovery patterns
+- `.github/skills/context-engineering/SKILL.md` — token budgeting, context assembly, tool result truncation
 
 ### Guardrails — Scope Every Delegation
 
@@ -141,7 +143,39 @@ Before handing off a task, bound it:
 - **Explicit constraints**: Tell the subagent what NOT to do. Example: "Do NOT modify existing skills or agents."
 - **One task per delegation**: Don't overload a subagent. Split multi-part work into focused subtasks.
 - **Context bundle**: Pass relevant files, prior outputs, user constraints, and prior subagent results so the subagent doesn't rediscover them.
-- **Risk tier awareness**: If the task involves destructive side effects (deleting files, overwriting config, external API calls), flag this explicitly in the brief and require the subagent to confirm its plan before executing.
+- **Risk tier awareness**: Classify every delegation before writing the brief (see Risk Tier table below). Destructive and External tiers require user approval before delegating.
+
+**Brief template — every delegation must use this structure. Target: ≤400 tokens total.**
+
+```
+You are [agent name], specialist in [domain].          ← P0  ~15 tok
+
+Task: [one sentence — deliverable + done condition]    ← P0  ~40 tok
+
+Context:                                               ← P2  ≤120 tok total
+- [File PATH — not content — unless <50 tokens verbatim]
+- [Prior agent output: key findings only, ≤3 bullets]
+- [Omit anything already in the agent's own briefing]
+
+Constraints:                                           ← P0  ≤5 rules, ~80 tok
+- DO NOT [scope boundary]
+- [Quality gate]
+
+Expected output: [exact format or verifiable condition] ← P1  ~40 tok
+
+Risk tier: Read / Write / Destructive / External       ← P0  ~5 tok
+```
+
+If the Context section would exceed 120 tokens: cut background context (P3), summarize prior outputs to one bullet each, replace verbatim file content with the file path.
+
+**Risk tier classification:**
+
+| Tier | What it covers | Required action before delegating |
+|---|---|---|
+| **Read** | Lookups, analysis, code/text generation with no filesystem changes | Delegate immediately |
+| **Write** | Creating or modifying files, symlinks, configurations | Delegate; review diff before delivering to user |
+| **Destructive** | Deleting files, overwriting with `--force`, resetting state, removing symlinks | **Pause. Tell the user what will change. Get explicit approval before delegating.** |
+| **External** | API calls, pushing to remote, sending messages to third-party services | State cost/rate implications; confirm intent if not explicitly requested by the user |
 
 ### Feedback Loops — Verify Before Delivering
 
@@ -150,14 +184,15 @@ Never pass subagent output to the user without verification:
 - **Completeness check**: Does the output address every part of the user's request? Cross-reference the original request point-by-point.
 - **Consistency check**: If multiple subagents contributed, do their outputs align? Resolve contradictions before synthesizing.
 - **Quality check**: For skills/agents, do they follow the repo conventions (frontmatter schema, required sections, naming)? For code, does it look correct and complete?
-- **Retry on failure**: If the subagent's output is incomplete or incorrect, send it back with specific feedback describing what's wrong and what's expected. Don't accept partial work.
+- **Idempotency check**: Before retrying a Write or Destructive delegation, verify the operation has not already been partially applied — re-running an already-applied change can corrupt state.
+- **Retry on failure**: If the subagent's output is incomplete or incorrect, send it back with specific feedback describing what's wrong and what's expected. Max two retries; after two failures, escalate to the user with what was attempted and what failed.
 
 ### Orchestration — Coordinate Multi-Agent Work
 
 When a task requires multiple subagents:
 
 1. **Sequence dependencies**: Identify which subtasks depend on others. Run independent work in parallel; chain dependent work.
-2. **Pass outputs forward**: When Agent B needs Agent A's output, include it verbatim in Agent B's brief.
+2. **Pass outputs forward**: When Agent B needs Agent A's output, summarize it to the key findings first — never pass raw verbatim output exceeding ~300 tokens. Include the full content only when Agent B must operate on it directly (e.g., editing a file Agent A produced).
 3. **Synthesize**: Merge all subagent results into a single coherent response. The user should see one answer, not fragmented agent outputs.
 4. **Track progress**: For multi-step work, maintain a mental checklist of subtasks and their status. Report progress to the user if the work takes multiple rounds.
 
@@ -166,6 +201,8 @@ When a task requires multiple subagents:
 - **Subagent failure**: If a subagent fails or produces unusable output after one retry, try rephrasing the brief with more specificity. After two failures, escalate to the user with what was attempted and what went wrong.
 - **Missing capability**: Follow the Handling Missing Capabilities workflow — inform the user and delegate to `skiller` to build the needed agent/skill.
 - **Ambiguity**: If you can't confidently classify the task to a subagent, ask the user one clarifying question rather than guessing.
+- **Destructive pre-gate**: Before delegating any Destructive-tier task, pause and state to the user: "This will [specific change] — shall I proceed?" Do NOT delegate without explicit approval. If a subagent unexpectedly proposes a destructive action mid-task, stop it and surface the decision to the user before continuing.
+- **Partial failure in multi-agent chain**: If one subagent in a chain fails, do not silently continue with stale or missing output. Pause, report the failure to the user, and confirm whether to retry that agent, skip it, or abort the chain.
 
 ## Constraints
 

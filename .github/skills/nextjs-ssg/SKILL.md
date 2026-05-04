@@ -1,21 +1,21 @@
 ---
 name: nextjs-ssg
-description: "Use when scaffolding, configuring, or troubleshooting Next.js 15 App Router projects with static export (output: 'export'). Covers project setup, directory structure, next.config.ts, generateStaticParams, build verification, and static export limitations. Use when user asks to 'create static Next.js site', 'set up Next.js static export', 'fix Next.js build errors', or 'configure next.config.ts for SSG'. Do not use for server-side rendering, API routes, database integration, or non-Next.js frameworks."
+description: "Use when scaffolding, configuring, or troubleshooting Next.js 16 App Router projects with static export (output: 'export'). Covers project setup, directory structure, next.config.ts, generateStaticParams, build verification, and static export limitations. Use when user asks to 'create static Next.js site', 'set up Next.js static export', 'fix Next.js build errors', or 'configure next.config.ts for SSG'. Do not use for server-side rendering, API routes, database integration, or non-Next.js frameworks."
 argument-hint: "Project path or name, target features (i18n, SEO, etc.), current error or goal."
 user-invocable: false
 license: MIT
-compatibility: "Requires Node.js 18+, Next.js 15+, and pnpm/npm/yarn for package management."
+compatibility: "Requires Node.js 18+, Next.js 16+, and pnpm/npm/yarn for package management."
 metadata:
   author: "Roman Senchuk"
   version: "1.1.0"
   last-updated: "2024-07-15"
 ---
 
-# Next.js 15 Static Site Generation (SSG)
+# Next.js 16 Static Site Generation (SSG)
 
 ## When To Use
 
-- **Scaffold**: Creating a new Next.js 15 project configured for fully static export.
+- **Scaffold**: Creating a new Next.js 16 project configured for fully static export.
 - **Configure**: Setting up `next.config.ts` with `output: 'export'` and related options.
 - **Structure**: Designing App Router directory layout for static pages with dynamic segments.
 - **Debug**: Fixing build failures related to static export — missing `generateStaticParams`, incompatible features, async params.
@@ -140,7 +140,7 @@ Every `page.tsx` under a dynamic segment (`[locale]`, `[slug]`) MUST export `gen
 
 ### Step 4 — TypeScript Configuration
 
-`tsconfig.json` for Next.js 15 with strict mode:
+`tsconfig.json` for Next.js 16 with strict mode:
 
 ```json
 {
@@ -211,7 +211,7 @@ export function generateStaticParams() {
 }
 ```
 
-**Critical**: In Next.js 15, `params` is a Promise — always await it:
+**Critical**: In Next.js 16, `params` is a Promise — always await it:
 
 ```typescript
 type Props = {
@@ -307,9 +307,9 @@ out/
 | `dynamicParams = true` | ❌ All params must be known at build time | Return all possible params from `generateStaticParams` |
 | Draft Mode | ❌ Requires server | Not available in static export |
 
-### Async params in Next.js 15
+### Async params in Next.js 16
 
-In Next.js 15, `params` and `searchParams` are Promises. This is a breaking change from Next.js 14:
+In Next.js 16, `params` and `searchParams` are Promises. This is a breaking change from Next.js 14:
 
 ```typescript
 // ❌ Next.js 14 style — WILL BREAK
@@ -317,7 +317,7 @@ export default function Page({ params }: { params: { locale: string } }) {
   const locale = params.locale;
 }
 
-// ✅ Next.js 15 style — correct
+// ✅ Next.js 16 style — correct
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 }
@@ -352,7 +352,7 @@ import Image from 'next/image';
 
 - [ ] `next.config.ts` has `output: 'export'`, `trailingSlash: true`, `images.unoptimized: true`
 - [ ] Every dynamic route segment exports `generateStaticParams()`
-- [ ] All page components use async `params` (Next.js 15 convention)
+- [ ] All page components use async `params` (Next.js 16 convention)
 - [ ] No server-only APIs used (`cookies()`, `headers()`, `draftMode()`)
 - [ ] No API routes in `app/api/`
 - [ ] No `revalidate` exports (ISR is incompatible with static export)

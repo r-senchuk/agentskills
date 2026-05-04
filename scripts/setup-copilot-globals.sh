@@ -13,8 +13,12 @@ REPO_ROOT="$DEFAULT_REPO_ROOT"
 COPILOT_HOME="${COPILOT_HOME:-$HOME/.copilot}"
 VSCODE_PROMPTS_DIR="${VSCODE_PROMPTS_DIR:-$HOME/Library/Application Support/Code/User/prompts}"
 VIBE_HOME="${VIBE_HOME:-$HOME/.vibe}"
+CLAUDE_HOME="${CLAUDE_HOME:-$HOME/.claude}"
+ANTIGRAVITY_HOME="${ANTIGRAVITY_HOME:-$HOME/.gemini/antigravity}"
 LINK_VSCODE_AGENTS=1
 LINK_VIBE=1
+LINK_CLAUDE=1
+LINK_ANTIGRAVITY=1
 FORCE=0
 DRY_RUN=0
 
@@ -28,8 +32,12 @@ Options:
   --copilot-home <path>   Global Copilot home. Default: ~/.copilot
   --vscode-prompts <path> VS Code prompts dir. Default: ~/Library/Application Support/Code/User/prompts
   --vibe-home <path>      Mistral Vibe home. Default: ~/.vibe
+  --claude-home <path>    Claude Code home. Default: ~/.claude
+  --antigravity-home <path> Antigravity home. Default: ~/.gemini/antigravity
   --no-vscode-agents      Skip linking agents into VS Code prompts profile.
   --no-vibe               Skip linking skills/agents into Mistral Vibe.
+  --no-claude             Skip linking skills into Claude Code.
+  --no-antigravity        Skip linking skills/agents into Antigravity.
   --force                 Replace existing files/symlinks at target paths.
   --dry-run               Show actions without making changes.
   -h, --help              Show this help.
@@ -87,6 +95,24 @@ while (( $# > 0 )); do
       VIBE_HOME="$2"
       shift 2
       ;;
+    --no-claude)
+      LINK_CLAUDE=0
+      shift
+      ;;
+    --claude-home)
+      [[ $# -ge 2 ]] || { warn "Missing value for --claude-home"; exit 1; }
+      CLAUDE_HOME="$2"
+      shift 2
+      ;;
+    --no-antigravity)
+      LINK_ANTIGRAVITY=0
+      shift
+      ;;
+    --antigravity-home)
+      [[ $# -ge 2 ]] || { warn "Missing value for --antigravity-home"; exit 1; }
+      ANTIGRAVITY_HOME="$2"
+      shift 2
+      ;;
     --force)
       FORCE=1
       shift
@@ -116,6 +142,11 @@ COPILOT_AGENTS_DIR="$COPILOT_HOME/agents"
 VSCODE_AGENTS_DIR="$VSCODE_PROMPTS_DIR/agents"
 VIBE_SKILLS_DIR="$VIBE_HOME/skills"
 VIBE_AGENTS_DIR="$VIBE_HOME/agents"
+CLAUDE_SKILLS_SRC="$REPO_ROOT/.claude/skills"
+CLAUDE_SKILLS_DIR="$CLAUDE_HOME/skills"
+CLAUDE_AGENTS_DIR="$CLAUDE_HOME/agents"
+ANTIGRAVITY_SKILLS_DIR="$ANTIGRAVITY_HOME/skills"
+ANTIGRAVITY_AGENTS_DIR="$ANTIGRAVITY_HOME/agents"
 
 [[ -d "$SKILLS_SRC" ]] || { warn "Missing directory: $SKILLS_SRC"; exit 1; }
 [[ -d "$AGENTS_SRC" ]] || { warn "Missing directory: $AGENTS_SRC"; exit 1; }
@@ -126,6 +157,12 @@ if (( LINK_VSCODE_AGENTS )); then
 fi
 if (( LINK_VIBE )); then
   run_cmd mkdir -p "$VIBE_SKILLS_DIR" "$VIBE_AGENTS_DIR"
+fi
+if (( LINK_CLAUDE )); then
+  run_cmd mkdir -p "$CLAUDE_SKILLS_DIR" "$CLAUDE_AGENTS_DIR"
+fi
+if (( LINK_ANTIGRAVITY )); then
+  run_cmd mkdir -p "$ANTIGRAVITY_SKILLS_DIR" "$ANTIGRAVITY_AGENTS_DIR"
 fi
 
 linked=0
@@ -179,6 +216,9 @@ for skill_dir in "$SKILLS_SRC"/*(N/); do
   if (( LINK_VIBE )); then
     link_one "$skill_dir" "$VIBE_SKILLS_DIR"
   fi
+  if (( LINK_ANTIGRAVITY )); then
+    link_one "$skill_dir" "$ANTIGRAVITY_SKILLS_DIR"
+  fi
 done
 
 for agent_file in "$AGENTS_SRC"/*.agent.md(.N); do
@@ -189,7 +229,19 @@ for agent_file in "$AGENTS_SRC"/*.agent.md(.N); do
   if (( LINK_VIBE )); then
     link_one "$agent_file" "$VIBE_AGENTS_DIR"
   fi
+  if (( LINK_CLAUDE )); then
+    link_one "$agent_file" "$CLAUDE_AGENTS_DIR"
+  fi
+  if (( LINK_ANTIGRAVITY )); then
+    link_one "$agent_file" "$ANTIGRAVITY_AGENTS_DIR"
+  fi
 done
+
+if (( LINK_CLAUDE )) && [[ -d "$CLAUDE_SKILLS_SRC" ]]; then
+  for claude_skill in "$CLAUDE_SKILLS_SRC"/*.md(.N); do
+    link_one "$claude_skill" "$CLAUDE_SKILLS_DIR"
+  done
+fi
 
 log ""
 log "Copilot global bootstrap complete."
@@ -207,4 +259,12 @@ fi
 if (( LINK_VIBE )); then
   log "Mistral Vibe skills: $VIBE_SKILLS_DIR"
   log "Mistral Vibe agents: $VIBE_AGENTS_DIR"
+fi
+if (( LINK_CLAUDE )); then
+  log "Claude Code skills: $CLAUDE_SKILLS_DIR"
+  log "Claude Code agents: $CLAUDE_AGENTS_DIR"
+fi
+if (( LINK_ANTIGRAVITY )); then
+  log "Antigravity skills: $ANTIGRAVITY_SKILLS_DIR"
+  log "Antigravity agents: $ANTIGRAVITY_AGENTS_DIR"
 fi

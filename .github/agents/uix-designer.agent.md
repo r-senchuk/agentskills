@@ -24,6 +24,10 @@ Before acting, classify the request:
 
 ## Skill Routing
 
+**Skill loading (two tiers — see CLAUDE.md Token Efficiency):**
+- Trivial tasks: skip skill load, act directly.
+- Non-trivial: check `.claude/skills/<name>.md` (quick ref) first; load full `.github/skills/<name>/SKILL.md` only for a complete procedure. Load lazily — `grep -n "^##\|^###" <path>` to locate the step, then read with offset+limit.
+
 Load and follow the relevant skill file before acting on any task in that domain.
 
 | Task Type | Skill to Load |

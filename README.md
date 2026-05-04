@@ -55,62 +55,18 @@ This repository is where skills are drafted, refined, and validated before submi
 
 ## Global Bootstrap (Mac)
 
-This repo can be your single source of truth for global Copilot and Mistral Vibe capabilities on your Mac.
+This repo can be your single source of truth for global Copilot and Mistral Vibe capabilities on macOS.
 
-Use the one-time bootstrap script:
-- [scripts/setup-copilot-globals.sh](scripts/setup-copilot-globals.sh)
+See the [Bootstrap Guide](docs/bootstrap-guide.md) for complete setup instructions, usage examples, troubleshooting, and configuration details.
 
-What it does:
-- Symlinks all skills from this repo into `~/.copilot/skills`
-- Symlinks all agents from this repo into `~/.copilot/agents`
-- Symlinks agents into VS Code user prompts profile (`~/Library/Application Support/Code/User/prompts/agents`)
-- Symlinks all skills and agents into Mistral Vibe directories (`~/.vibe/skills` and `~/.vibe/agents`)
-
-### Usage examples
-
+**Quick Start:**
 ```bash
-# 1) Preview only
+# Preview changes
 ./scripts/setup-copilot-globals.sh --dry-run
 
-# 2) Apply links (includes Mistral Vibe by default)
+# Apply symlinks
 ./scripts/setup-copilot-globals.sh
-
-# 3) Skip Mistral Vibe linking
-./scripts/setup-copilot-globals.sh --no-vibe
-
-# 4) Use a custom Mistral Vibe home
-./scripts/setup-copilot-globals.sh --vibe-home /path/to/custom/vibe
-
-# 5) Replace existing conflicting links/files
-./scripts/setup-copilot-globals.sh --force
-
-# 6) Optional: make it callable globally
-mkdir -p ~/bin
-ln -sf "$HOME/path/to/agentskills/scripts/setup-copilot-globals.sh" ~/bin/setup-copilot-globals.sh
 ```
-
-### Troubleshooting
-
-```bash
-# Check what is currently linked
-ls -la ~/.copilot/skills
-ls -la ~/.copilot/agents
-ls -la "$HOME/Library/Application Support/Code/User/prompts/agents"
-ls -la ~/.vibe/skills
-ls -la ~/.vibe/agents
-
-# Re-link and replace conflicting targets
-./scripts/setup-copilot-globals.sh --force
-
-# Validate that links still point to this repo
-readlink ~/.copilot/skills/mistral-sdk-router
-readlink ~/.copilot/agents/mistral.agent.md
-readlink "$HOME/Library/Application Support/Code/User/prompts/agents/mistral.agent.md"
-readlink ~/.vibe/skills/mistral-sdk-router
-readlink ~/.vibe/agents/mistral.agent.md
-```
-
-If links look correct but capabilities do not appear, restart VS Code and run the bootstrap script again with `--force`.
 
 After setup, any changes you make in this repository are reflected instantly everywhere those global symlinks are used.
 

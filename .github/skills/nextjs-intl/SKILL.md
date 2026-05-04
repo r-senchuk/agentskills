@@ -1,15 +1,15 @@
 ---
 name: nextjs-intl
-description: "Use when setting up, configuring, or troubleshooting next-intl internationalization in Next.js 15 App Router projects, especially with static export. Covers defineRouting, locale routing, message files, translations, locale switcher, hreflang generation, and static export compatibility. Do not use for next-i18next, server-side-only i18n, or non-Next.js i18n solutions."
+description: "Use when setting up, configuring, or troubleshooting next-intl internationalization in Next.js 16 App Router projects, especially with static export. Covers defineRouting, locale routing, message files, translations, locale switcher, hreflang generation, and static export compatibility. Do not use for next-i18next, server-side-only i18n, or non-Next.js i18n solutions."
 argument-hint: "Locales to support, default locale, current error or i18n goal, whether using static export."
 user-invocable: false
 ---
 
-# next-intl with Next.js 15 App Router
+# next-intl with Next.js 16 App Router
 
 ## When To Use
 
-- **Setup**: Installing and configuring next-intl in a Next.js 15 App Router project.
+- **Setup**: Installing and configuring next-intl in a Next.js 16 App Router project.
 - **Routing**: Configuring locale routing with `defineRouting`, localized pathnames, and `[locale]` segments.
 - **Translations**: Creating message files, using `useTranslations()`, and structuring translation namespaces.
 - **Static export**: Making next-intl work with `output: 'export'` — `setRequestLocale`, `generateStaticParams`, locale detection without middleware.
@@ -485,7 +485,7 @@ declare global {
 - [ ] `src/middleware.ts` exists for development routing
 - [ ] `app/[locale]/layout.tsx` includes `NextIntlClientProvider`, `setRequestLocale`, and `generateStaticParams`
 - [ ] Every page under `[locale]` calls `setRequestLocale(locale)` before translations
-- [ ] Every page under `[locale]` uses async `params` pattern (Next.js 15)
+- [ ] Every page under `[locale]` uses async `params` pattern (Next.js 16)
 - [ ] Locale switcher component uses `useRouter` and `usePathname` from `@/i18n/navigation`
 - [ ] `pnpm build` succeeds with all locales generated in `out/`
 

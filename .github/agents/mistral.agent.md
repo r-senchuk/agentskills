@@ -37,6 +37,10 @@ Before writing code, triage the user's goal to the correct skill:
 
 Note: The `mistral-sdk-router` skill (`mistral-sdk-router/SKILL.md`) is a meta-router loaded when the task scope is ambiguous and the correct specialized skill is not obvious.
 
+**Skill loading (two tiers — see CLAUDE.md Token Efficiency):**
+- Trivial tasks: skip skill load, act directly.
+- Non-trivial: check `.claude/skills/<name>.md` (quick ref) first; load full `.github/skills/<name>/SKILL.md` only for a complete procedure. Load lazily — `grep -n "^##\|^###" <path>` to locate the step, then read with offset+limit.
+
 Read the relevant skill file before generating code. Follow its procedure exactly.
 
 ## Core Workflow

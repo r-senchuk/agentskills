@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls .github/skills*)",
+      "Bash(ls .github/agents*)",
+      "Bash(ls .claude/skills*)",
+      "Bash(find .github -name '*.md')",
+      "Bash(find .claude -name '*.md')",
+      "Bash(grep:*)",
+      "Bash(git rev-parse --show-toplevel)",
+      "Bash(git log*)",
+      "Bash(git status)",
+      "Bash(wc -w *)",
+      "Bash(bash -n *)",
+      "Bash(zsh -n *)",
+      "Bash(./scripts/setup-copilot-globals.sh --dry-run)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"\nimport sys, json, os\ndata = json.load(sys.stdin)\ntool_input = data.get('tool_input', {})\nfile_path = tool_input.get('file_path', '')\nif 'SKILL.md' not in file_path:\n    sys.exit(0)\nfolder = os.path.basename(os.path.dirname(file_path))\ntry:\n    with open(file_path) as f:\n        lines = f.read().split('\\\\n')\n    name_line = next((l for l in lines if l.startswith('name:')), '')\n    name = name_line.replace('name:', '').strip().strip('\\\"')\n    if not name:\n        print('\\u26a0\\ufe0f  SKILL.md: name: field missing')\n    elif folder == name:\n        print(f'\\u2705 SKILL.md name match: {name}')\n    else:\n        print(f'\\u274c SKILL.md name mismatch: folder={folder} name={name}')\nexcept Exception as e:\n    print(f'\\u26a0\\ufe0f  Could not validate SKILL.md: {e}')\n\""
+          }
+        ]
+      }
+    ]
+  }
+}

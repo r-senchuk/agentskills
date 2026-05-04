@@ -146,8 +146,11 @@ The bootstrap script creates symlinks from:
 - `~/.copilot/agents/` → agent source files
 - `~/.copilot/skills/` → skill source files
 - `~/Library/Application Support/Code/User/prompts/agents/` → VS Code prompts directory
+- `~/.claude/skills/` → Claude Code skill files in `.claude/skills/` (if present)
 
 **Always run the bootstrap script after creating or modifying any agent or skill file.**
+
+**Claude Code note:** The `tools:` values in `.agent.md` (`read`, `edit`, `search`, `execute`, `web`, `agent`) are Copilot aliases. The Claude Code equivalents are `Read`, `Edit`/`Write`, `Bash`, `WebSearch`/`WebFetch`, `Agent`. If creating a companion `.claude/skills/<name>.md` file for Claude Code slash-command access, run the bootstrap script to link it to `~/.claude/skills/`.
 
 
 ### Step 7 — Troubleshoot Common Issues

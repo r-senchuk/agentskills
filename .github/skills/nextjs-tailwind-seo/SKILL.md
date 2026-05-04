@@ -1,15 +1,15 @@
 ---
 name: nextjs-tailwind-seo
-description: "Use when setting up Tailwind CSS, implementing SEO metadata, configuring fonts, or adding structured data in Next.js 15 App Router projects. Covers Tailwind v4 CSS-first config, custom design tokens, generateMetadata, JSON-LD, next-sitemap, OG tags, canonical URLs, and responsive design patterns. Do not use for backend development, non-Tailwind styling, or design/branding decisions."
+description: "Use when setting up Tailwind CSS, implementing SEO metadata, configuring fonts, or adding structured data in Next.js 16 App Router projects. Covers Tailwind v4 CSS-first config, custom design tokens, generateMetadata, JSON-LD, next-sitemap, OG tags, canonical URLs, and responsive design patterns. Do not use for backend development, non-Tailwind styling, or design/branding decisions."
 argument-hint: "SEO goal (metadata, sitemap, JSON-LD), Tailwind customization target (tokens, responsive), or font setup."
 user-invocable: false
 ---
 
-# Tailwind CSS & SEO for Next.js 15
+# Tailwind CSS & SEO for Next.js 16
 
 ## When To Use
 
-- **Tailwind setup**: Configuring Tailwind CSS v4 with Next.js 15, custom design tokens, PostCSS.
+- **Tailwind setup**: Configuring Tailwind CSS v4 with Next.js 16, custom design tokens, PostCSS.
 - **Fonts**: Integrating Google Fonts via `next/font/google` with Tailwind CSS variables.
 - **Responsive design**: Implementing mobile-first responsive layouts with Tailwind breakpoints.
 - **SEO metadata**: Writing `generateMetadata()` for per-page title, description, OG tags, and canonical URLs.

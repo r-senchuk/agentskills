@@ -146,7 +146,53 @@ WC=$(wc -w < "$SKILL_ABS")
 
 Load `./references/quality-checklist.md` for the full validation matrix including content checks.
 
-### Step 6 — Troubleshoot Common Issues
+### Step 6 — Create Claude Code Companion Skill (if applicable)
+
+After the Copilot `SKILL.md` passes validation, decide whether a Claude Code companion is needed.
+
+**Create** `.claude/skills/<name>.md` if:
+- The skill is a workflow the user would explicitly invoke via `/name` in Claude Code CLI
+- The skill is a meta-workflow for managing this repo (skill-builder, agent-builder, validate, sync)
+
+**Skip** for domain implementation skills loaded automatically by subagents (e.g., `nextjs-ssg`, `mistral-function-calling`, `shell-script-audit`).
+
+If creating a companion:
+
+1. Create the file at `.claude/skills/<name>.md` — **no YAML frontmatter**
+2. Use this structure:
+
+```markdown
+# Skill Name
+
+One-line summary of what happens when invoked.
+
+## Steps
+
+1. Action step using Claude Code tool names (Read, Bash, Edit, Write, Agent)
+2. ...
+
+## Done when
+
+Verifiable success condition.
+```
+
+3. Rules:
+   - Imperative voice throughout ("Read...", "Run...", "Check...")
+   - Use Claude Code tool names — not Copilot aliases (`read`, `edit`, `execute`)
+   - Include commands and code inline — no deferred lookups
+   - ≤ 150 lines; extract detail to referenced files only when unavoidable
+   - State required inputs upfront; ask for any that are missing before starting
+
+4. Run the sync script to link the new file to `~/.claude/skills/`:
+   ```bash
+   ROOT="$(git rev-parse --show-toplevel)"
+   "$ROOT/scripts/setup-copilot-globals.sh" --dry-run
+   "$ROOT/scripts/setup-copilot-globals.sh" --force
+   ```
+
+5. Verify the link was created: `ls ~/.claude/skills/<name>.md`
+
+### Step 7 — Troubleshoot Common Issues
 
 **Skill fails to load — "missing or malformed YAML frontmatter"**
 - Open the file and verify `---` appears on lines 1 and N with no leading spaces or BOM characters.
@@ -184,6 +230,7 @@ Load `./references/quality-checklist.md` for the full validation matrix includin
 - [ ] No XML tags (`< >`) anywhere in the frontmatter block
 - [ ] No `README.md` file inside the skill folder
 - [ ] Troubleshooting or error-handling content is present (inline guards, common issues step, or completion check)
+- [ ] Claude Code companion decision made: `.claude/skills/<name>.md` created if user-invokable via CLI, skipped if subagent-only
 
 ## References
 
