@@ -14,7 +14,7 @@ COPILOT_HOME="${COPILOT_HOME:-$HOME/.copilot}"
 VSCODE_PROMPTS_DIR="${VSCODE_PROMPTS_DIR:-$HOME/Library/Application Support/Code/User/prompts}"
 VIBE_HOME="${VIBE_HOME:-$HOME/.vibe}"
 CLAUDE_HOME="${CLAUDE_HOME:-$HOME/.claude}"
-ANTIGRAVITY_HOME="${ANTIGRAVITY_HOME:-$HOME/.gemini/antigravity}"
+ANTIGRAVITY_PLUGIN_DIR="${ANTIGRAVITY_PLUGIN_DIR:-$HOME/.gemini/config/plugins/agentskills}"
 LINK_VSCODE_AGENTS=1
 LINK_VIBE=1
 LINK_CLAUDE=1
@@ -33,7 +33,7 @@ Options:
   --vscode-prompts <path> VS Code prompts dir. Default: ~/Library/Application Support/Code/User/prompts
   --vibe-home <path>      Mistral Vibe home. Default: ~/.vibe
   --claude-home <path>    Claude Code home. Default: ~/.claude
-  --antigravity-home <path> Antigravity home. Default: ~/.gemini/antigravity
+  --antigravity-plugin <path> Antigravity plugin dir. Default: ~/.gemini/config/plugins/agentskills
   --no-vscode-agents      Skip linking agents into VS Code prompts profile.
   --no-vibe               Skip linking skills/agents into Mistral Vibe.
   --no-claude             Skip linking skills into Claude Code.
@@ -108,9 +108,9 @@ while (( $# > 0 )); do
       LINK_ANTIGRAVITY=0
       shift
       ;;
-    --antigravity-home)
-      [[ $# -ge 2 ]] || { warn "Missing value for --antigravity-home"; exit 1; }
-      ANTIGRAVITY_HOME="$2"
+    --antigravity-plugin)
+      [[ $# -ge 2 ]] || { warn "Missing value for --antigravity-plugin"; exit 1; }
+      ANTIGRAVITY_PLUGIN_DIR="$2"
       shift 2
       ;;
     --force)
@@ -145,8 +145,8 @@ VIBE_AGENTS_DIR="$VIBE_HOME/agents"
 CLAUDE_SKILLS_SRC="$REPO_ROOT/.claude/skills"
 CLAUDE_SKILLS_DIR="$CLAUDE_HOME/skills"
 CLAUDE_AGENTS_DIR="$CLAUDE_HOME/agents"
-ANTIGRAVITY_SKILLS_DIR="$ANTIGRAVITY_HOME/skills"
-ANTIGRAVITY_AGENTS_DIR="$ANTIGRAVITY_HOME/agents"
+# Antigravity uses a plugin directory — we symlink the whole repo as a plugin.
+# The plugin.json at the repo root tells Antigravity where skills/ and agents/ live.
 
 [[ -d "$SKILLS_SRC" ]] || { warn "Missing directory: $SKILLS_SRC"; exit 1; }
 [[ -d "$AGENTS_SRC" ]] || { warn "Missing directory: $AGENTS_SRC"; exit 1; }
@@ -162,7 +162,7 @@ if (( LINK_CLAUDE )); then
   run_cmd mkdir -p "$CLAUDE_SKILLS_DIR" "$CLAUDE_AGENTS_DIR"
 fi
 if (( LINK_ANTIGRAVITY )); then
-  run_cmd mkdir -p "$ANTIGRAVITY_SKILLS_DIR" "$ANTIGRAVITY_AGENTS_DIR"
+  run_cmd mkdir -p "$(dirname "$ANTIGRAVITY_PLUGIN_DIR")"
 fi
 
 linked=0
@@ -216,10 +216,11 @@ for skill_dir in "$SKILLS_SRC"/*(N/); do
   if (( LINK_VIBE )); then
     link_one "$skill_dir" "$VIBE_SKILLS_DIR"
   fi
-  if (( LINK_ANTIGRAVITY )); then
-    link_one "$skill_dir" "$ANTIGRAVITY_SKILLS_DIR"
-  fi
 done
+
+if (( LINK_ANTIGRAVITY )); then
+  link_one "$REPO_ROOT" "$(dirname "$ANTIGRAVITY_PLUGIN_DIR")"
+fi
 
 for agent_file in "$AGENTS_SRC"/*.agent.md(.N); do
   link_one "$agent_file" "$COPILOT_AGENTS_DIR"
@@ -231,9 +232,6 @@ for agent_file in "$AGENTS_SRC"/*.agent.md(.N); do
   fi
   if (( LINK_CLAUDE )); then
     link_one "$agent_file" "$CLAUDE_AGENTS_DIR"
-  fi
-  if (( LINK_ANTIGRAVITY )); then
-    link_one "$agent_file" "$ANTIGRAVITY_AGENTS_DIR"
   fi
 done
 
@@ -265,6 +263,5 @@ if (( LINK_CLAUDE )); then
   log "Claude Code agents: $CLAUDE_AGENTS_DIR"
 fi
 if (( LINK_ANTIGRAVITY )); then
-  log "Antigravity skills: $ANTIGRAVITY_SKILLS_DIR"
-  log "Antigravity agents: $ANTIGRAVITY_AGENTS_DIR"
+  log "Antigravity plugin: $ANTIGRAVITY_PLUGIN_DIR -> $REPO_ROOT"
 fi

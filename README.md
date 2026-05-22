@@ -23,17 +23,10 @@ This repository is where skills are drafted, refined, and validated before submi
 | [harness-engineering](.github/skills/harness-engineering/SKILL.md) | Design guardrails, feedback loops, state, observability, and error recovery for agent workflows. |
 | [imagery-art-direction](.github/skills/imagery-art-direction/SKILL.md) | Select, optimize, and place renovation-site photography and visual assets for static Next.js export. |
 | [macos-homebrew-troubleshoot](.github/skills/macos-homebrew-troubleshoot/SKILL.md) | Diagnose and fix macOS environment issues, Homebrew problems, PATH conflicts, and permissions. |
-| [mistral-agent-builder](.github/skills/mistral-agent-builder/SKILL.md) | Build and operate persistent Mistral Agents with tools, handoffs, and guardrails. |
-| [mistral-document-ai](.github/skills/mistral-document-ai/SKILL.md) | Extract text, tables, and structure from PDFs and images with Mistral OCR workflows. |
-| [mistral-embeddings-rag](.github/skills/mistral-embeddings-rag/SKILL.md) | Build embeddings and RAG pipelines with chunking, retrieval, and grounded answers. |
-| [mistral-function-calling](.github/skills/mistral-function-calling/SKILL.md) | Implement robust Mistral tool/function-calling loops with safe execution patterns. |
-| [mistral-sdk-router](.github/skills/mistral-sdk-router/SKILL.md) | Route any Mistral API or SDK task to the correct specialized skill. |
-| [mistral-structured-outputs](.github/skills/mistral-structured-outputs/SKILL.md) | Extract guaranteed typed JSON using schema-constrained structured outputs. |
-| [mistral-vibe-expert](.github/skills/mistral-vibe-expert/SKILL.md) | Operate Mistral Vibe CLI with safe delegation, tool permissions, and clear result synthesis. |
 | [mobile-first-layout](.github/skills/mobile-first-layout/SKILL.md) | Build responsive mobile-first page layouts, grids, and section shells for Tailwind/Next.js sites. |
-| [nextjs-intl](.github/skills/nextjs-intl/SKILL.md) | Configure and troubleshoot `next-intl` internationalization in Next.js App Router projects. |
-| [nextjs-ssg](.github/skills/nextjs-ssg/SKILL.md) | Scaffold and troubleshoot static-export Next.js App Router projects. |
-| [nextjs-tailwind-seo](.github/skills/nextjs-tailwind-seo/SKILL.md) | Set up Tailwind CSS, SEO metadata, fonts, and structured data for Next.js projects. |
+| [nextjs-intl](.github/skills/nextjs-intl/SKILL.md) | Configure and troubleshoot `next-intl` internationalization in Next.js 16 App Router projects. |
+| [nextjs-ssg](.github/skills/nextjs-ssg/SKILL.md) | Scaffold and troubleshoot static-export Next.js 16 App Router projects. |
+| [nextjs-tailwind-seo](.github/skills/nextjs-tailwind-seo/SKILL.md) | Set up Tailwind CSS v4, SEO metadata, fonts, and structured data for Next.js 16 projects. |
 | [photo-upload-form-ux](.github/skills/photo-upload-form-ux/SKILL.md) | Design mobile-first quote funnels with embedded forms, photo guidance, and thank-you flows. |
 | [shell-script-audit](.github/skills/shell-script-audit/SKILL.md) | Audit and harden shell scripts for stability, portability, error handling, and best practices. |
 | [skill-builder](.github/skills/skill-builder/SKILL.md) | Create, audit, or refactor a SKILL.md with research, structure, and validation checks. |
@@ -48,27 +41,34 @@ This repository is where skills are drafted, refined, and validated before submi
 |-------|-------------|
 | [sara](.github/agents/sara.agent.md) | Default team-lead agent. Handles trivial tasks and bounded orchestration work directly; delegates specialist work to subagents. The only user-facing agent. |
 | [bashar](.github/agents/bashar.agent.md) | Subagent: macOS and shell specialist for script audits, Homebrew troubleshooting, zsh configuration, and PATH debugging. |
-| [mistral](.github/agents/mistral.agent.md) | Subagent: specialist for building and operating Mistral SDK apps; routes to the correct Mistral skill. |
-| [nexter](.github/agents/nexter.agent.md) | Subagent: Next.js specialist for App Router, static export, Tailwind, i18n, SEO, and component implementation. |
+| [nexter](.github/agents/nexter.agent.md) | Subagent: Next.js 16 specialist for App Router, static export, Tailwind v4, i18n, SEO, and component implementation. |
 | [skiller](.github/agents/skiller.agent.md) | Subagent: researches domains, builds skills, and designs agents. Creates all dependency skills before writing the agent file. |
 | [uix-designer](.github/agents/uix-designer.agent.md) | Subagent: senior UIX designer for vivid, trust-building, conversion-focused renovation website improvements. |
 
-## Global Bootstrap (Mac)
+## Setup (All Platforms — Mac)
 
-This repo can be your single source of truth for global Copilot and Mistral Vibe capabilities on macOS.
+This repo is the single source of truth for skills and agents across GitHub Copilot, Claude Code, Mistral Vibe, and Google Antigravity CLI on macOS.
 
-See the [Bootstrap Guide](docs/bootstrap-guide.md) for complete setup instructions, usage examples, troubleshooting, and configuration details.
+See the [Bootstrap Guide](docs/bootstrap-guide.md) for complete setup instructions.
 
 **Quick Start:**
 ```bash
 # Preview changes
 ./scripts/setup-copilot-globals.sh --dry-run
 
-# Apply symlinks
+# Apply symlinks (Copilot, VS Code, Vibe, Claude Code, Antigravity)
 ./scripts/setup-copilot-globals.sh
 ```
 
-After setup, any changes you make in this repository are reflected instantly everywhere those global symlinks are used.
+After setup, any changes you make in this repository are reflected instantly everywhere via symlinks.
+
+### Antigravity CLI
+
+The bootstrap script symlinks this repo as a native Antigravity plugin:
+```
+~/.gemini/config/plugins/agentskills -> /path/to/agentskills
+```
+Antigravity reads `plugin.json` from the repo root to discover the `skills/` and `agents/` directories. Skills are loaded on demand — add them manually in your session when needed.
 
 ## Quality Bar
 

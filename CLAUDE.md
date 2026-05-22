@@ -8,20 +8,20 @@ A personal incubator for GitHub Copilot skills and agents targeting contribution
 
 ## Bootstrap & Sync
 
-After cloning, run the one-time bootstrap to symlink all skills and agents into global Copilot/Vibe directories:
+After cloning, run the one-time bootstrap to symlink all skills and agents into global Copilot/Vibe/Antigravity directories:
 
 ```bash
 # Preview changes (no writes)
 ./scripts/setup-copilot-globals.sh --dry-run
 
-# Apply symlinks (Copilot, VS Code, Mistral Vibe)
+# Apply symlinks (Copilot, VS Code, Mistral Vibe, Antigravity)
 ./scripts/setup-copilot-globals.sh
 
 # Re-link and replace conflicts
 ./scripts/setup-copilot-globals.sh --force
 ```
 
-The script targets `~/.copilot/skills/`, `~/.copilot/agents/`, `~/Library/Application Support/Code/User/prompts/agents/`, `~/.vibe/skills/`, and `~/.vibe/agents/`. After setup, edits in this repo are reflected everywhere immediately via symlinks.
+The script targets `~/.copilot/skills/`, `~/.copilot/agents/`, `~/Library/Application Support/Code/User/prompts/agents/`, `~/.vibe/skills/`, `~/.vibe/agents/`, and `~/.gemini/config/plugins/agentskills`. After setup, edits in this repo are reflected everywhere immediately via symlinks.
 
 Optional shell alias — source from `~/.zshrc` to get `agent-sync` as a global command:
 ```bash
@@ -106,7 +106,6 @@ user-invocable: true|false  # only sara is true; all subagents are false
 | Subagent | Domain |
 |---|---|
 | `skiller` | Skill/agent authoring and audit — routes `skill-builder`, `agent-builder` |
-| `mistral` | Mistral SDK — routes all `mistral-*` skills via `mistral-sdk-router` |
 | `bashar` | macOS & shell — routes `shell-script-audit`, `macos-homebrew-troubleshoot`, `zsh-config-expert` |
 | `nexter` | Next.js App Router — routes `nextjs-ssg`, `nextjs-intl`, `nextjs-tailwind-seo` |
 | `uix-designer` | Garnebo visual UI — routes design/CRO/component skills |
@@ -149,7 +148,6 @@ Sara's orchestration model works natively in Claude Code via the `Agent` tool. W
 | Domain | Briefing file |
 |---|---|
 | Skill/agent authoring | `.github/agents/skiller.agent.md` |
-| Mistral SDK/CLI | `.github/agents/mistral.agent.md` |
 | macOS & shell | `.github/agents/bashar.agent.md` |
 | Next.js frontend | `.github/agents/nexter.agent.md` |
 | Garnebo UI/design | `.github/agents/uix-designer.agent.md` |
@@ -195,6 +193,4 @@ Delegation briefs must stay ≤400 tokens. Assign budget by priority:
 - Pass file paths, not file content, whenever the subagent can read the file itself.
 - Subagent responses over ~500 tokens: extract key findings before passing to the next agent or delivering to the user (see Sara's Delegation Harness → Orchestration).
 
-## Shared References
 
-`.github/references/mistral-cross-cutting-guidance.md` — shared API key, model selection, retry, and cost policies for all `mistral-*` skills. Link as `../../references/mistral-cross-cutting-guidance.md` from inside a skill subdirectory.

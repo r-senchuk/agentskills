@@ -1,0 +1,9 @@
+{
+  "name": "agentskills",
+  "displayName": "Agent Skills",
+  "description": "A curated library of agent skills for GitHub Copilot, Claude Code, and Antigravity CLI. Skills cover Next.js SSG, i18n, Tailwind v4 SEO, macOS/shell, context engineering, harness engineering, UIX design, and more.",
+  "version": "1.0.0",
+  "author": "Roman Senchuk",
+  "skills": "./skills",
+  "agents": "./agents"
+}
