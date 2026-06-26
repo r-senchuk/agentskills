@@ -5,5 +5,7 @@
   "version": "1.0.0",
   "author": "Roman Senchuk",
   "skills": "./skills",
-  "agents": "./agents"
+  "agents": "./agents",
+  "deprecated": true,
+  "note": "Antigravity support is paused. This repo now targets OpenCode as the primary platform. See opencode.json and AGENTS.md."
 }

@@ -1,4 +1,8 @@
 #!/bin/zsh
+# DEPRECATED: This repo now targets OpenCode as the primary platform.
+# This script is no longer maintained. Symlinks for Copilot, VS Code,
+# Mistral Vibe, and Antigravity are no longer needed or updated.
+# See opencode.json and AGENTS.md for current setup instructions.
 set -euo pipefail
 setopt null_glob
 

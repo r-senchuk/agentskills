@@ -12,7 +12,7 @@ metadata:
 ---
 
 # Photo-Upload Form UX for Mobile Quote Funnels
-Design and implement the quote request funnel UX for the Garnebo `/quote` page — optimising for mobile users uploading smartphone photos, minimising form friction, and maximising completions.
+Design and implement the quote request funnel UX for the /quote page — optimising for mobile users uploading smartphone photos, minimising form friction, and maximising completions.
 
 **Architecture:** Static export (no API routes, no backend). All form handling delegated to third-party embed: Typeform, Tally, or Fillout. Most users arrive from Google Maps/Instagram/WhatsApp with renovation photos already in their camera roll.
 
@@ -206,7 +206,7 @@ Configure the form tool to redirect to `/[locale]/grazie` or `/[locale]/thank-yo
     "preferWhatsapp": "Preferisci scrivere su WhatsApp?",
     "whatsappCta": "Inviaci un messaggio →",
     "faqHeading": "Domande frequenti",
-    "metaTitle": "Preventivo Gratuito Ristrutturazioni | Garnebo Bologna",
+    "metaTitle": "Preventivo Gratuito Ristrutturazioni",
     "metaDesc": "Richiedi un preventivo in 2 minuti. Carica le foto dal telefono.",
     "photoGuide": {
       "eyebrow": "Prima di iniziare",

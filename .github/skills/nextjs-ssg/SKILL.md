@@ -4,11 +4,11 @@ description: "Use when scaffolding, configuring, or troubleshooting Next.js 16 A
 argument-hint: "Project path or name, target features (i18n, SEO, etc.), current error or goal."
 user-invocable: false
 license: MIT
-compatibility: "Requires Node.js 18+, Next.js 16+, and pnpm/npm/yarn for package management."
+compatibility: "Requires Node.js 20+, Next.js 16+, and pnpm/npm/yarn for package management."
 metadata:
   author: "Roman Senchuk"
-  version: "1.1.0"
-  last-updated: "2024-07-15"
+  version: "1.2.0"
+  last-updated: "2026-05-31"
 ---
 
 # Next.js 16 Static Site Generation (SSG)
@@ -145,7 +145,7 @@ Every `page.tsx` under a dynamic segment (`[locale]`, `[slug]`) MUST export `gen
 ```json
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -297,7 +297,7 @@ out/
 
 | Feature | Status | Workaround |
 |---|---|---|
-| `middleware.ts` | ❌ Ignored in production | Handle locale detection via `[locale]` segment + default redirect in root `page.tsx` |
+| `middleware.ts` | ❌ Ignored in production | Handle locale detection via `[locale]` segment + default redirect in root `page.tsx`. Note: Next.js 16 uses `proxy.ts` for middleware; both `middleware.ts` and `proxy.ts` are ignored with `output: 'export'`. |
 | API Routes (`app/api/`) | ❌ Not generated | Use external API or build-time data fetching |
 | ISR (`revalidate`) | ❌ Not supported | Full rebuild on content change |
 | `cookies()`, `headers()` | ❌ Build error | Remove server-only APIs |

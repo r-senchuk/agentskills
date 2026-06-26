@@ -12,7 +12,7 @@ Read the briefing file listed below, then spawn an `Agent` with that file's cont
 | Mistral SDK — agents, function calling, RAG, OCR, structured outputs, Vibe CLI | `.github/agents/mistral.agent.md` | Any Mistral API, SDK, or CLI task |
 | macOS environment, Homebrew, shell scripts, zsh config, PATH | `.github/agents/bashar.agent.md` | Shell script review, Homebrew, macOS environment, zsh |
 | Next.js App Router, static export, Tailwind v4, next-intl, SEO | `.github/agents/nexter.agent.md` | Next.js pages, routes, components, i18n, Tailwind setup |
-| Garnebo brand UI — design tokens, components, CRO, imagery, audits | `.github/agents/uix-designer.agent.md` | Visual design audit, UI components, brand tokens, CRO |
+| Brand UI — design tokens, components, CRO, imagery, audits | `.github/agents/uix-designer.agent.md` | Visual design audit, UI components, brand tokens, CRO |
 
 ## Complexity Rubric
 

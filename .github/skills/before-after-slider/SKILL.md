@@ -267,7 +267,7 @@ import { BeforeAfterSlider } from '@/components/BeforeAfterSlider';
       Our Work
     </p>
     <h2 className="mt-3 text-center text-[26px] font-semibold text-brand-primary md:text-[36px]">
-      See the Garnebo Difference
+      See the project's difference
     </h2>
     <div className="mt-10 grid gap-6 md:grid-cols-2">
       <BeforeAfterSlider
@@ -286,7 +286,7 @@ import { BeforeAfterSlider } from '@/components/BeforeAfterSlider';
       />
     </div>
     <p className="mt-6 text-center text-[13px] font-light text-accent-blue">
-      Drag the slider to compare · All photos from real Garnebo projects in Bologna
+      Drag the slider to compare · All photos from real client projects
     </p>
   </div>
 </section>

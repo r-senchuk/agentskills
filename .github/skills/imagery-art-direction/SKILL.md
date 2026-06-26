@@ -12,7 +12,7 @@ metadata:
 ---
 
 # Imagery Strategy and Art Direction
-Guide selection, art direction, optimisation, and placement of photography and visual assets across the Garnebo website. Imagery must reinforce brand trust and drive conversions. Static export on S3/CloudFront: `images.unoptimized: true`, all images pre-built into `/public/`, primary format `.webp`.
+Guide selection, art direction, optimisation, and placement of photography and visual assets across the website. Imagery must reinforce brand trust and drive conversions. Static export on S3/CloudFront: `images.unoptimized: true`, all images pre-built into `/public/`, primary format `.webp`.
 
 **Brand personality:** Clean, precise, tech-enabled, premium-organised. Think architect's presentation folder — not a TV home improvement show.
 
@@ -37,9 +37,9 @@ Guide selection, art direction, optimisation, and placement of photography and v
 
 ### Step 1 — Image Sourcing Hierarchy
 
-1. **Real Garnebo project photos** — request from client (highest trust value)
+1. **Real project photos** — request from client (highest trust value)
 2. **Commissioned photography** — hire a local architectural photographer for a half-day shoot
-3. **Licensed stock** — Unsplash/Pexels (free), Getty/Shutterstock (paid). Search: "renovated apartment Bologna", "Italian interior renovation", "parquet flooring install"
+3. **Licensed stock** — Unsplash/Pexels (free), Getty/Shutterstock (paid). Search: "renovated apartment", "Italian interior renovation", "parquet flooring install"
 4. **AI-generated** — only as placeholder, never in production without disclosure
 
 ### Step 2 — Image Specifications
@@ -78,7 +78,7 @@ import Image from 'next/image';
 
 <Image
   src="/hero-finished-apartment.webp"
-  alt="Renovated apartment with new parquet flooring in Bologna"
+  alt="Renovated apartment with new parquet flooring"
   fill
   priority
   sizes="100vw"
@@ -109,16 +109,16 @@ Bad:   alt="renovation"
 Bad:   alt="before"
 
 Good:  alt="Living room before renovation — worn parquet flooring and dated wallpaper"
-Good:  alt="Same living room after Garnebo renovation — new engineered oak flooring and fresh white plaster"
-Good:  alt="Tiler applying precision grout to 60x60cm porcelain tiles in a Bologna bathroom"
-Good:  alt="Marco Bianchi, Garnebo Project Manager, on-site at a completed renovation in Bolognina"
+Good:  alt="Same living room after renovation — new engineered oak flooring and fresh white plaster"
+Good:  alt="Tiler applying precision grout to 60x60cm porcelain tiles in a bathroom"
+Good:  alt="Project Manager, on-site at a completed renovation in the project location"
 ```
 
 **Formula:**
 - Before photo: `[Room type] before renovation — [key before-state details]`
-- After photo: `[Room type] after Garnebo renovation — [key improvements]`
+- After photo: `[Room type] after renovation — [key improvements]`
 - Action shot: `[Who] doing [what] [where]`
-- Team: `[Full name], [role at Garnebo]`
+- Team: `[Full name], [role at the company]`
 
 ### Step 6 — File Naming Convention
 

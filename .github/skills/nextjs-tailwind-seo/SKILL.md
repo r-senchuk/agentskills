@@ -321,7 +321,61 @@ export default async function HomePage({ params }: Props) {
 }
 ```
 
-### Step 6 — next-sitemap Configuration
+### Step 6 — Sitemap and Robots
+
+Next.js 16 has a built-in `app/sitemap.ts` file convention. Prefer this over the `next-sitemap` npm package for new projects.
+
+**Option A: Built-in `app/sitemap.ts` (recommended)**
+
+```typescript
+// app/sitemap.ts
+import type { MetadataRoute } from 'next';
+import { routing } from '@/i18n/routing';
+
+const BASE_URL = 'https://www.example.com';
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const pages = ['', '/about', '/services', '/contact'];
+  const entries: MetadataRoute.Sitemap = [];
+
+  for (const locale of routing.locales) {
+    for (const page of pages) {
+      entries.push({
+        url: `${BASE_URL}/${locale}${page}`,
+        lastModified: new Date(),
+        changeFrequency: page === '' ? 'yearly' : 'monthly',
+        priority: page === '' ? 1 : 0.8,
+        alternates: {
+          languages: Object.fromEntries(
+            routing.locales.map((loc) => [loc, `${BASE_URL}/${loc}${page}`])
+          ),
+        },
+      });
+    }
+  }
+
+  return entries;
+}
+```
+
+For built-in `robots.ts`:
+
+```typescript
+// app/robots.ts
+import type { MetadataRoute } from 'next';
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+    },
+    sitemap: 'https://www.example.com/sitemap.xml',
+  };
+}
+```
+
+**Option B: next-sitemap npm package (legacy projects)**
 
 ```bash
 pnpm add -D next-sitemap
@@ -364,10 +418,7 @@ Add the postbuild script to `package.json`:
 }
 ```
 
-After `pnpm build`, the `out/` directory will contain:
-- `sitemap.xml` — all pages across all locales
-- `sitemap-0.xml` — individual sitemap (if paginated)
-- `robots.txt` — with sitemap reference
+After `pnpm build`, the `out/` directory will contain `sitemap.xml` and `robots.txt`.
 
 ### Step 7 — Canonical URL Generation Per Locale
 
@@ -464,26 +515,6 @@ And referenced in `@theme`:
 For static export, `next-sitemap` should run after `next build`. Set `outDir: './out'` in the config and use the `postbuild` script.
 
 
-### Step 9 — Troubleshoot Common Issues
-
-**Tailwind classes not applying**
-- Ensure `globals.css` starts with `@import "tailwindcss"` (Tailwind v4 CSS-first, no `tailwind.config.ts`).
-- Verify `globals.css` is imported in the root layout `app/layout.tsx`.
-
-**`@theme` custom tokens not available as utilities**
-- Token names must follow `--color-*`, `--font-*`, `--spacing-*` convention for auto-mapped utilities.
-- Check for typos in the token name vs the utility class used.
-
-**`generateMetadata` not showing in `<head>`**
-- Only works in Server Components. If the file has `'use client'` at the top, move metadata to a separate server-side parent.
-
-**JSON-LD not indexed by Google**
-- Use `<script type="application/ld+json">` inside a Server Component, not a Client Component.
-- Validate at https://search.google.com/test/rich-results.
-
-**`next-sitemap` generating 404 paths**
-- Ensure `generateStaticParams` is defined for all dynamic routes before running `next build`.
-
 ## Completion Checks
 
 - [ ] `@import "tailwindcss"` in `globals.css` with `@theme` tokens
@@ -495,8 +526,8 @@ For static export, `next-sitemap` should run after `next build`. Set `outDir: '.
 - [ ] `generateMetadata()` on every page with title, description, OG, canonical
 - [ ] `alternates.languages` includes all locales for hreflang
 - [ ] JSON-LD `<script>` tags render valid schema (test at schema.org validator)
-- [ ] `next-sitemap` installed with `postbuild` script in `package.json`
-- [ ] `robots.txt` and `sitemap.xml` appear in `out/` after build
+- [ ] `next-sitemap` installed with `postbuild` script in `package.json` OR built-in `app/sitemap.ts` used
+- [ ] `robots.txt` and `sitemap.xml` appear in `out/` after build (or built-in `app/robots.ts` generates them)
 - [ ] Responsive design tested: mobile-first classes with `sm:`, `md:`, `lg:` overrides
 - [ ] `favicon.ico` and `icon.png` present in `src/app/`
 - [ ] All OG image URLs are absolute (full domain)
@@ -507,6 +538,8 @@ For static export, `next-sitemap` should run after `next build`. Set `outDir: '.
 - [Tailwind v4 Upgrade Guide](https://tailwindcss.com/docs/upgrade-guide)
 - [Next.js Metadata API](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)
 - [Next.js Static File Conventions (icons)](https://nextjs.org/docs/app/api-reference/file-conventions/metadata)
+- [Next.js Metadata Files — sitemap.xml](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap)
+- [Next.js Metadata Files — robots.txt](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots)
 - [next-sitemap Documentation](https://github.com/iamvishnusankar/next-sitemap)
 - [Schema.org LocalBusiness](https://schema.org/LocalBusiness)
 - [Google Structured Data Testing Tool](https://search.google.com/test/rich-results)

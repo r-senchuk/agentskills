@@ -12,16 +12,16 @@ metadata:
 ---
 
 # Trust Signal UI Components
-Design and implement trust signal components (compliance badges, legal credentials, guarantees, team portraits, shield/checkmark iconography) that reduce visitor anxiety and increase quote request conversions for the Garnebo renovation business.
+Design and implement trust signal components (compliance badges, legal credentials, guarantees, team portraits, shield/checkmark iconography) that reduce visitor anxiety and increase quote request conversions for the renovation business.
 
 **Trust blockers in home services:** Fear of unlicensed workers, hidden costs, project abandonment, non-compliance with building codes.
-**Key Garnebo trust assets:** DM 37/2008 compliance, VAT IT04239601208, Bologna local presence, fixed-price quotes, single project manager contact.
+
 
 ## When To Use
 
 - Adding a horizontal trust badge row below the hero section or on the quote page
 - Building a `TrustBlock` section with 3-column compliance/guarantee/local-team cards
-- Implementing a `ComplianceBadge` for a specific legal credential (e.g. DM 37/2008)
+- Implementing a `ComplianceBadge` for a specific legal credential (e.g. relevant local regulatory certification)
 - Adding a `TeamModule` with staff portraits, names, roles, and bios
 - Creating a guarantee statement block or shield icon to reduce pre-conversion anxiety
 
@@ -31,7 +31,7 @@ Design and implement trust signal components (compliance badges, legal credentia
 
 1. Which trust signal component is needed (badge row, full trust block, compliance badge, team module, or guarantee block)
 2. Target page and section placement (hero area, services page, quote page, footer, etc.)
-3. Available trust assets (DM 37/2008 certification, VAT number, project count, ratings, team photos)
+3. Available trust assets (relevant local regulatory certification, VAT/Tax ID, project count, ratings, team photos)
 4. Locale(s) required (Italian, English, or both)
 
 ## Procedure
@@ -42,10 +42,10 @@ Before building, catalogue available assets:
 
 | Signal type | Asset | Priority |
 |---|---|---|
-| Legal compliance | DM 37/2008 certification | Critical |
-| Business legitimacy | VAT / P.IVA IT04239601208 | High |
+| Legal compliance | Relevant local regulatory certification | Critical |
+| Business legitimacy | VAT/Tax ID | High |
 | Financial protection | Fixed-price written quote | Critical |
-| Local presence | Bologna-based team, local project mgr | High |
+| Local presence | Local team, local project mgr | High |
 | Social proof | Client count, ratings, testimonials | High |
 | Quality assurance | Workmanship guarantee / warranty | Medium |
 
@@ -196,7 +196,7 @@ export function TeamMember({ name, role, bio, imageSrc }: TeamMemberProps) {
   <h3 className="mt-4 text-[20px] font-semibold text-white md:text-[24px]">Our Promise</h3>
   <p className="mx-auto mt-3 max-w-md text-[16px] font-normal leading-relaxed text-white/80">
     If the final cost exceeds our written quote for reasons within our control,
-    Garnebo covers the difference. Full stop.
+    The project covers the difference. Full stop.
   </p>
 </div>
 ```
@@ -209,13 +209,13 @@ export function TeamMember({ name, role, bio, imageSrc }: TeamMemberProps) {
 |---|---|
 | Hero section | Micro-copy badges: "Free · No obligation · 24h response" |
 | Below hero | 3–4 badge row: certified, fixed price, local, insured |
-| Services page | DM 37/2008 badge near electrical/plumbing services |
+| Services page | Relevant local regulatory badge near electrical/plumbing services |
 | Quote page | Privacy/GDPR note |
-| Footer | VAT number, registered address, certifications |
+| Footer | VAT/Tax ID, registered address, certifications |
 
 **Translation keys:**
 ```json
-{ "trust": { "badge1": "Certificato DM 37/2008", "badge2": "Preventivo a prezzo fisso", "badge3": "Team locale a Bologna", "badge4": "100% in regola" } }
+{ "trust": { "badge1": "Certificato di conformità", "badge2": "Preventivo a prezzo fisso", "badge3": "Team locale", "badge4": "100% in regola" } }
 ```
 
 > **Constraints:** Do NOT use generic shield icons without specific legal context. Do NOT invent credentials that don't exist. Do NOT use green (#00FF00) — use brand `accent-sage`. Do NOT place trust blocks only at the bottom. Do NOT use icon libraries (Font Awesome, Hero Icons via npm) — inline SVG only. ALWAYS provide `aria-hidden="true"` on decorative SVG icons.
@@ -224,7 +224,7 @@ export function TeamMember({ name, role, bio, imageSrc }: TeamMemberProps) {
 
 - [ ] All SVG icons are inline and carry `aria-hidden="true"`
 - [ ] `TrustBadgeRow` uses `flex-wrap` and renders correctly at 375 px viewport
-- [ ] `ComplianceBadge` `code` matches a real credential (e.g. DM 37/2008, VAT IT04239601208)
+- [ ] `ComplianceBadge` `code` matches a real credential (e.g. local regulatory certification, VAT/Tax ID)
 - [ ] Team portrait images use `rounded-full object-cover` with descriptive alt text
 - [ ] All colour classes use brand token utilities — no arbitrary hex
 - [ ] At least one trust signal appears above the fold on mobile

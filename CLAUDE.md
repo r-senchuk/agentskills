@@ -108,7 +108,7 @@ user-invocable: true|false  # only sara is true; all subagents are false
 | `skiller` | Skill/agent authoring and audit — routes `skill-builder`, `agent-builder` |
 | `bashar` | macOS & shell — routes `shell-script-audit`, `macos-homebrew-troubleshoot`, `zsh-config-expert` |
 | `nexter` | Next.js App Router — routes `nextjs-ssg`, `nextjs-intl`, `nextjs-tailwind-seo` |
-| `uix-designer` | Garnebo visual UI — routes design/CRO/component skills |
+| `uix-designer` | Visual UI — routes design/CRO/component skills |
 
 When adding a new specialist domain, create the required skills first (`skiller` / `skill-builder`), then create the agent (`skiller` / `agent-builder`), then register it in Sara's routing table.
 
@@ -150,7 +150,7 @@ Sara's orchestration model works natively in Claude Code via the `Agent` tool. W
 | Skill/agent authoring | `.github/agents/skiller.agent.md` |
 | macOS & shell | `.github/agents/bashar.agent.md` |
 | Next.js frontend | `.github/agents/nexter.agent.md` |
-| Garnebo UI/design | `.github/agents/uix-designer.agent.md` |
+| UI/design | `.github/agents/uix-designer.agent.md` |
 
 **Note on tool name differences:** The `tools:` field in `.agent.md` files uses Copilot aliases (`read`, `edit`, `search`, `execute`, `web`, `agent`). The Claude Code equivalents are `Read`, `Edit`/`Write`, `Bash`, `WebSearch`/`WebFetch`, `Agent`. Interpret agent briefings accordingly.
 

@@ -12,9 +12,9 @@ metadata:
 ---
 
 # Visual Design Audit and Brand Consistency Review
-Systematically audit every page and component of the Garnebo website against brand directives, flag violations, and generate a prioritised list of actionable design improvements.
+Systematically audit every page and component of the website against brand directives, flag violations, and generate a prioritised list of actionable design improvements.
 
-**Project:** Garnebo — Next.js 16 App Router, static export, Tailwind CSS v4, next-intl (it/en). **Brand identity:** Clean, modern, tech-enabled renovation company. "Anti-dust, anti-chaos" personality.
+**Project:** The renovation project — Next.js 16 App Router, static export, Tailwind CSS v4, next-intl (it/en). **Brand identity:** Clean, modern, tech-enabled renovation company. "Anti-dust, anti-chaos" personality.
 
 ## When To Use
 

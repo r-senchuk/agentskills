@@ -1,6 +1,6 @@
 ---
 name: nextjs-intl
-description: "Use when setting up, configuring, or troubleshooting next-intl internationalization in Next.js 16 App Router projects, especially with static export. Covers defineRouting, locale routing, message files, translations, locale switcher, hreflang generation, and static export compatibility. Do not use for next-i18next, server-side-only i18n, or non-Next.js i18n solutions."
+description: "Use when setting up, configuring, or troubleshooting next-intl v4 internationalization in Next.js 16 App Router projects, especially with static export. Covers defineRouting, locale routing, message files, translations, locale switcher, hreflang generation, and static export compatibility. Do not use for next-i18next, server-side-only i18n, or non-Next.js i18n solutions."
 argument-hint: "Locales to support, default locale, current error or i18n goal, whether using static export."
 user-invocable: false
 ---
@@ -79,13 +79,14 @@ Create `src/i18n/request.ts`:
 
 ```typescript
 import { getRequestConfig } from 'next-intl/server';
+import { hasLocale } from 'next-intl';
 import { routing } from './routing';
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
 
   // Validate that the incoming locale is supported
-  if (!locale || !routing.locales.includes(locale as any)) {
+  if (!hasLocale(routing.locales, locale)) {
     locale = routing.defaultLocale;
   }
 
@@ -160,22 +161,23 @@ Create `messages/it.json` with the same structure but Italian translations.
 
 **Namespace convention**: Use flat top-level keys that match page or component names. Nest only for logical grouping within a namespace.
 
-### Step 6 — Middleware (Development Only)
+### Step 6 — Locale Proxy (Development Only)
 
-Create `src/middleware.ts`:
+In Next.js 16, next-intl recommends using `src/proxy.ts` (previously called `middleware.ts`):
 
 ```typescript
+// src/proxy.ts
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
 
 export default createMiddleware(routing);
 
 export const config = {
-  matcher: ['/', '/(en|it)/:path*'],
+  matcher: '/((?!api|trpc|_next|_vercel|.*\\..*).*)',
 };
 ```
 
-**Critical for static export**: Middleware runs in `pnpm dev` but is completely ignored when building with `output: 'export'`. In production, locale detection must be handled differently:
+**Critical for static export**: The locale proxy runs in `pnpm dev` but is completely ignored when building with `output: 'export'`. In production, locale detection must be handled differently:
 
 - The root `page.tsx` should redirect to the default locale
 - Or configure your static host to redirect `/` → `/en/`
@@ -196,7 +198,8 @@ export default function RootPage() {
 
 ```typescript
 // src/app/[locale]/layout.tsx
-import { NextIntlClientProvider, useMessages } from 'next-intl';
+import { NextIntlClientProvider } from 'next-intl';
+import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { setRequestLocale, getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
@@ -214,7 +217,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
 
   // Validate locale
-  if (!routing.locales.includes(locale as any)) {
+  if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
 
@@ -439,9 +442,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 The component is missing `setRequestLocale(locale)` before calling `useTranslations`. Add it to every page and layout under `[locale]`.
 
-### Middleware not working in production static export
+### Proxy not working in production static export
 
-Middleware is completely ignored with `output: 'export'`. Handle locale detection via:
+The locale proxy (`src/proxy.ts`) is completely ignored with `output: 'export'`. Handle locale detection via:
 1. Root `page.tsx` that redirects to `/${defaultLocale}`
 2. Static host configuration (e.g., Netlify `_redirects`, Cloudflare redirect rules)
 
@@ -482,7 +485,7 @@ declare global {
 - [ ] `next.config.ts` uses `createNextIntlPlugin` wrapper
 - [ ] `messages/` directory has a JSON file for every locale in `routing.locales`
 - [ ] All JSON files have identical key structure
-- [ ] `src/middleware.ts` exists for development routing
+- [ ] `src/proxy.ts` exists for development locale routing
 - [ ] `app/[locale]/layout.tsx` includes `NextIntlClientProvider`, `setRequestLocale`, and `generateStaticParams`
 - [ ] Every page under `[locale]` calls `setRequestLocale(locale)` before translations
 - [ ] Every page under `[locale]` uses async `params` pattern (Next.js 16)

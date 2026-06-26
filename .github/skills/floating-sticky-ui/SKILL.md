@@ -12,7 +12,7 @@ metadata:
 ---
 
 # Floating and Sticky UI Elements
-Implement and maintain the sticky navigation, floating mobile CTA bar, floating WhatsApp widget, and any other fixed/sticky UI elements on the Garnebo site. Ensures correct `z-index` layering, smooth transitions, scroll-triggered visibility, and no overlap conflicts.
+Implement and maintain the sticky navigation, floating mobile CTA bar, floating WhatsApp widget, and any other fixed/sticky UI elements on the site. Ensures correct `z-index` layering, smooth transitions, scroll-triggered visibility, and no overlap conflicts.
 
 **Z-index stack (reserved values):**
 

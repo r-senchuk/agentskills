@@ -12,7 +12,7 @@ metadata:
 ---
 
 # CRO UI Patterns for Home Services
-Design and implement high-converting UX patterns specific to residential renovation and home services businesses on the Garnebo website. Business model: B2C renovation project management in Bologna, Italy — primary conversion goal is quote form submissions. Audience: homeowners (75%+ mobile), high intent, low patience for friction. Trust-deficit is the #1 conversion blocker.
+Design and implement high-converting UX patterns specific to residential renovation and home services businesses on the project website. Business model: B2C renovation project management in the local area — primary conversion goal is quote form submissions. Audience: homeowners (75%+ mobile), high intent, low patience for friction. Trust-deficit is the #1 conversion blocker.
 
 **Core principles:** Trust before action → Reduce perceived risk → One clear next step per section → Friction removal → Dense social proof throughout.
 
@@ -24,7 +24,7 @@ Design and implement high-converting UX patterns specific to residential renovat
 - Urgency or scarcity messaging needs to be added to a page without using fake tactics
 - CTA button copy, placement rules, or page-level conversion architecture need review
 
-**Do NOT use for:** backend event tracking, A/B test tooling, SEO meta copy, non-Garnebo or non-home-services projects.
+**Do NOT use for:** backend event tracking, A/B test tooling, SEO meta copy, non-project or non-home-services projects.
 
 ## Inputs To Collect First
 
@@ -46,7 +46,7 @@ PROBLEM AGITATION (Pain points the user recognises)
     ↓
 PROOF (Before/After, testimonials, compliance badges)
     ↓
-SOLUTION (How Garnebo solves it, step-by-step)
+SOLUTION (How the project solves it, step-by-step)
     ↓
 CTA (Get a Quote — low friction, clear value)
     ↓
@@ -69,7 +69,7 @@ High-converting hero for home services:
   <div className="relative z-20 mx-auto max-w-4xl">
     {/* Eyebrow: specificity builds trust */}
     <p className="text-[13px] font-semibold uppercase tracking-wider text-accent-sage">
-      Bologna · Emilia-Romagna
+      Local area
     </p>
     
     {/* H1: outcome-focused, not feature-focused */}
@@ -135,7 +135,7 @@ High-converting hero for home services:
 ```tsx
 <div className="grid gap-8 md:grid-cols-3">
   {[
-    { stat: '120+', label: 'Renovations completed in Bologna' },
+    { stat: '100+', label: 'Renovations completed in the local area' },
     { stat: '4.9★', label: 'Average client satisfaction rating' },
     { stat: '0', label: 'Projects without a signed fixed-price quote' },
   ].map((item) => (
@@ -158,13 +158,13 @@ High-converting hero for home services:
     ))}
   </div>
   <blockquote className="mt-4 text-[16px] font-normal italic leading-relaxed text-brand-secondary">
-    "Garnebo handled everything — from the permit to the final coat of paint."
+    "The project handled everything — from the permit to the final coat of paint."
   </blockquote>
   <div className="mt-6 flex items-center gap-3">
     <img src="/testimonials/marco-b.webp" alt="Marco B." className="h-10 w-10 rounded-full object-cover" />
     <div>
       <p className="text-[16px] font-semibold text-brand-primary">Marco B.</p>
-      <p className="text-[13px] font-light text-accent-blue">3-room renovation, Bologna Centro</p>
+      <p className="text-[13px] font-light text-accent-blue">3-room renovation, local area</p>
     </div>
   </div>
 </div>
