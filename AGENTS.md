@@ -18,6 +18,8 @@ This is a content repo — Markdown, shell scripts, and YAML frontmatter. There 
 
 After editing `opencode.json`, any agent file, or any skill, **quit and restart OpenCode** for changes to take effect. OpenCode loads config once at startup and does not hot-reload.
 
+`.opencode/agents/nexter.md` is the canonical Nexter definition. After changing it, run `./scripts/generate-codex-agent.zsh`; the generated `.codex/agents/nexter.toml` is the Codex-specific artifact and must not be edited directly.
+
 ## Directory Surface
 
 The root-level `skills/` and `agents/` directories are **symlinks** to `.github/skills/` and `.github/agents/`:

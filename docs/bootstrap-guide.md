@@ -75,6 +75,15 @@ If links look correct but capabilities do not appear:
 
 After setup, any changes you make in this repository are reflected instantly everywhere those global symlinks are used.
 
+### Updating Nexter
+
+`.opencode/agents/nexter.md` is the canonical Nexter definition. After changing it, regenerate the Codex artifact before running the bootstrap script:
+
+```bash
+./scripts/generate-codex-agent.zsh
+./scripts/setup-copilot-globals.sh
+```
+
 ## Configuration Files
 
 - `~/.vibe/config.toml` - Mistral Vibe configuration

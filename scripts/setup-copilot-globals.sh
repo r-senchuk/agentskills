@@ -164,6 +164,7 @@ CLAUDE_AGENTS_DIR="$CLAUDE_HOME/agents"
 CODEX_SKILLS_DIR="$CODEX_GLOBAL_HOME/skills"
 CODEX_AGENTS_SRC="$REPO_ROOT/.codex/agents"
 CODEX_AGENTS_DIR="$CODEX_GLOBAL_HOME/agents"
+CODEX_AGENT_GENERATOR="$REPO_ROOT/scripts/generate-codex-agent.zsh"
 CODEX_SKILL_NAMES=(nextjs-ssg nextjs-intl nextjs-tailwind-seo typescript-7)
 # Antigravity uses a plugin directory — we symlink the whole repo as a plugin.
 # The plugin.json at the repo root tells Antigravity where skills/ and agents/ live.
@@ -182,6 +183,8 @@ if (( LINK_CLAUDE )); then
   run_cmd mkdir -p "$CLAUDE_SKILLS_DIR" "$CLAUDE_AGENTS_DIR"
 fi
 if (( LINK_CODEX )); then
+  [[ -x "$CODEX_AGENT_GENERATOR" ]] || { warn "Missing Codex agent generator: $CODEX_AGENT_GENERATOR"; exit 1; }
+  "$CODEX_AGENT_GENERATOR" --check || { warn "Regenerate the Codex agent before installing: scripts/generate-codex-agent.zsh"; exit 1; }
   [[ -f "$CODEX_AGENTS_SRC/nexter.toml" ]] || { warn "Missing Codex agent source: $CODEX_AGENTS_SRC/nexter.toml"; exit 1; }
   for skill_name in "${CODEX_SKILL_NAMES[@]}"; do
     [[ -d "$SKILLS_SRC/$skill_name" ]] || { warn "Missing Codex skill source: $SKILLS_SRC/$skill_name"; exit 1; }
