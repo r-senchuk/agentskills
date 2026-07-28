@@ -1,6 +1,6 @@
 # Global Bootstrap Guide
 
-This repository can serve as your single source of truth for global Copilot and Mistral Vibe capabilities on macOS.
+This repository can serve as your single source of truth for global Codex, Copilot, and Mistral Vibe capabilities on macOS.
 
 ## Bootstrap Script
 
@@ -10,6 +10,8 @@ Use the one-time bootstrap script to symlink all skills and agents:
 ### What It Does
 
 The script creates symlinks from this repository to:
+- `~/.codex/skills/` - Nexter's four reusable Next.js workflow skills
+- `~/.codex/agents/` - Codex Nexter custom agent
 - `~/.copilot/skills/` - Global Copilot skills directory
 - `~/.copilot/agents/` - Global Copilot agents directory  
 - `~/Library/Application Support/Code/User/prompts/agents/` - VS Code prompts profile
@@ -22,7 +24,7 @@ The script creates symlinks from this repository to:
 # 1) Preview only (dry run)
 ./scripts/setup-copilot-globals.sh --dry-run
 
-# 2) Apply links (includes Mistral Vibe by default)
+# 2) Apply links (includes Codex and Mistral Vibe by default)
 ./scripts/setup-copilot-globals.sh
 
 # 3) Skip Mistral Vibe linking
@@ -31,10 +33,14 @@ The script creates symlinks from this repository to:
 # 4) Use a custom Mistral Vibe home
 ./scripts/setup-copilot-globals.sh --vibe-home /path/to/custom/vibe
 
-# 5) Replace existing conflicting links/files
+# 5) Use a custom Codex home or skip Codex
+./scripts/setup-copilot-globals.sh --codex-home /path/to/custom/codex
+./scripts/setup-copilot-globals.sh --no-codex
+
+# 6) Replace existing conflicting links/files
 ./scripts/setup-copilot-globals.sh --force
 
-# 6) Optional: make it callable globally
+# 7) Optional: make it callable globally
 mkdir -p ~/bin
 ln -sf "$HOME/path/to/agentskills/scripts/setup-copilot-globals.sh" ~/bin/setup-copilot-globals.sh
 ```
@@ -44,6 +50,8 @@ ln -sf "$HOME/path/to/agentskills/scripts/setup-copilot-globals.sh" ~/bin/setup-
 ```bash
 # Check what is currently linked
 ls -la ~/.copilot/skills
+ls -la ~/.codex/skills
+ls -la ~/.codex/agents
 ls -la ~/.copilot/agents
 ls -la "$HOME/Library/Application Support/Code/User/prompts/agents"
 ls -la ~/.vibe/skills
@@ -54,6 +62,7 @@ ls -la ~/.vibe/agents
 
 # Validate that links still point to this repo
 readlink ~/.copilot/skills/mistral-sdk-router
+readlink ~/.codex/agents/nexter.toml
 readlink ~/.copilot/agents/mistral.agent.md
 readlink "$HOME/Library/Application Support/Code/User/prompts/agents/mistral.agent.md"
 readlink ~/.vibe/skills/mistral-sdk-router

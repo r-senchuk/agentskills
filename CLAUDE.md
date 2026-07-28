@@ -8,20 +8,20 @@ A personal incubator for GitHub Copilot skills and agents targeting contribution
 
 ## Bootstrap & Sync
 
-After cloning, run the one-time bootstrap to symlink all skills and agents into global Copilot/Vibe/Antigravity directories:
+After cloning, run the one-time bootstrap to symlink global Codex skills and legacy platform skills/agents:
 
 ```bash
 # Preview changes (no writes)
 ./scripts/setup-copilot-globals.sh --dry-run
 
-# Apply symlinks (Copilot, VS Code, Mistral Vibe, Antigravity)
+# Apply symlinks (Codex, Copilot, VS Code, Mistral Vibe, Claude Code, Antigravity)
 ./scripts/setup-copilot-globals.sh
 
 # Re-link and replace conflicts
 ./scripts/setup-copilot-globals.sh --force
 ```
 
-The script targets `~/.copilot/skills/`, `~/.copilot/agents/`, `~/Library/Application Support/Code/User/prompts/agents/`, `~/.vibe/skills/`, `~/.vibe/agents/`, and `~/.gemini/config/plugins/agentskills`. After setup, edits in this repo are reflected everywhere immediately via symlinks.
+The script targets `~/.codex/agents/` for Nexter and `~/.codex/skills/` for its four Next.js dependency skills, plus `~/.copilot/skills/`, `~/.copilot/agents/`, `~/Library/Application Support/Code/User/prompts/agents/`, `~/.vibe/skills/`, `~/.vibe/agents/`, and `~/.gemini/config/plugins/agentskills`. After setup, edits in this repo are reflected everywhere immediately via symlinks.
 
 Optional shell alias — source from `~/.zshrc` to get `agent-sync` as a global command:
 ```bash
@@ -192,5 +192,3 @@ Delegation briefs must stay ≤400 tokens. Assign budget by priority:
 - Run `/compact` before starting a new multi-agent task in a long session.
 - Pass file paths, not file content, whenever the subagent can read the file itself.
 - Subagent responses over ~500 tokens: extract key findings before passing to the next agent or delivering to the user (see Sara's Delegation Harness → Orchestration).
-
-

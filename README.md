@@ -47,7 +47,7 @@ This repository is where skills are drafted, refined, and validated before submi
 
 ## Setup (All Platforms — Mac)
 
-This repo is the single source of truth for skills and agents across GitHub Copilot, Claude Code, Mistral Vibe, and Google Antigravity CLI on macOS.
+This repo is the single source of truth for skills and agents across Codex, GitHub Copilot, Claude Code, Mistral Vibe, and Google Antigravity CLI on macOS.
 
 See the [Bootstrap Guide](docs/bootstrap-guide.md) for complete setup instructions.
 
@@ -56,7 +56,7 @@ See the [Bootstrap Guide](docs/bootstrap-guide.md) for complete setup instructio
 # Preview changes
 ./scripts/setup-copilot-globals.sh --dry-run
 
-# Apply symlinks (Copilot, VS Code, Vibe, Claude Code, Antigravity)
+# Apply symlinks (Codex, Copilot, VS Code, Vibe, Claude Code, Antigravity)
 ./scripts/setup-copilot-globals.sh
 ```
 

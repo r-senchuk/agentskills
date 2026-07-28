@@ -1,12 +1,11 @@
 #!/bin/zsh
-# DEPRECATED: This repo now targets OpenCode as the primary platform.
-# This script is no longer maintained. Symlinks for Copilot, VS Code,
-# Mistral Vibe, and Antigravity are no longer needed or updated.
-# See opencode.json and AGENTS.md for current setup instructions.
+# Global bootstrap for Codex skills and legacy Copilot, VS Code, Mistral Vibe,
+# Claude Code, and Antigravity integrations. OpenCode reads this repository
+# directly through opencode.json and needs no global symlinks.
 set -euo pipefail
 setopt null_glob
 
-# One-time bootstrap for global Copilot skills/agents via symlinks.
+# One-time bootstrap for global skills/agents via symlinks.
 # After linking, updates in this repo are reflected everywhere immediately.
 
 # Use zsh path expansion for macOS/BSD portability (avoids GNU-only dirname flags).
@@ -18,10 +17,12 @@ COPILOT_HOME="${COPILOT_HOME:-$HOME/.copilot}"
 VSCODE_PROMPTS_DIR="${VSCODE_PROMPTS_DIR:-$HOME/Library/Application Support/Code/User/prompts}"
 VIBE_HOME="${VIBE_HOME:-$HOME/.vibe}"
 CLAUDE_HOME="${CLAUDE_HOME:-$HOME/.claude}"
+CODEX_GLOBAL_HOME="${CODEX_GLOBAL_HOME:-$HOME/.codex}"
 ANTIGRAVITY_PLUGIN_DIR="${ANTIGRAVITY_PLUGIN_DIR:-$HOME/.gemini/config/plugins/agentskills}"
 LINK_VSCODE_AGENTS=1
 LINK_VIBE=1
 LINK_CLAUDE=1
+LINK_CODEX=1
 LINK_ANTIGRAVITY=1
 FORCE=0
 DRY_RUN=0
@@ -37,10 +38,12 @@ Options:
   --vscode-prompts <path> VS Code prompts dir. Default: ~/Library/Application Support/Code/User/prompts
   --vibe-home <path>      Mistral Vibe home. Default: ~/.vibe
   --claude-home <path>    Claude Code home. Default: ~/.claude
+  --codex-home <path>     Codex home. Default: ~/.codex
   --antigravity-plugin <path> Antigravity plugin dir. Default: ~/.gemini/config/plugins/agentskills
   --no-vscode-agents      Skip linking agents into VS Code prompts profile.
   --no-vibe               Skip linking skills/agents into Mistral Vibe.
   --no-claude             Skip linking skills into Claude Code.
+  --no-codex              Skip linking the Nexter agent and its skills into Codex.
   --no-antigravity        Skip linking skills/agents into Antigravity.
   --force                 Replace existing files/symlinks at target paths.
   --dry-run               Show actions without making changes.
@@ -108,6 +111,15 @@ while (( $# > 0 )); do
       CLAUDE_HOME="$2"
       shift 2
       ;;
+    --no-codex)
+      LINK_CODEX=0
+      shift
+      ;;
+    --codex-home)
+      [[ $# -ge 2 ]] || { warn "Missing value for --codex-home"; exit 1; }
+      CODEX_GLOBAL_HOME="$2"
+      shift 2
+      ;;
     --no-antigravity)
       LINK_ANTIGRAVITY=0
       shift
@@ -149,6 +161,10 @@ VIBE_AGENTS_DIR="$VIBE_HOME/agents"
 CLAUDE_SKILLS_SRC="$REPO_ROOT/.claude/skills"
 CLAUDE_SKILLS_DIR="$CLAUDE_HOME/skills"
 CLAUDE_AGENTS_DIR="$CLAUDE_HOME/agents"
+CODEX_SKILLS_DIR="$CODEX_GLOBAL_HOME/skills"
+CODEX_AGENTS_SRC="$REPO_ROOT/.codex/agents"
+CODEX_AGENTS_DIR="$CODEX_GLOBAL_HOME/agents"
+CODEX_SKILL_NAMES=(nextjs-ssg nextjs-intl nextjs-tailwind-seo typescript-7)
 # Antigravity uses a plugin directory — we symlink the whole repo as a plugin.
 # The plugin.json at the repo root tells Antigravity where skills/ and agents/ live.
 
@@ -164,6 +180,13 @@ if (( LINK_VIBE )); then
 fi
 if (( LINK_CLAUDE )); then
   run_cmd mkdir -p "$CLAUDE_SKILLS_DIR" "$CLAUDE_AGENTS_DIR"
+fi
+if (( LINK_CODEX )); then
+  [[ -f "$CODEX_AGENTS_SRC/nexter.toml" ]] || { warn "Missing Codex agent source: $CODEX_AGENTS_SRC/nexter.toml"; exit 1; }
+  for skill_name in "${CODEX_SKILL_NAMES[@]}"; do
+    [[ -d "$SKILLS_SRC/$skill_name" ]] || { warn "Missing Codex skill source: $SKILLS_SRC/$skill_name"; exit 1; }
+  done
+  run_cmd mkdir -p "$CODEX_SKILLS_DIR" "$CODEX_AGENTS_DIR"
 fi
 if (( LINK_ANTIGRAVITY )); then
   run_cmd mkdir -p "$(dirname "$ANTIGRAVITY_PLUGIN_DIR")"
@@ -222,6 +245,13 @@ for skill_dir in "$SKILLS_SRC"/*(N/); do
   fi
 done
 
+if (( LINK_CODEX )); then
+  for skill_name in "${CODEX_SKILL_NAMES[@]}"; do
+    link_one "$SKILLS_SRC/$skill_name" "$CODEX_SKILLS_DIR"
+  done
+  link_one "$CODEX_AGENTS_SRC/nexter.toml" "$CODEX_AGENTS_DIR"
+fi
+
 if (( LINK_ANTIGRAVITY )); then
   link_one "$REPO_ROOT" "$(dirname "$ANTIGRAVITY_PLUGIN_DIR")"
 fi
@@ -246,7 +276,7 @@ if (( LINK_CLAUDE )) && [[ -d "$CLAUDE_SKILLS_SRC" ]]; then
 fi
 
 log ""
-log "Copilot global bootstrap complete."
+log "Global bootstrap complete."
 log "Repo source of truth: $REPO_ROOT"
 if (( DRY_RUN )); then
   log "Planned links: $linked | Planned replacements: $replaced | Planned skips: $skipped"
@@ -265,6 +295,10 @@ fi
 if (( LINK_CLAUDE )); then
   log "Claude Code skills: $CLAUDE_SKILLS_DIR"
   log "Claude Code agents: $CLAUDE_AGENTS_DIR"
+fi
+if (( LINK_CODEX )); then
+  log "Codex skills: $CODEX_SKILLS_DIR (Nexter dependencies)"
+  log "Codex agents: $CODEX_AGENTS_DIR (Nexter)"
 fi
 if (( LINK_ANTIGRAVITY )); then
   log "Antigravity plugin: $ANTIGRAVITY_PLUGIN_DIR -> $REPO_ROOT"
