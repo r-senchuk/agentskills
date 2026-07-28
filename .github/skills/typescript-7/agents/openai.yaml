@@ -1,0 +1,4 @@
+interface:
+  display_name: "TypeScript 7"
+  short_description: "Adopt and troubleshoot native TypeScript 7 safely."
+  default_prompt: "Upgrade this TypeScript project to TypeScript 7 and validate the transition."

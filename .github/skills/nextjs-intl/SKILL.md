@@ -3,6 +3,9 @@ name: nextjs-intl
 description: "Use when setting up, configuring, or troubleshooting next-intl v4 internationalization in Next.js 16 App Router projects, especially with static export. Covers defineRouting, locale routing, message files, translations, locale switcher, hreflang generation, and static export compatibility. Do not use for next-i18next, server-side-only i18n, or non-Next.js i18n solutions."
 argument-hint: "Locales to support, default locale, current error or i18n goal, whether using static export."
 user-invocable: false
+metadata:
+  version: "1.1.0"
+  last-updated: "2026-07-28"
 ---
 
 # next-intl with Next.js 16 App Router
@@ -177,22 +180,10 @@ export const config = {
 };
 ```
 
-**Critical for static export**: The locale proxy runs in `pnpm dev` but is completely ignored when building with `output: 'export'`. In production, locale detection must be handled differently:
-
-- The root `page.tsx` should redirect to the default locale
-- Or configure your static host to redirect `/` → `/en/`
-
-Root redirect approach:
-
-```typescript
-// src/app/page.tsx
-import { redirect } from 'next/navigation';
-import { routing } from '@/i18n/routing';
-
-export default function RootPage() {
-  redirect(`/${routing.defaultLocale}`);
-}
-```
+**Critical for static export**: Proxy is unsupported with `output: 'export'`.
+Do not use `redirect()` in a root page as a fallback: redirects require a server.
+Either publish locale-prefixed URLs only and link directly to the default locale,
+or configure the static host/CDN to redirect `/` to `/${routing.defaultLocale}/`.
 
 ### Step 7 — Locale Layout with Provider
 
@@ -444,9 +435,10 @@ The component is missing `setRequestLocale(locale)` before calling `useTranslati
 
 ### Proxy not working in production static export
 
-The locale proxy (`src/proxy.ts`) is completely ignored with `output: 'export'`. Handle locale detection via:
-1. Root `page.tsx` that redirects to `/${defaultLocale}`
-2. Static host configuration (e.g., Netlify `_redirects`, Cloudflare redirect rules)
+The locale proxy (`src/proxy.ts`) is unsupported with `output: 'export'`.
+Handle `/` at the static host/CDN (for example, Netlify `_redirects` or a
+Cloudflare redirect rule), or expose only locale-prefixed entry URLs. Do not use a
+Next.js `redirect()` for this static-export fallback.
 
 ### Message file not found
 
@@ -498,3 +490,4 @@ declare global {
 - [next-intl Static Rendering](https://next-intl.dev/docs/getting-started/app-router/with-i18n-routing#static-rendering)
 - [next-intl defineRouting API](https://next-intl.dev/docs/routing#define-routing)
 - [next-intl Navigation APIs](https://next-intl.dev/docs/routing/navigation)
+- [TypeScript 7 migration notes](../typescript-7/SKILL.md)

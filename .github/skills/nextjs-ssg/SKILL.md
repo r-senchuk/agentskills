@@ -4,14 +4,14 @@ description: "Use when scaffolding, configuring, or troubleshooting Next.js 16 A
 argument-hint: "Project path or name, target features (i18n, SEO, etc.), current error or goal."
 user-invocable: false
 license: MIT
-compatibility: "Requires Node.js 20+, Next.js 16+, and pnpm/npm/yarn for package management."
+compatibility: "Requires Node.js 20.9+, Next.js 16.2.11+ (Active LTS), TypeScript 7.0+, and pnpm."
 metadata:
   author: "Roman Senchuk"
-  version: "1.2.0"
-  last-updated: "2026-05-31"
+  version: "1.3.0"
+  last-updated: "2026-07-28"
 ---
 
-# Next.js 16 Static Site Generation (SSG)
+# Next.js 16.2 Static Site Generation (SSG)
 
 ## When To Use
 
@@ -44,7 +44,6 @@ pnpm create next-app@latest my-app \
   --app \
   --src-dir \
   --use-pnpm \
-  --no-turbopack \
   --import-alias "@/*"
 ```
 
@@ -54,7 +53,7 @@ Or for manual setup:
 mkdir my-app && cd my-app
 pnpm init
 pnpm add next@latest react@latest react-dom@latest
-pnpm add -D typescript @types/react @types/react-dom @types/node
+pnpm add -D typescript@^7 @types/react @types/react-dom @types/node
 ```
 
 After scaffolding, verify the project runs:
@@ -113,10 +112,9 @@ Standard SSG directory layout:
 ```
 src/
 ├── app/
-│   ├── layout.tsx              # Root layout (html, body tags)
 │   ├── not-found.tsx           # Global 404 page
 │   └── [locale]/
-│       ├── layout.tsx          # Locale layout (providers, nav)
+│       ├── layout.tsx          # Root layout (html, body, providers, nav)
 │       ├── page.tsx            # Home page
 │       ├── about/
 │       │   └── page.tsx
@@ -138,7 +136,12 @@ src/
 
 Every `page.tsx` under a dynamic segment (`[locale]`, `[slug]`) MUST export `generateStaticParams`.
 
-### Step 4 — TypeScript Configuration
+### Step 4 — TypeScript 7 Configuration
+
+Use TypeScript 7 for direct CLI checking. Its programmatic compiler API is not
+available until TypeScript 7.1, so projects whose lint or framework tooling imports
+`typescript` must retain the TypeScript 6 compatibility package; follow the
+`typescript-7` skill before upgrading those projects.
 
 `tsconfig.json` for Next.js 16 with strict mode:
 
@@ -146,7 +149,7 @@ Every `page.tsx` under a dynamic segment (`[locale]`, `[slug]`) MUST export `gen
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["dom", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -227,7 +230,7 @@ export default async function Page({ params }: Props) {
 ### Step 6 — Root Layout
 
 ```typescript
-// src/app/layout.tsx
+// src/app/[locale]/layout.tsx
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -237,16 +240,27 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
-  return children;
+  const { locale } = await params;
+
+  return (
+    <html lang={locale}>
+      <body>{children}</body>
+    </html>
+  );
 }
 ```
 
-Note: The root layout should NOT include `<html>` or `<body>` tags when using a `[locale]` sub-layout that sets the `lang` attribute. Place `<html>` and `<body>` in the locale layout instead.
+When all routes are localized, `app/[locale]/layout.tsx` is the root layout and
+MUST render `<html>` and `<body>`. Do not also create `app/layout.tsx` for that
+same route tree. If an `app/layout.tsx` exists, it is the root layout and it MUST
+render those tags; nested locale layouts should render only their children.
 
 ### Step 7 — Build and Verify
 
@@ -298,7 +312,7 @@ out/
 | Feature | Status | Workaround |
 |---|---|---|
 | `middleware.ts` | ❌ Ignored in production | Handle locale detection via `[locale]` segment + default redirect in root `page.tsx`. Note: Next.js 16 uses `proxy.ts` for middleware; both `middleware.ts` and `proxy.ts` are ignored with `output: 'export'`. |
-| API Routes (`app/api/`) | ❌ Not generated | Use external API or build-time data fetching |
+| Route Handlers | ⚠️ Only static `GET` handlers are generated | Use `GET` to emit build-time JSON, TXT, or other static files; do not access the request |
 | ISR (`revalidate`) | ❌ Not supported | Full rebuild on content change |
 | `cookies()`, `headers()` | ❌ Build error | Remove server-only APIs |
 | `searchParams` in pages | ❌ Forces dynamic rendering | Use client-side `useSearchParams()` with Suspense |
@@ -354,7 +368,7 @@ import Image from 'next/image';
 - [ ] Every dynamic route segment exports `generateStaticParams()`
 - [ ] All page components use async `params` (Next.js 16 convention)
 - [ ] No server-only APIs used (`cookies()`, `headers()`, `draftMode()`)
-- [ ] No API routes in `app/api/`
+- [ ] Any Route Handler is a request-independent `GET` handler that emits a static file
 - [ ] No `revalidate` exports (ISR is incompatible with static export)
 - [ ] `pnpm build` completes without errors
 - [ ] `out/` directory contains expected HTML files for all routes and locales
@@ -363,6 +377,7 @@ import Image from 'next/image';
 
 ## References
 
-- [Next.js Static Exports Guide](https://nextjs.org/docs/app/building-your-application/deploying/static-exports)
+- [Next.js Static Exports Guide](https://nextjs.org/docs/app/guides/static-exports)
 - [Next.js App Router Documentation](https://nextjs.org/docs/app)
 - [generateStaticParams API Reference](https://nextjs.org/docs/app/api-reference/functions/generate-static-params)
+- [TypeScript 7 migration notes](../typescript-7/SKILL.md)

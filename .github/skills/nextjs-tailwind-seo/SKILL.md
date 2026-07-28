@@ -1,15 +1,18 @@
 ---
 name: nextjs-tailwind-seo
-description: "Use when setting up Tailwind CSS, implementing SEO metadata, configuring fonts, or adding structured data in Next.js 16 App Router projects. Covers Tailwind v4 CSS-first config, custom design tokens, generateMetadata, JSON-LD, next-sitemap, OG tags, canonical URLs, and responsive design patterns. Do not use for backend development, non-Tailwind styling, or design/branding decisions."
+description: "Use when setting up Tailwind CSS 4.3, implementing SEO metadata, configuring fonts, or adding structured data in Next.js 16.2 App Router projects. Covers Tailwind v4 CSS-first config, custom design tokens, generateMetadata, JSON-LD, next-sitemap, OG tags, canonical URLs, and responsive design patterns. Do not use for backend development, non-Tailwind styling, or design/branding decisions."
 argument-hint: "SEO goal (metadata, sitemap, JSON-LD), Tailwind customization target (tokens, responsive), or font setup."
 user-invocable: false
+metadata:
+  version: "1.1.0"
+  last-updated: "2026-07-28"
 ---
 
-# Tailwind CSS & SEO for Next.js 16
+# Tailwind CSS 4.3 & SEO for Next.js 16.2
 
 ## When To Use
 
-- **Tailwind setup**: Configuring Tailwind CSS v4 with Next.js 16, custom design tokens, PostCSS.
+- **Tailwind setup**: Configuring Tailwind CSS 4.3 with Next.js 16.2, custom design tokens, PostCSS.
 - **Fonts**: Integrating Google Fonts via `next/font/google` with Tailwind CSS variables.
 - **Responsive design**: Implementing mobile-first responsive layouts with Tailwind breakpoints.
 - **SEO metadata**: Writing `generateMetadata()` for per-page title, description, OG tags, and canonical URLs.
@@ -91,6 +94,8 @@ export default config;
 - `@import "tailwindcss"` replaces `@tailwind base; @tailwind components; @tailwind utilities;`
 - Custom colors defined as `--color-*` are automatically available as Tailwind classes (e.g., `bg-primary`, `text-accent`)
 - PostCSS uses `@tailwindcss/postcss` instead of `tailwindcss` as the plugin
+- In Tailwind 4.3, use `@source inline()` to safelist generated classes and
+  `@source not` to exclude paths; do not restore a v3 `safelist` configuration
 
 ### Step 2 — Google Fonts with next/font
 
@@ -535,6 +540,7 @@ For static export, `next-sitemap` should run after `next build`. Set `outDir: '.
 ## References
 
 - [Tailwind CSS v4 Documentation](https://tailwindcss.com/docs)
+- [Tailwind CSS 4.3 release notes](https://tailwindcss.com/blog/tailwindcss-v4-3)
 - [Tailwind v4 Upgrade Guide](https://tailwindcss.com/docs/upgrade-guide)
 - [Next.js Metadata API](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)
 - [Next.js Static File Conventions (icons)](https://nextjs.org/docs/app/api-reference/file-conventions/metadata)
