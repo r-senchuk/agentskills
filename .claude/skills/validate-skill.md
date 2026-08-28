@@ -8,12 +8,12 @@ Provide the skill name (kebab-case directory name). If not provided, ask for it.
 
 ## Steps
 
-1. Construct the path: `.github/skills/<name>/SKILL.md`
+1. Construct the path: `.agents/skills/<name>/SKILL.md`
 2. Confirm the file exists; if not, report the error and stop.
 3. Run the validation script:
 
 ```bash
-SKILL=".github/skills/<skill-name>/SKILL.md"
+SKILL=".agents/skills/<skill-name>/SKILL.md"
 ROOT=$(git rev-parse --show-toplevel)
 SKILL_ABS="$ROOT/$SKILL"
 FOLDER=$(basename $(dirname "$SKILL_ABS"))
@@ -39,7 +39,7 @@ WC=$(wc -w < "$SKILL_ABS")
 
 To validate all skills at once:
 ```bash
-for dir in .github/skills/*/; do
+for dir in .agents/skills/*/; do
   name=$(basename "$dir")
   echo "--- $name ---"
   SKILL="${dir}SKILL.md"

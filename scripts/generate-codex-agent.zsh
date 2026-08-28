@@ -51,7 +51,7 @@ trap 'rm -f -- "$temporary_output"' EXIT
   printf 'description = "%s"\n\n' "$escaped_description"
   print -- "developer_instructions = '''"
   awk 'BEGIN { delimiters = 0 } /^---$/ { delimiters++; next } delimiters >= 2 { print }' "$SOURCE" \
-    | sed -E 's#\.github/skills/([^/]+)/SKILL\.md#~/.codex/skills/\1/SKILL.md#g'
+    | sed -E 's#\.agents/skills/([^/]+)/SKILL\.md#~/.codex/skills/\1/SKILL.md#g'
   print -- "'''"
 } > "$temporary_output"
 

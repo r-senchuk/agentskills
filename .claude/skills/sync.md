@@ -23,7 +23,7 @@ ls ~/.claude/skills/
 
 | Source | Target |
 |---|---|
-| `.github/skills/*/` | `~/.copilot/skills/` and `~/.vibe/skills/` |
+| `.agents/skills/*/` | `~/.copilot/skills/` and `~/.vibe/skills/` |
 | `.github/agents/*.agent.md` | `~/.copilot/agents/`, `~/.vibe/agents/`, VS Code prompts |
 | `.claude/skills/*.md` | `~/.claude/skills/` |
 

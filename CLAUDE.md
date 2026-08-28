@@ -14,14 +14,14 @@ After cloning, run the one-time bootstrap to symlink global Codex skills and leg
 # Preview changes (no writes)
 ./scripts/setup-copilot-globals.sh --dry-run
 
-# Apply symlinks (Codex, Copilot, VS Code, Mistral Vibe, Claude Code, Antigravity)
+# Apply symlinks (Codex, Cursor, Copilot, VS Code, Mistral Vibe, Claude Code, Antigravity)
 ./scripts/setup-copilot-globals.sh
 
 # Re-link and replace conflicts
 ./scripts/setup-copilot-globals.sh --force
 ```
 
-The script targets `~/.codex/agents/` for Nexter and `~/.codex/skills/` for its four Next.js dependency skills, plus `~/.copilot/skills/`, `~/.copilot/agents/`, `~/Library/Application Support/Code/User/prompts/agents/`, `~/.vibe/skills/`, `~/.vibe/agents/`, and `~/.gemini/config/plugins/agentskills`. After setup, edits in this repo are reflected everywhere immediately via symlinks.
+The script targets `~/.agents/skills/` and `~/.cursor/agents/` for Cursor, `~/.codex/agents/` for Nexter and `~/.codex/skills/` for its four Next.js dependency skills, plus `~/.copilot/skills/`, `~/.copilot/agents/`, `~/Library/Application Support/Code/User/prompts/agents/`, `~/.vibe/skills/`, `~/.vibe/agents/`, and `~/.gemini/config/plugins/agentskills`. After setup, edits in this repo are reflected everywhere immediately via symlinks.
 
 Optional shell alias — source from `~/.zshrc` to get `agent-sync` as a global command:
 ```bash
@@ -33,7 +33,7 @@ source "/path/to/agentskills/scripts/agent-sync.zsh"
 Run this inline validation script before committing any new or edited `SKILL.md`:
 
 ```bash
-SKILL=".github/skills/<skill-name>/SKILL.md"
+SKILL=".agents/skills/<skill-name>/SKILL.md"
 ROOT=$(git rev-parse --show-toplevel)
 SKILL_ABS="$ROOT/$SKILL"
 FOLDER=$(basename $(dirname "$SKILL_ABS"))
@@ -52,11 +52,20 @@ for S in "When To Use" "Inputs To Collect First" "Procedure" "Completion Checks"
 done
 WC=$(wc -w < "$SKILL_ABS")
 [ "$WC" -le 5000 ] && echo "✅ $WC words" || echo "❌ $WC words (limit 5000)"
+
+# Cursor compat (optional)
+UI=$(grep -m1 '^user-invocable:' "$SKILL_ABS" | awk '{print $2}')
+DI=$(grep -m1 '^disable-model-invocation:' "$SKILL_ABS" | awk '{print $2}')
+if [ "$UI" = "false" ]; then
+  [ "$DI" = "true" ] && echo "✅ disable-model-invocation aligns with user-invocable: false" \
+    || echo "❌ add disable-model-invocation: true when user-invocable: false"
+fi
+./scripts/generate-cursor-agents.zsh --check && echo "✅ Cursor agents current" || echo "❌ run scripts/generate-cursor-agents.zsh"
 ```
 
 ## Skill Structure
 
-Every skill lives under `.github/skills/<skill-name>/SKILL.md`. The folder name must exactly match the `name:` frontmatter field.
+Every skill lives under `.agents/skills/<skill-name>/SKILL.md`. The folder name must exactly match the `name:` frontmatter field.
 
 **Required frontmatter:**
 ```yaml
@@ -163,13 +172,13 @@ These rules apply to all agents in this repo. They prevent context bloat and kee
 | Tier | File | Lines | When to use |
 |---|---|---|---|
 | 1 — Quick reference | `.claude/skills/<name>.md` | ≤150 | Trivial tasks, scope check, procedure overview |
-| 2 — Full procedure | `.github/skills/<name>/SKILL.md` | 150–500+ | Full create/audit/refactor cycle |
+| 2 — Full procedure | `.agents/skills/<name>/SKILL.md` | 150–500+ | Full create/audit/refactor cycle |
 
 Always check Tier 1 first. For Tier 2, load lazily — read headers to locate the step, then load only that section:
 
 ```bash
 # Locate the step without loading the full file
-grep -n "^##\|^###" .github/skills/<name>/SKILL.md
+grep -n "^##\|^###" .agents/skills/<name>/SKILL.md
 # Then Read with offset + limit for just that step
 ```
 

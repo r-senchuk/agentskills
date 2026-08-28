@@ -2,7 +2,7 @@
 
 Create a new `.agent.md` file or improve an existing agent definition.
 
-Full procedure: `.github/skills/agent-builder/SKILL.md`
+Full procedure: `.agents/skills/agent-builder/SKILL.md`
 
 ## Quick Reference
 
@@ -11,7 +11,7 @@ Full procedure: `.github/skills/agent-builder/SKILL.md`
 2. Purpose — one sentence: what job does this agent do that the default agent cannot?
 3. User-facing or subagent? (`user-invocable: true/false`)
 4. Tool requirements
-5. Skills to assign (verify each exists first: `ls .github/skills/`)
+5. Skills to assign (verify each exists first: `ls .agents/skills/`)
 
 **Dependency rule:** Never write the `.agent.md` until all required skills exist and are validated.
 
@@ -50,7 +50,7 @@ NAME_FIELD=$(grep -m1 '^name:' "$AGENT" | sed 's/name: *"\?//;s/"$//')
 for F in description tools user-invocable; do
   grep -q "^$F:" "$AGENT" && echo "✅ $F" || echo "❌ missing: $F"
 done
-grep -oE '\.github/skills/[^/]+/SKILL\.md' "$AGENT" | while read F; do
+grep -oE '\.agents/skills/[^/]+/SKILL\.md' "$AGENT" | while read F; do
   [ -f "$F" ] && echo "✅ $F" || echo "❌ missing skill: $F"
 done
 for S in "Constraints" "Output Format"; do
@@ -69,7 +69,7 @@ When an agent is invoked via Claude Code's `Agent` tool, the caller reads the `.
 1. **Self-contained briefing** — the body must work without prior conversation context. Include everything needed.
 2. **Claude Code tool names** — the subagent will use `Read`, `Edit`, `Write`, `Bash`, `WebSearch`, `WebFetch`, `Agent`. Reference these, not Copilot aliases.
 3. **Explicit output format** — the `## Output Format` section drives what the subagent returns to its caller. Be exact: structure, length, required fields.
-4. **Skill routing at runtime** — the subagent reads skill files using `Read`. List the exact file paths in the routing table so the subagent can `Read(".github/skills/<name>/SKILL.md")` at runtime.
+4. **Skill routing at runtime** — the subagent reads skill files using `Read`. List the exact file paths in the routing table so the subagent can `Read(".agents/skills/<name>/SKILL.md")` at runtime.
 5. **Scope bound tightly** — the `## Constraints` section prevents scope drift. Write `DO NOT` rules for the most likely failure modes of that specific agent.
 
 **Delegation pattern (Claude Code caller side):**
@@ -80,4 +80,4 @@ When an agent is invoked via Claude Code's `Agent` tool, the caller reads the `.
 4. Deliver synthesized result to user
 ```
 
-**Agent file size:** Keep `.agent.md` body under 300 lines. Agents loaded as briefings should be dense with intent, not exhaustive tutorials. Move reference material to `.github/skills/<name>/references/`.
+**Agent file size:** Keep `.agent.md` body under 300 lines. Agents loaded as briefings should be dense with intent, not exhaustive tutorials. Move reference material to `.agents/skills/<name>/references/`.

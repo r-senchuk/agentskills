@@ -1,7 +1,7 @@
 #!/bin/zsh
-# Global bootstrap for Codex skills and legacy Copilot, VS Code, Mistral Vibe,
-# Claude Code, and Antigravity integrations. OpenCode reads this repository
-# directly through opencode.json and needs no global symlinks.
+# Global bootstrap for Codex skills, Cursor/cursor-agent, and legacy Copilot,
+# VS Code, Mistral Vibe, Claude Code, and Antigravity integrations. OpenCode
+# reads this repository directly through opencode.json and needs no global symlinks.
 set -euo pipefail
 setopt null_glob
 
@@ -19,10 +19,13 @@ VIBE_HOME="${VIBE_HOME:-$HOME/.vibe}"
 CLAUDE_HOME="${CLAUDE_HOME:-$HOME/.claude}"
 CODEX_GLOBAL_HOME="${CODEX_GLOBAL_HOME:-$HOME/.codex}"
 ANTIGRAVITY_PLUGIN_DIR="${ANTIGRAVITY_PLUGIN_DIR:-$HOME/.gemini/config/plugins/agentskills}"
+AGENTS_GLOBAL_HOME="${AGENTS_GLOBAL_HOME:-$HOME/.agents}"
+CURSOR_HOME="${CURSOR_HOME:-$HOME/.cursor}"
 LINK_VSCODE_AGENTS=1
 LINK_VIBE=1
 LINK_CLAUDE=1
 LINK_CODEX=1
+LINK_CURSOR=1
 LINK_ANTIGRAVITY=1
 FORCE=0
 DRY_RUN=0
@@ -32,7 +35,7 @@ usage() {
 Usage: setup-copilot-globals.sh [options]
 
 Options:
-  --repo <path>           Repo root containing .github/skills and .github/agents.
+  --repo <path>           Repo root containing .agents/skills and .github/agents.
                           Default: parent directory of this script.
   --copilot-home <path>   Global Copilot home. Default: ~/.copilot
   --vscode-prompts <path> VS Code prompts dir. Default: ~/Library/Application Support/Code/User/prompts
@@ -44,6 +47,9 @@ Options:
   --no-vibe               Skip linking skills/agents into Mistral Vibe.
   --no-claude             Skip linking skills into Claude Code.
   --no-codex              Skip linking the Nexter agent and its skills into Codex.
+  --no-cursor             Skip linking skills/agents into Cursor (~/.agents, ~/.cursor).
+  --cursor-home <path>    Cursor home. Default: ~/.cursor
+  --agents-home <path>    Global .agents home. Default: ~/.agents
   --no-antigravity        Skip linking skills/agents into Antigravity.
   --force                 Replace existing files/symlinks at target paths.
   --dry-run               Show actions without making changes.
@@ -115,6 +121,20 @@ while (( $# > 0 )); do
       LINK_CODEX=0
       shift
       ;;
+    --no-cursor)
+      LINK_CURSOR=0
+      shift
+      ;;
+    --cursor-home)
+      [[ $# -ge 2 ]] || { warn "Missing value for --cursor-home"; exit 1; }
+      CURSOR_HOME="$2"
+      shift 2
+      ;;
+    --agents-home)
+      [[ $# -ge 2 ]] || { warn "Missing value for --agents-home"; exit 1; }
+      AGENTS_GLOBAL_HOME="$2"
+      shift 2
+      ;;
     --codex-home)
       [[ $# -ge 2 ]] || { warn "Missing value for --codex-home"; exit 1; }
       CODEX_GLOBAL_HOME="$2"
@@ -151,7 +171,7 @@ done
 
 [[ -d "$REPO_ROOT" ]] || { warn "Missing repo root directory: $REPO_ROOT"; exit 1; }
 REPO_ROOT="$(cd -- "$REPO_ROOT" && pwd)"
-SKILLS_SRC="$REPO_ROOT/.github/skills"
+SKILLS_SRC="$REPO_ROOT/.agents/skills"
 AGENTS_SRC="$REPO_ROOT/.github/agents"
 COPILOT_SKILLS_DIR="$COPILOT_HOME/skills"
 COPILOT_AGENTS_DIR="$COPILOT_HOME/agents"
@@ -165,12 +185,25 @@ CODEX_SKILLS_DIR="$CODEX_GLOBAL_HOME/skills"
 CODEX_AGENTS_SRC="$REPO_ROOT/.codex/agents"
 CODEX_AGENTS_DIR="$CODEX_GLOBAL_HOME/agents"
 CODEX_AGENT_GENERATOR="$REPO_ROOT/scripts/generate-codex-agent.zsh"
+CURSOR_AGENT_GENERATOR="$REPO_ROOT/scripts/generate-cursor-agents.zsh"
+CURSOR_AGENTS_SRC="$REPO_ROOT/.cursor/agents"
+AGENTS_GLOBAL_SKILLS_DIR="$AGENTS_GLOBAL_HOME/skills"
+CURSOR_AGENTS_DIR="$CURSOR_HOME/agents"
 CODEX_SKILL_NAMES=(nextjs-ssg nextjs-intl nextjs-tailwind-seo typescript-7)
 # Antigravity uses a plugin directory — we symlink the whole repo as a plugin.
 # The plugin.json at the repo root tells Antigravity where skills/ and agents/ live.
 
 [[ -d "$SKILLS_SRC" ]] || { warn "Missing directory: $SKILLS_SRC"; exit 1; }
 [[ -d "$AGENTS_SRC" ]] || { warn "Missing directory: $AGENTS_SRC"; exit 1; }
+
+if (( LINK_CODEX )); then
+  [[ -x "$CODEX_AGENT_GENERATOR" ]] || { warn "Missing Codex agent generator: $CODEX_AGENT_GENERATOR"; exit 1; }
+  "$CODEX_AGENT_GENERATOR" --check || { warn "Regenerate the Codex agent before installing: scripts/generate-codex-agent.zsh"; exit 1; }
+fi
+if (( LINK_CURSOR )); then
+  [[ -x "$CURSOR_AGENT_GENERATOR" ]] || { warn "Missing Cursor agent generator: $CURSOR_AGENT_GENERATOR"; exit 1; }
+  "$CURSOR_AGENT_GENERATOR" --check || { warn "Regenerate Cursor agents before installing: scripts/generate-cursor-agents.zsh"; exit 1; }
+fi
 
 run_cmd mkdir -p "$COPILOT_SKILLS_DIR" "$COPILOT_AGENTS_DIR"
 if (( LINK_VSCODE_AGENTS )); then
@@ -183,13 +216,15 @@ if (( LINK_CLAUDE )); then
   run_cmd mkdir -p "$CLAUDE_SKILLS_DIR" "$CLAUDE_AGENTS_DIR"
 fi
 if (( LINK_CODEX )); then
-  [[ -x "$CODEX_AGENT_GENERATOR" ]] || { warn "Missing Codex agent generator: $CODEX_AGENT_GENERATOR"; exit 1; }
-  "$CODEX_AGENT_GENERATOR" --check || { warn "Regenerate the Codex agent before installing: scripts/generate-codex-agent.zsh"; exit 1; }
   [[ -f "$CODEX_AGENTS_SRC/nexter.toml" ]] || { warn "Missing Codex agent source: $CODEX_AGENTS_SRC/nexter.toml"; exit 1; }
   for skill_name in "${CODEX_SKILL_NAMES[@]}"; do
     [[ -d "$SKILLS_SRC/$skill_name" ]] || { warn "Missing Codex skill source: $SKILLS_SRC/$skill_name"; exit 1; }
   done
   run_cmd mkdir -p "$CODEX_SKILLS_DIR" "$CODEX_AGENTS_DIR"
+fi
+if (( LINK_CURSOR )); then
+  [[ -d "$CURSOR_AGENTS_SRC" ]] || { warn "Missing Cursor agents directory: $CURSOR_AGENTS_SRC"; exit 1; }
+  run_cmd mkdir -p "$AGENTS_GLOBAL_SKILLS_DIR" "$CURSOR_AGENTS_DIR"
 fi
 if (( LINK_ANTIGRAVITY )); then
   run_cmd mkdir -p "$(dirname "$ANTIGRAVITY_PLUGIN_DIR")"
@@ -246,6 +281,9 @@ for skill_dir in "$SKILLS_SRC"/*(N/); do
   if (( LINK_VIBE )); then
     link_one "$skill_dir" "$VIBE_SKILLS_DIR"
   fi
+  if (( LINK_CURSOR )); then
+    link_one "$skill_dir" "$AGENTS_GLOBAL_SKILLS_DIR"
+  fi
 done
 
 if (( LINK_CODEX )); then
@@ -278,6 +316,12 @@ if (( LINK_CLAUDE )) && [[ -d "$CLAUDE_SKILLS_SRC" ]]; then
   done
 fi
 
+if (( LINK_CURSOR )); then
+  for cursor_agent in "$CURSOR_AGENTS_SRC"/*.md(.N); do
+    link_one "$cursor_agent" "$CURSOR_AGENTS_DIR"
+  done
+fi
+
 log ""
 log "Global bootstrap complete."
 log "Repo source of truth: $REPO_ROOT"
@@ -302,6 +346,10 @@ fi
 if (( LINK_CODEX )); then
   log "Codex skills: $CODEX_SKILLS_DIR (Nexter dependencies)"
   log "Codex agents: $CODEX_AGENTS_DIR (Nexter)"
+fi
+if (( LINK_CURSOR )); then
+  log "Cursor global skills: $AGENTS_GLOBAL_SKILLS_DIR"
+  log "Cursor agents: $CURSOR_AGENTS_DIR"
 fi
 if (( LINK_ANTIGRAVITY )); then
   log "Antigravity plugin: $ANTIGRAVITY_PLUGIN_DIR -> $REPO_ROOT"

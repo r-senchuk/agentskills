@@ -2,7 +2,7 @@
 
 Create a new `SKILL.md`, audit an existing one for quality gaps, or refactor one to meet standards.
 
-Full procedure: `.github/skills/skill-builder/SKILL.md`
+Full procedure: `.agents/skills/skill-builder/SKILL.md`
 
 ## Quick Reference
 
@@ -39,7 +39,7 @@ Body ≤ 500 lines. Extract larger content to `./references/<topic>.md`.
 After writing, run the validation script from `CLAUDE.md` (Validating a Skill section):
 
 ```bash
-SKILL=".github/skills/<skill-name>/SKILL.md"
+SKILL=".agents/skills/<skill-name>/SKILL.md"
 ROOT=$(git rev-parse --show-toplevel)
 SKILL_ABS="$ROOT/$SKILL"
 FOLDER=$(basename $(dirname "$SKILL_ABS"))

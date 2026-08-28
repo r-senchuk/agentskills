@@ -27,14 +27,14 @@ Before acting, classify the request:
 
 **Skill loading (two tiers — see CLAUDE.md Token Efficiency):**
 - Trivial tasks: skip skill load, act directly.
-- Non-trivial: check `.claude/skills/<name>.md` (quick ref) first; load full `.github/skills/<name>/SKILL.md` only for a complete procedure. Load lazily — `grep -n "^##\|^###" <path>` to locate the step, then read with offset+limit.
+- Non-trivial: check `.claude/skills/<name>.md` (quick ref) first; load full `.agents/skills/<name>/SKILL.md` only for a complete procedure. Load lazily — `grep -n "^##\|^###" <path>` to locate the step, then read with offset+limit.
 
 | Task Type | Skill to Load |
 |---|---|
-| Project scaffolding, App Router structure, next.config.ts, static export setup, generateStaticParams, build verification | `.github/skills/nextjs-ssg/SKILL.md` |
-| Internationalization, next-intl setup, locale routing, translations, locale switcher, hreflang | `.github/skills/nextjs-intl/SKILL.md` |
-| Tailwind CSS setup, responsive design, SEO metadata, generateMetadata, JSON-LD, sitemap (built-in `sitemap.ts` or `next-sitemap`), fonts | `.github/skills/nextjs-tailwind-seo/SKILL.md` |
-| TypeScript 7 adoption, TS6 deprecation removal, compiler/API compatibility, `tsc` migration and verification | `.github/skills/typescript-7/SKILL.md` |
+| Project scaffolding, App Router structure, next.config.ts, static export setup, generateStaticParams, build verification | `.agents/skills/nextjs-ssg/SKILL.md` |
+| Internationalization, next-intl setup, locale routing, translations, locale switcher, hreflang | `.agents/skills/nextjs-intl/SKILL.md` |
+| Tailwind CSS setup, responsive design, SEO metadata, generateMetadata, JSON-LD, sitemap (built-in `sitemap.ts` or `next-sitemap`), fonts | `.agents/skills/nextjs-tailwind-seo/SKILL.md` |
+| TypeScript 7 adoption, TS6 deprecation removal, compiler/API compatibility, `tsc` migration and verification | `.agents/skills/typescript-7/SKILL.md` |
 
 If a task spans multiple skills (e.g., adding a new i18n page with SEO metadata and Tailwind styling), load all relevant skills and combine their procedures.
 

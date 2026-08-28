@@ -1,6 +1,6 @@
 # Global Bootstrap Guide
 
-This repository can serve as your single source of truth for global Codex, Copilot, and Mistral Vibe capabilities on macOS.
+This repository can serve as your single source of truth for global Codex, Cursor, Copilot, and Mistral Vibe capabilities on macOS.
 
 ## Bootstrap Script
 
@@ -10,6 +10,8 @@ Use the one-time bootstrap script to symlink all skills and agents:
 ### What It Does
 
 The script creates symlinks from this repository to:
+- `~/.agents/skills/` - Cursor/cursor-agent global skills (vendor-neutral)
+- `~/.cursor/agents/` - Cursor subagents (generated from `.github/agents/`)
 - `~/.codex/skills/` - Nexter's four reusable Next.js workflow skills
 - `~/.codex/agents/` - Codex Nexter custom agent
 - `~/.copilot/skills/` - Global Copilot skills directory
@@ -33,9 +35,10 @@ The script creates symlinks from this repository to:
 # 4) Use a custom Mistral Vibe home
 ./scripts/setup-copilot-globals.sh --vibe-home /path/to/custom/vibe
 
-# 5) Use a custom Codex home or skip Codex
+# 5) Use a custom Codex home or skip Codex / Cursor
 ./scripts/setup-copilot-globals.sh --codex-home /path/to/custom/codex
 ./scripts/setup-copilot-globals.sh --no-codex
+./scripts/setup-copilot-globals.sh --no-cursor
 
 # 6) Replace existing conflicting links/files
 ./scripts/setup-copilot-globals.sh --force
@@ -49,6 +52,8 @@ ln -sf "$HOME/path/to/agentskills/scripts/setup-copilot-globals.sh" ~/bin/setup-
 
 ```bash
 # Check what is currently linked
+ls -la ~/.agents/skills
+ls -la ~/.cursor/agents
 ls -la ~/.copilot/skills
 ls -la ~/.codex/skills
 ls -la ~/.codex/agents
@@ -75,12 +80,13 @@ If links look correct but capabilities do not appear:
 
 After setup, any changes you make in this repository are reflected instantly everywhere those global symlinks are used.
 
-### Updating Nexter
+### Updating Generated Agents
 
-`.opencode/agents/nexter.md` is the canonical Nexter definition. After changing it, regenerate the Codex artifact before running the bootstrap script:
+`.opencode/agents/nexter.md` is the canonical Nexter definition for OpenCode/Codex. `.github/agents/*.agent.md` files feed Cursor subagents. Regenerate before bootstrap:
 
 ```bash
 ./scripts/generate-codex-agent.zsh
+./scripts/generate-cursor-agents.zsh
 ./scripts/setup-copilot-globals.sh
 ```
 

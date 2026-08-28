@@ -33,7 +33,7 @@ Comprehensive authoring guide referenced from README:
 
 ## Skill-Specific Documentation
 
-Each skill in `.github/skills/<name>/` contains:
+Each skill in `.agents/skills/<name>/` contains:
 - `SKILL.md` - Main instruction file with frontmatter and procedure
 - `references/` - Optional supporting documents (loaded on-demand)
 

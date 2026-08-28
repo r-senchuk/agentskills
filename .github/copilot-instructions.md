@@ -17,14 +17,20 @@ Do not create skills that duplicate existing model strengths without adding spec
 
 ```
 .github/
-├── skills/<skill-name>/          # One folder per skill
-│   ├── SKILL.md                  # Required. Frontmatter + procedure body.
-│   └── references/               # Optional. Loaded on-demand by the skill.
+├── skills/ -> ../.agents/skills   # compat symlink
 ├── agents/<name>.agent.md        # Custom agent personas
-├── references/                   # Shared cross-skill guidance (e.g. mistral-cross-cutting-guidance.md)
-└── copilot-instructions.md       # This file. Workspace-wide always-on instructions.
+├── references/                   # Shared cross-skill guidance
+└── copilot-instructions.md       # Workspace-wide always-on instructions
+.agents/
+└── skills/<skill-name>/          # Canonical skill holder
+    ├── SKILL.md                  # Required. Frontmatter + procedure body.
+    └── references/               # Optional. Loaded on-demand by the skill.
+.cursor/
+└── agents/<name>.md              # Generated Cursor subagents
 scripts/
-└── setup-copilot-globals.sh     # Symlinks skills + agents to ~/.copilot/ and VS Code profile
+├── setup-copilot-globals.sh      # Symlinks skills + agents globally
+├── generate-codex-agent.zsh      # OpenCode nexter -> Codex TOML
+└── generate-cursor-agents.zsh    # Copilot agents -> Cursor subagents
 ```
 
 ## Skill Frontmatter Schema
@@ -75,8 +81,8 @@ Frontmatter rules for agents:
 
 ## Adding a New Skill
 
-1. Create `.github/skills/<skill-name>/SKILL.md` with the frontmatter schema above.
-2. Add supporting reference docs under `.github/skills/<skill-name>/references/` if needed.
+1. Create `.agents/skills/<skill-name>/SKILL.md` with the frontmatter schema above.
+2. Add supporting reference docs under `.agents/skills/<skill-name>/references/` if needed.
 3. Link references from `SKILL.md` using relative paths (`./references/<file>.md`).
 4. Keep the skill body self-contained — assume no prior context from the caller.
 5. Check [awesome-copilot.github.com/skills](https://awesome-copilot.github.com/skills) to confirm the skill fills a real gap before building it.
