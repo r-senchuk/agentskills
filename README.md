@@ -29,10 +29,12 @@ This repository is where skills are drafted, refined, and validated before submi
 | [nextjs-ssg](.agents/skills/nextjs-ssg/SKILL.md) | Scaffold and troubleshoot static-export Next.js 16 App Router projects. |
 | [nextjs-tailwind-seo](.agents/skills/nextjs-tailwind-seo/SKILL.md) | Set up Tailwind CSS v4, SEO metadata, fonts, and structured data for Next.js 16 projects. |
 | [photo-upload-form-ux](.agents/skills/photo-upload-form-ux/SKILL.md) | Design mobile-first quote funnels with embedded forms, photo guidance, and thank-you flows. |
+| [sara](.agents/skills/sara/SKILL.md) | Route repository work to the appropriate specialist and review the result. |
 | [shell-script-audit](.agents/skills/shell-script-audit/SKILL.md) | Audit and harden shell scripts for stability, portability, error handling, and best practices. |
 | [skill-builder](.agents/skills/skill-builder/SKILL.md) | Create, audit, or refactor a SKILL.md with research, structure, and validation checks. |
 | [tailwind-v4-theming](.agents/skills/tailwind-v4-theming/SKILL.md) | Add and debug Tailwind CSS v4 theme tokens and extracted component utilities. |
 | [trust-signal-components](.agents/skills/trust-signal-components/SKILL.md) | Design trust-building UI components such as badges, guarantees, and compliance blocks. |
+| [typescript-7](.agents/skills/typescript-7/SKILL.md) | Adopt and troubleshoot TypeScript 7, including TypeScript 6 compiler-API compatibility. |
 | [visual-design-audit](.agents/skills/visual-design-audit/SKILL.md) | Audit pages and components for brand consistency, accessibility, and CRO issues. |
 | [zsh-config-expert](.agents/skills/zsh-config-expert/SKILL.md) | Configure, troubleshoot, and optimize zsh: completions, startup files, prompt, glob qualifiers, performance. |
 
@@ -66,6 +68,18 @@ OpenCode global adapters are linked under `~/.config/opencode/skills/edd-loop/`,
 Use `--opencode-home <path>` to choose another home or `--no-opencode` to skip
 them. The OpenCode links are independent of Cursor, so `--no-cursor` does not
 disable the EDD adapters.
+
+### EDD loop invocation
+
+Use the explicit workflow name supported by your client:
+
+- OpenCode: `/edd-loop <implementation task>`
+- Codex or Copilot skill invocation: `$edd-loop <implementation task>`
+- Claude Code: `/edd-loop <implementation task>` (after running the bootstrap so
+  the companion in `.claude/skills/` is linked)
+
+The loop requires a pre-edit EDD, deterministic checks, and a fresh read-only
+verifier. It is not intended for planning-only, review-only, or trivial work.
 
 For an isolated EDD bootstrap (useful when an unrelated Nexter generated-agent
 check blocks the full bootstrap), use `--edd-only`. It links only `edd-loop` and its EDD

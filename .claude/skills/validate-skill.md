@@ -1,6 +1,6 @@
 # Validate Skill
 
-Run the 8-point validation checklist against a named SKILL.md file.
+Run the current Agent Skills structure and metadata checks against a named SKILL.md file.
 
 ## Usage
 
@@ -20,18 +20,24 @@ FOLDER=$(basename $(dirname "$SKILL_ABS"))
 NAME=$(grep -m1 "^name:" "$SKILL_ABS" | sed 's/name: *//')
 
 [ "$FOLDER" = "$NAME" ] && echo "✅ name match" || echo "❌ mismatch: folder=$FOLDER name=$NAME"
-for F in name description argument-hint user-invocable; do
+for F in name description; do
   grep -q "^$F:" "$SKILL_ABS" && echo "✅ $F" || echo "❌ missing: $F"
 done
-FM=$(sed -n '/^---$/,/^---$/p' "$SKILL_ABS" | head -20)
-echo "$FM" | grep -q '[<>]' && echo "❌ XML tags in frontmatter" || echo "✅ no XML tags"
 grep -m1 "^description:" "$SKILL_ABS" | grep -qi "use when\|when user\|use for" \
   && echo "✅ description has trigger phrase" || echo "❌ description missing trigger phrase"
 for S in "When To Use" "Inputs To Collect First" "Procedure" "Completion Checks" "References"; do
   grep -q "^## $S" "$SKILL_ABS" && echo "✅ $S" || echo "❌ missing section: $S"
 done
-WC=$(wc -w < "$SKILL_ABS")
-[ "$WC" -le 5000 ] && echo "✅ $WC words" || echo "❌ $WC words (limit 5000)"
+LINES=$(wc -l < "$SKILL_ABS")
+[ "$LINES" -lt 500 ] && echo "✅ $LINES lines" || echo "❌ $LINES lines (keep under 500)"
+
+UI=$(grep -m1 '^user-invocable:' "$SKILL_ABS" | awk '{print $2}')
+DI=$(grep -m1 '^disable-model-invocation:' "$SKILL_ABS" | awk '{print $2}')
+if [ "$UI" = "false" ] && [ "$DI" = "true" ]; then
+  echo "❌ unreachable skill: both invocation controls disable access"
+else
+  echo "✅ invocation controls"
+fi
 ```
 
 4. Report each check result.

@@ -36,7 +36,7 @@ After changing `.github/agents/*.agent.md`, run `./scripts/generate-cursor-agent
 - **`opencode.json`** — declares `skills.paths: [".agents/skills"]` and `instructions: ["AGENTS.md"]`
 - **`.opencode/agents/` and `.opencode/commands/`** — OpenCode project adapters; the bootstrap can link them to the global OpenCode home
 - **`.agents/skills/edd-loop/`** — canonical EDD skill; the bootstrap links it independently to `~/.config/opencode/skills/edd-loop/`
-- **`.opencode/agents/nexter.md`** — canonical Nexter definition for OpenCode
+- **`.opencode/agents/nexter.md`** — thin OpenCode adapter; the canonical Nexter briefing is `.github/agents/nexter.agent.md`
 
 After editing `opencode.json`, any agent file, or any skill, **quit and restart OpenCode** for changes to take effect.
 

@@ -340,6 +340,8 @@ link_one() {
 
 if (( !EDD_ONLY )); then
   for skill_dir in "$SKILLS_SRC"/*(N/); do
+    # Ignore empty/legacy directories that are not Agent Skills.
+    [[ -f "$skill_dir/SKILL.md" ]] || continue
     link_one "$skill_dir" "$COPILOT_SKILLS_DIR"
     if (( LINK_VIBE )); then
       link_one "$skill_dir" "$VIBE_SKILLS_DIR"

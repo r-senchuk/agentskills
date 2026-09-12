@@ -45,13 +45,13 @@ SKILL_ABS="$ROOT/$SKILL"
 FOLDER=$(basename $(dirname "$SKILL_ABS"))
 NAME=$(grep -m1 "^name:" "$SKILL_ABS" | sed 's/name: *//')
 [ "$FOLDER" = "$NAME" ] && echo "✅ name match" || echo "❌ mismatch"
-for F in name description argument-hint user-invocable; do
+for F in name description; do
   grep -q "^$F:" "$SKILL_ABS" && echo "✅ $F" || echo "❌ missing: $F"
 done
 for S in "When To Use" "Inputs To Collect First" "Procedure" "Completion Checks" "References"; do
   grep -q "^## $S" "$SKILL_ABS" && echo "✅ $S" || echo "❌ missing: $S"
 done
-WC=$(wc -w < "$SKILL_ABS"); [ "$WC" -le 5000 ] && echo "✅ $WC words" || echo "❌ $WC words"
+LINES=$(wc -l < "$SKILL_ABS"); [ "$LINES" -lt 500 ] && echo "✅ $LINES lines" || echo "❌ $LINES lines"
 ```
 
 After creating the file, run the sync script: `./scripts/setup-copilot-globals.sh --force`

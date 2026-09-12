@@ -81,12 +81,13 @@ ls -la ~/.vibe/agents
 ./scripts/setup-copilot-globals.sh --force
 
 # Validate that links still point to this repo
-readlink ~/.copilot/skills/mistral-sdk-router
+readlink ~/.copilot/skills/edd-loop
 readlink ~/.codex/agents/nexter.toml
-readlink ~/.copilot/agents/mistral.agent.md
-readlink "$HOME/Library/Application Support/Code/User/prompts/agents/mistral.agent.md"
-readlink ~/.vibe/skills/mistral-sdk-router
-readlink ~/.vibe/agents/mistral.agent.md
+readlink ~/.config/opencode/commands/edd-loop.md
+readlink ~/.copilot/agents/nexter.agent.md
+readlink "$HOME/Library/Application Support/Code/User/prompts/agents/nexter.agent.md"
+readlink ~/.vibe/skills/edd-loop
+readlink ~/.vibe/agents/nexter.agent.md
 ```
 
 If links look correct but capabilities do not appear:
