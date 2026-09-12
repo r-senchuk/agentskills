@@ -39,16 +39,22 @@ Every `SKILL.md` must start with a YAML frontmatter block between `---` delimite
 
 ```yaml
 ---
-name: <kebab-case-name>          # max 64 chars; must match the directory name exactly
-description: "One sentence shown to Copilot when selecting the skill."  # 10–1024 chars
-argument-hint: "Comma-separated list of inputs the skill expects."
-user-invocable: true             # false if the skill is internal/non-interactive
+name: <kebab-case-name>          # required; max 64 chars; must match the directory name exactly
+description: "What it does and when to use it."  # required; non-empty, max 1024 chars
+license: MIT                     # optional; state the license for shareable skills
+argument-hint: "Inputs"          # optional Copilot/VS Code slash-command hint
+user-invocable: false            # optional; hidden from the slash menu, still auto-loadable
+disable-model-invocation: true   # optional; explicit invocation only
 ---
 ```
 
 - `name` must match the directory name exactly.
 - `description` drives skill selection — make it specific and action-oriented.
-- `argument-hint` is surfaced as a prompt to the user; list concrete inputs.
+- The portable Agent Skills core is `name` and `description`; add other metadata
+  only when the target client needs it.
+- `argument-hint` is surfaced as a prompt to the user in supporting clients; list concrete inputs.
+- Do not combine `user-invocable: false` with `disable-model-invocation: true`:
+  that makes a skill unreachable. Use the latter only for explicit workflows.
 
 ## Skill Body Conventions
 
@@ -58,7 +64,7 @@ Structure the Markdown body with these sections (in order):
 2. **Inputs To Collect First** — numbered list of required context
 3. **Procedure** — top-level `## Procedure` header; each step as its own `### Step N — Title` subsection
 4. **Completion Checks** — `- [ ]` checkbox format; verifiable, not subjective
-5. **References** — relative `./references/` links only
+5. **References** — resolve paths from the skill root; keep reference chains one level deep
 
 Use fenced code blocks with language tags (`bash`, `python`, etc.) for all command examples.
 
@@ -76,6 +82,7 @@ Structure the Markdown body with these sections:
 Frontmatter rules for agents:
 - `tools`: use minimal set; document rationale in identity if all 6 tools are used
 - Only `sara` is `user-invocable: true` — all other agents are subagents (`user-invocable: false`)
+- Use `disable-model-invocation: true` only for a user-selected agent; do not use the obsolete `disabled` field
 - `description` must contain "Use when" trigger, `Do NOT use for` negative clause, and ≥3 keywords
 - `name` must match filename (kebab-case, no `.agent.md` extension)
 
@@ -111,9 +118,6 @@ See [README.md](../README.md) for the full current skill and agent table.
 
 ### Skill Groups
 
-**Mistral SDK** (`mistral-*`)  
-Routed through the `mistral` subagent (via Sara). Covers: agent builder, function calling, embeddings/RAG, structured outputs, document AI, and Vibe CLI. The `mistral-sdk-router` skill is the entrypoint for ambiguous multi-surface tasks.
-
 **Research & Meta** (`skill-builder`, `agent-builder`)  
 Routed through the `skiller` subagent (via Sara). Covers: web-powered research, SKILL.md authoring/auditing, and `.agent.md` design.
 
@@ -122,11 +126,7 @@ Routed through the `bashar` subagent (via Sara). Covers: shell script auditing/h
 
 ### Agent Hierarchy
 
-`sara` is the sole user-facing agent (team lead). She handles trivial tasks directly and may do bounded orchestration work such as classification, decomposition, comparison, and status synthesis. For non-trivial specialist work she delegates to `mistral`, `skiller`, or `bashar` based on domain. When no existing agent can handle a non-trivial task, Sara informs the user and immediately delegates to `skiller` to create the required agent — no manual approval gate.
-
-### Shared References
-
-`.github/references/mistral-cross-cutting-guidance.md` — shared API key, model selection, retry, and cost policies for all Mistral skills. Link as `../../references/mistral-cross-cutting-guidance.md` from inside a skill subdirectory.
+`sara` is the sole user-facing agent (team lead). She handles trivial tasks directly and may do bounded orchestration work such as classification, decomposition, comparison, and status synthesis. For non-trivial specialist work she delegates to `skiller`, `bashar`, `nexter`, or `uix-designer` based on domain. When no existing agent can handle a non-trivial task, Sara delegates to `skiller` to define the needed capability.
 
 ## References
 

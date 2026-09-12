@@ -1,4 +1,5 @@
 ---
+name: nexter
 description: "Next.js 16 static-export specialist for App Router, Tailwind v4, next-intl, SEO, and TypeScript React implementation. Use for bounded frontend implementation work only; never for backend APIs, databases, infra, or design/branding decisions."
 mode: subagent
 ---

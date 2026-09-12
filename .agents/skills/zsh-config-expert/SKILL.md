@@ -3,7 +3,6 @@ name: zsh-config-expert
 description: "Use when configuring, troubleshooting, or optimizing zsh: shell options, completion system, prompt customization, parameter expansion, glob qualifiers, .zshrc/.zprofile structure, and plugin management. Do not use for bash-only scripts, non-shell configuration, or writing new scripts from scratch."
 argument-hint: "Zsh configuration goal or issue, relevant .zshrc snippet or error, plugin framework (if any)."
 user-invocable: false
-disable-model-invocation: true
 ---
 
 # Zsh Configuration Expert

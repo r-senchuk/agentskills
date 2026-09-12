@@ -3,7 +3,6 @@ name: nextjs-ssg
 description: "Use when scaffolding, configuring, or troubleshooting Next.js 16 App Router projects with static export (output: 'export'). Covers project setup, directory structure, next.config.ts, generateStaticParams, build verification, and static export limitations. Use when user asks to 'create static Next.js site', 'set up Next.js static export', 'fix Next.js build errors', or 'configure next.config.ts for SSG'. Do not use for server-side rendering, API routes, database integration, or non-Next.js frameworks."
 argument-hint: "Project path or name, target features (i18n, SEO, etc.), current error or goal."
 user-invocable: false
-disable-model-invocation: true
 license: MIT
 compatibility: "Requires Node.js 20.9+, Next.js 16.2.11+ (Active LTS), TypeScript 7.0+, and pnpm."
 paths:

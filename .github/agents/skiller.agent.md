@@ -1,7 +1,7 @@
 ---
 name: skiller
 description: 'Use when you need to research and create a new SKILL.md, audit or refactor an existing skill for gaps or quality issues, design and build a new .agent.md, or deliver a complete agent with all its dependency skills. Orchestrates web and GitHub research, skill authoring, and agent design. Use for: build skill, create skill, audit skill, refactor skill, fill skill gaps, create agent, design agent, build agent with skills. Do NOT use for general coding tasks, debugging, runtime errors, or feature implementation — use the default agent for those.'
-disabled: true
+user-invocable: false
 tools:
     - read
     - edit

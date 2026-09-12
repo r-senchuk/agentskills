@@ -3,7 +3,6 @@ name: nextjs-intl
 description: "Use when setting up, configuring, or troubleshooting next-intl v4 internationalization in Next.js 16 App Router projects, especially with static export. Covers defineRouting, locale routing, message files, translations, locale switcher, hreflang generation, and static export compatibility. Do not use for next-i18next, server-side-only i18n, or non-Next.js i18n solutions."
 argument-hint: "Locales to support, default locale, current error or i18n goal, whether using static export."
 user-invocable: false
-disable-model-invocation: true
 license: MIT
 compatibility: "Requires Node.js 20.9+, Next.js 16.2.11+ (Active LTS), next-intl v4, TypeScript 7.0+, and pnpm."
 paths:

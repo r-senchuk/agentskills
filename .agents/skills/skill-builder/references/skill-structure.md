@@ -1,16 +1,19 @@
 # Skill Structure Reference
 
-> Reference: *The Complete Guide to Building Skills for Claude* (Anthropic, 2026).
-> This document aligns with that guide's Technical Requirements and Best Practices chapters.
+> Reference: the [Agent Skills specification](https://agentskills.io/specification) and
+> current GitHub Copilot skills guidance. Product-specific fields are optional;
+> keep the portable core valid first.
 
 ## Canonical SKILL.md Frontmatter
 
 ```yaml
 ---
-name: <kebab-case>              # Required. Max 64 chars. Must match folder name exactly.
-description: "Use when..."      # Required. 10–1024 chars. Quoted. No unescaped colons. Trigger-keyword rich.
-argument-hint: "Input1, Input2" # Required. Surfaced as prompt hint for slash invocation.
-user-invocable: false           # false = auto-triggered only; true = also shows as slash command
+name: <kebab-case>                    # Required. Max 64 chars. Must match folder name exactly.
+description: "Use when..."            # Required. What it does and when to use it.
+license: MIT                           # Optional. State the applicable license when sharing.
+argument-hint: "Input1, Input2"       # Optional. Copilot/VS Code slash-command hint.
+user-invocable: false                  # Optional. Hides a background skill from the slash menu.
+disable-model-invocation: true         # Optional. Use only for an explicit-only workflow.
 ---
 ```
 
@@ -20,7 +23,7 @@ user-invocable: false           # false = auto-triggered only; true = also shows
 - Start with "Use when..." pattern
 - Include synonyms for the action: `create|build|generate` OR `audit|review|inspect`
 - Quote the entire value if it contains colons: `description: "Use when: X"`
-- Max 1024 chars — stay under 600 for readability
+- Max 1024 chars — stay concise enough to be useful among all available skills
 - No vague words: "helpful", "useful", "general", "various"
 
 ## Section Order (Required)
@@ -35,7 +38,7 @@ user-invocable: false           # false = auto-triggered only; true = also shows
 
 ```
 .agents/skills/<skill-name>/
-├── SKILL.md                    # Required. Max 5,000 words; keep focused.
+├── SKILL.md                    # Required. Keep activated instructions under 500 lines.
 ├── references/
 │   ├── topic-a.md              # Loaded only when referenced
 │   └── topic-b.md
@@ -43,9 +46,8 @@ user-invocable: false           # false = auto-triggered only; true = also shows
     └── validate.sh             # Executable helpers
 ```
 
-> **No `README.md` inside the skill folder.** Skill folders must not contain a `README.md` — all
-> documentation belongs in `SKILL.md` or `references/`. A repo-level `README.md` is fine.
-> (Source: *The Complete Guide to Building Skills for Claude*, Technical Requirements.)
+`SKILL.md` is the only required file. Supporting documents, templates, assets, and
+scripts are allowed when they are necessary and referenced by the instructions.
 
 ## Progressive Loading Design
 
@@ -62,12 +64,11 @@ Rule of thumb: if a section is >80 lines, extract to a reference file.
 | Folder `my-skill`, `name: myskill` | Must match exactly: both must be `my-skill` |
 | `description: Use when: doing X` | Unescaped colon → `description: "Use when: doing X"` |
 | Tab indentation in YAML | Always use spaces |
-| `user-invocable` omitted | Default is `true` (slash command visible); set explicitly |
+| `user-invocable: false` plus `disable-model-invocation: true` | The skill is unreachable; use only one based on the intended behavior |
 | Description without trigger words | Add "Use when...", "Use for...", domain-specific nouns |
 | Description without NOT clause | Add "Do not use for X" to prevent false positives |
 | `name` field > 64 chars | Shorten to max 64 alphanumeric + hyphen characters |
-| XML tags (`< >`) in frontmatter | Remove all angle brackets — security restriction; frontmatter appears in system prompt |
-| `name` contains "claude" or "anthropic" | Rename — these prefixes are reserved by Anthropic |
+| `name` uses uppercase, edge hyphens, or `--` | Use 1–64 lowercase letters, digits, and single internal hyphens |
 | Step headings using `## Step N` | Use `### Step N` — steps live under `## Procedure`, so `###` is correct |
 
 ## Slash Command Behavior

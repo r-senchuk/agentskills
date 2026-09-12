@@ -19,6 +19,7 @@ This repository is where skills are drafted, refined, and validated before submi
 | [before-after-slider](.agents/skills/before-after-slider/SKILL.md) | Build accessible before/after image comparison sliders with drag, touch, and keyboard support. |
 | [context-engineering](.agents/skills/context-engineering/SKILL.md) | Design token-budgeted context assembly, memory, and tool-result injection for LLM systems. |
 | [cro-home-services](.agents/skills/cro-home-services/SKILL.md) | Design and audit conversion-focused UX patterns for home-services renovation websites. |
+| [edd-loop](.agents/skills/edd-loop/SKILL.md) | Execute the canonical evidence-driven development loop with bounded worker and verifier contracts. |
 | [floating-sticky-ui](.agents/skills/floating-sticky-ui/SKILL.md) | Implement and debug sticky navigation, floating CTAs, widgets, and z-index layering. |
 | [harness-engineering](.agents/skills/harness-engineering/SKILL.md) | Design guardrails, feedback loops, state, observability, and error recovery for agent workflows. |
 | [imagery-art-direction](.agents/skills/imagery-art-direction/SKILL.md) | Select, optimize, and place renovation-site photography and visual assets for static Next.js export. |
@@ -47,7 +48,7 @@ This repository is where skills are drafted, refined, and validated before submi
 
 ## Setup (All Platforms — Mac)
 
-This repo is the single source of truth for skills and agents across Cursor, Codex, GitHub Copilot, Claude Code, Mistral Vibe, and Google Antigravity CLI on macOS.
+This repo is the single source of truth for skills and agents across OpenCode, Cursor, Codex, GitHub Copilot, Claude Code, Mistral Vibe, and Google Antigravity CLI on macOS.
 
 See the [Bootstrap Guide](docs/bootstrap-guide.md) for complete setup instructions.
 
@@ -56,9 +57,20 @@ See the [Bootstrap Guide](docs/bootstrap-guide.md) for complete setup instructio
 # Preview changes
 ./scripts/setup-copilot-globals.sh --dry-run
 
-# Apply symlinks (Codex, Cursor, Copilot, VS Code, Vibe, Claude Code, Antigravity)
+# Apply symlinks (OpenCode, Codex, Cursor, Copilot, VS Code, Vibe, Claude Code, Antigravity)
 ./scripts/setup-copilot-globals.sh
 ```
+
+OpenCode global adapters are linked under `~/.config/opencode/skills/edd-loop/`,
+`~/.config/opencode/agents/`, and `~/.config/opencode/commands/` by default.
+Use `--opencode-home <path>` to choose another home or `--no-opencode` to skip
+them. The OpenCode links are independent of Cursor, so `--no-cursor` does not
+disable the EDD adapters.
+
+For an isolated EDD bootstrap (useful when an unrelated Nexter generated-agent
+check blocks the full bootstrap), use `--edd-only`. It links only `edd-loop` and its EDD
+verifier/worker adapters into the selected Codex and OpenCode homes; the normal
+bootstrap still validates the Nexter generator.
 
 After setup, any changes you make in this repository are reflected instantly everywhere via symlinks.
 

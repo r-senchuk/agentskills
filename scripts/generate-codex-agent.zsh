@@ -1,10 +1,10 @@
 #!/bin/zsh
-# Generate the Codex Nexter agent from the canonical OpenCode definition.
+# Generate the Codex Nexter agent from the canonical Copilot definition.
 set -euo pipefail
 
 SCRIPT_DIR="${0:A:h}"
 REPO_ROOT="${SCRIPT_DIR:h}"
-SOURCE="$REPO_ROOT/.opencode/agents/nexter.md"
+SOURCE="$REPO_ROOT/.github/agents/nexter.agent.md"
 OUTPUT="$REPO_ROOT/.codex/agents/nexter.toml"
 CHECK_ONLY=0
 
@@ -12,7 +12,7 @@ usage() {
   cat <<'EOF'
 Usage: generate-codex-agent.zsh [--check]
 
-Generates .codex/agents/nexter.toml from .opencode/agents/nexter.md.
+Generates .codex/agents/nexter.toml from .github/agents/nexter.agent.md.
 
 Options:
   --check    Exit non-zero if the generated file is missing or stale.
@@ -36,6 +36,7 @@ name="$(awk 'NR > 1 && /^---$/ { exit } NR > 1 && /^name:[[:space:]]*/ { sub(/^n
 description="$(awk 'NR > 1 && /^---$/ { exit } NR > 1 && /^description:[[:space:]]*/ { sub(/^description:[[:space:]]*/, ""); print; exit }' "$SOURCE")"
 [[ -n "$name" && -n "$description" ]] || { print -u2 -- "Canonical agent must define name and description"; exit 1; }
 [[ "$description" == '"'*'"' ]] && description="${description#\"}" && description="${description%\"}"
+[[ "$description" == "'"*"'" ]] && description="${description#\'}" && description="${description%\'}"
 
 toml_escape() {
   sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
@@ -58,8 +59,16 @@ trap 'rm -f -- "$temporary_output"' EXIT
 if (( CHECK_ONLY )); then
   if ! [[ -f "$OUTPUT" ]] || ! cmp -s "$temporary_output" "$OUTPUT"; then
     print -u2 -- "Stale generated Codex agent: run scripts/generate-codex-agent.zsh"
+    [[ -f "$OUTPUT" ]] && diff -u "$OUTPUT" "$temporary_output" >&2 || true
     exit 1
   fi
+  print -- "Codex Nexter agent is current: $OUTPUT"
+  exit 0
+fi
+
+if [[ -f "$OUTPUT" ]] && cmp -s "$temporary_output" "$OUTPUT"; then
+  rm -f -- "$temporary_output"
+  trap - EXIT
   print -- "Codex Nexter agent is current: $OUTPUT"
   exit 0
 fi

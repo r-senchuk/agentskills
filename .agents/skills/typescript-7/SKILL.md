@@ -3,7 +3,6 @@ name: typescript-7
 description: "Use when adopting, configuring, or troubleshooting TypeScript 7.0 in a Node.js, React, or Next.js project. Covers the native compiler, TypeScript 6 migration, compiler-API compatibility, side-by-side installation, tsconfig cleanup, and validation. Do not use for general TypeScript language design or projects that must remain on TypeScript 5 or earlier."
 argument-hint: "Project path, package manager, current TypeScript version, affected tooling, upgrade goal or error."
 user-invocable: false
-disable-model-invocation: true
 license: MIT
 compatibility: "Requires Node.js 20.9+, TypeScript 7.0+, optional @typescript/typescript6 for API consumers."
 paths:

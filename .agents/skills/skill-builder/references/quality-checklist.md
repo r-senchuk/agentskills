@@ -12,12 +12,12 @@ FOLDER=$(basename $(dirname "$SKILL"))
 NAME=$(grep -m1 "^name:" "$SKILL" | sed 's/name: *//')
 [ "$FOLDER" = "$NAME" ] && echo "✅ name match" || echo "❌ name mismatch: folder=$FOLDER, name=$NAME"
 
-# 2. Line count
+# 2. Line count (keep the activated instruction file compact)
 LINES=$(wc -l < "$SKILL")
-[ "$LINES" -le 500 ] && echo "✅ $LINES lines" || echo "❌ $LINES lines (limit 500)"
+[ "$LINES" -lt 500 ] && echo "✅ $LINES lines" || echo "❌ $LINES lines (keep under 500)"
 
-# 3. Required frontmatter fields
-for F in name description argument-hint user-invocable; do
+# 3. Required Agent Skills frontmatter fields
+for F in name description; do
   grep -q "^$F:" "$SKILL" && echo "✅ $F" || echo "❌ missing: $F"
 done
 
@@ -36,19 +36,12 @@ grep -oE "'\./references/[^']+'\.md|\./references/[^)]+" "$SKILL" | tr -d "'" | 
   [ -f "$BASE/$F" ] && echo "✅ $F" || echo "❌ missing reference file: $F"
 done
 
-# 7. No XML tags in frontmatter (forbidden: security restriction per spec)
-FM=$(sed -n '/^---$/,/^---$/p' "$SKILL" | head -20)
-echo "$FM" | grep -q '[<>]' && echo "❌ XML tags in frontmatter" || echo "✅ no XML tags"
-
-# 8. No README.md inside skill folder
-[ -f "$(dirname "$SKILL")/README.md" ] && echo "❌ README.md found (forbidden in skill folder)" || echo "✅ no README.md"
-
-# 9. Word count (PDF guide: keep under 5,000 words)
-WC=$(wc -w < "$SKILL")
-[ "$WC" -le 5000 ] && echo "✅ $WC words (≤5000)" || echo "❌ $WC words (exceeds 5000-word limit)"
-
-# 10. Description has trigger phrase
+# 7. Description has trigger phrase
 grep -m1 "^description:" "$SKILL" | grep -qi "use when\|when user\|use for"   && echo "✅ description has trigger phrase" || echo "❌ description missing 'Use when' / trigger phrase"
+
+# 8. Individual assets must stay small enough for upstream packaging.
+find "$(dirname "$SKILL")" -type f -size +5M -print | grep -q . \
+  && echo "❌ asset exceeds 5 MB" || echo "✅ assets under 5 MB"
 ```
 
 ## Content Quality Checks (manual)
@@ -58,7 +51,8 @@ grep -m1 "^description:" "$SKILL" | grep -qi "use when\|when user\|use for"   &&
 - [ ] Starts with "Use when" or "Use for"
 - [ ] Describes what NOT to use it for (to prevent false positives)
 - [ ] No vague words: "helpful", "useful", "general", "various"
-- [ ] Quoted and no unescaped colons
+- [ ] Uses valid YAML quoting; use single quotes when preparing an Awesome Copilot contribution
+- [ ] `argument-hint`, `user-invocable`, and `disable-model-invocation` are used only when their platform-specific behavior is intended
 
 ### When To Use
 - [ ] Lists specific trigger conditions (not just "use this skill")
@@ -68,7 +62,7 @@ grep -m1 "^description:" "$SKILL" | grep -qi "use when\|when user\|use for"   &&
 - [ ] Each step is numbered and has its own `### Step N` subsection under `## Procedure`
 - [ ] Terminal commands use fenced code blocks with `bash` tag
 - [ ] No hardcoded personal values (usernames, paths, API keys)
-- [ ] References to external files use relative `./references/` paths
+- [ ] References from `SKILL.md` use one-level relative paths and resolve
 - [ ] No steps that say "if needed" without specifying when
 - [ ] Skill includes error handling or troubleshooting content (inline guards, common issues step, or explicit error cases)
 
@@ -91,11 +85,12 @@ Only applies when submitting to [github/awesome-copilot](https://github.com/gith
 - [ ] `npm run skill:validate` passes in the awesome-copilot repo
 - [ ] `🤖🤖🤖` included in PR title if submitted via AI agent
 
-### PDF Guide Compliance (from *The Complete Guide to Building Skills for Claude*)
+### Agent Skills Specification Compliance
 - [ ] `description` includes WHAT the skill does + WHEN to use it (trigger conditions)
-- [ ] `description` under 1024 characters and contains no XML tags (`< >`)
-- [ ] No `README.md` inside the skill folder (README lives at repo level only)
-- [ ] SKILL.md under 5,000 words (PDF threshold for context efficiency)
+- [ ] `name` is 1–64 lowercase letters, digits, or hyphens, has no repeated/edge hyphen, and matches its folder
+- [ ] `description` is non-empty and ≤1024 characters
+- [ ] Each bundled asset is referenced where its use is needed and is under 5 MB for Awesome Copilot packaging
+- [ ] Main instructions stay under 500 lines; heavy material is progressively disclosed through focused references
 - [ ] At least one troubleshooting or error-handling section in the body
 - [ ] Progressive disclosure applied: heavy reference content extracted to `./references/`
 
@@ -109,4 +104,5 @@ Only applies when submitting to [github/awesome-copilot](https://github.com/gith
 | Step headings at wrong level | `## Step N` used instead of `### Step N` | Steps live under `## Procedure` — use `###` to stay in hierarchy |
 | Monolithic body | >500 lines | Extract secondary content to `./references/` |
 | Dead reference links | Reference files don't exist | Create files or remove broken links |
+| Unreachable skill | `user-invocable: false` and `disable-model-invocation: true` are both set | Remove one flag: background skills omit `disable-model-invocation`; explicit-only skills keep `user-invocable: true` |
 | Generic best practices | No uplift over default model | Replace with workflow-specific constraints |

@@ -1,0 +1,6 @@
+interface:
+  display_name: "EDD Loop"
+  short_description: "Run explicit evaluation-driven implementation loops."
+  default_prompt: "Use $edd-loop [max=N] to implement this substantive task from a pre-edit EDD, run deterministic checks, and obtain a fresh read-only verifier verdict."
+policy:
+  allow_implicit_invocation: false

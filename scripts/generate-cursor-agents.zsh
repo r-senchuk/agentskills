@@ -89,7 +89,7 @@ generate_one() {
     print -- '---'
     print -- "name: $name"
     print -- "description: >-"
-    print -r -- "$description" | fold -s -w 100 | sed 's/^/  /'
+    print -r -- "$description" | fold -s -w 100 | sed -e 's/[[:space:]]*$//' -e 's/^/  /'
     [[ -n "$readonly_line" ]] && print -- "$readonly_line"
     print -- 'model: inherit'
     print -- '---'

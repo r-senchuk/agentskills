@@ -3,7 +3,6 @@ name: nextjs-tailwind-seo
 description: "Use when setting up Tailwind CSS 4.3, implementing SEO metadata, configuring fonts, or adding structured data in Next.js 16.2 App Router projects. Covers Tailwind v4 CSS-first config, custom design tokens, generateMetadata, JSON-LD, built-in app/sitemap.ts and robots.ts, OG tags, canonical URLs, and responsive design patterns. Do not use for backend development, non-Tailwind styling, or design/branding decisions."
 argument-hint: "SEO goal (metadata, sitemap, JSON-LD), Tailwind customization target (tokens, responsive), or font setup."
 user-invocable: false
-disable-model-invocation: true
 license: MIT
 compatibility: "Requires Node.js 20.9+, Next.js 16.2.11+ (Active LTS), TypeScript 7.0+, and pnpm."
 paths:

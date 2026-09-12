@@ -1,7 +1,6 @@
 #!/bin/zsh
-# Global bootstrap for Codex skills, Cursor/cursor-agent, and legacy Copilot,
-# VS Code, Mistral Vibe, Claude Code, and Antigravity integrations. OpenCode
-# reads this repository directly through opencode.json and needs no global symlinks.
+# Global bootstrap for Codex, OpenCode, Cursor/cursor-agent, and legacy
+# Copilot, VS Code, Mistral Vibe, Claude Code, and Antigravity integrations.
 set -euo pipefail
 setopt null_glob
 
@@ -18,6 +17,7 @@ VSCODE_PROMPTS_DIR="${VSCODE_PROMPTS_DIR:-$HOME/Library/Application Support/Code
 VIBE_HOME="${VIBE_HOME:-$HOME/.vibe}"
 CLAUDE_HOME="${CLAUDE_HOME:-$HOME/.claude}"
 CODEX_GLOBAL_HOME="${CODEX_GLOBAL_HOME:-$HOME/.codex}"
+OPENCODE_HOME="${OPENCODE_HOME:-$HOME/.config/opencode}"
 ANTIGRAVITY_PLUGIN_DIR="${ANTIGRAVITY_PLUGIN_DIR:-$HOME/.gemini/config/plugins/agentskills}"
 AGENTS_GLOBAL_HOME="${AGENTS_GLOBAL_HOME:-$HOME/.agents}"
 CURSOR_HOME="${CURSOR_HOME:-$HOME/.cursor}"
@@ -25,10 +25,12 @@ LINK_VSCODE_AGENTS=1
 LINK_VIBE=1
 LINK_CLAUDE=1
 LINK_CODEX=1
+LINK_OPENCODE=1
 LINK_CURSOR=1
 LINK_ANTIGRAVITY=1
 FORCE=0
 DRY_RUN=0
+EDD_ONLY=0
 
 usage() {
   cat <<'EOF'
@@ -42,11 +44,14 @@ Options:
   --vibe-home <path>      Mistral Vibe home. Default: ~/.vibe
   --claude-home <path>    Claude Code home. Default: ~/.claude
   --codex-home <path>     Codex home. Default: ~/.codex
+  --opencode-home <path>  OpenCode global home. Default: ~/.config/opencode
   --antigravity-plugin <path> Antigravity plugin dir. Default: ~/.gemini/config/plugins/agentskills
   --no-vscode-agents      Skip linking agents into VS Code prompts profile.
   --no-vibe               Skip linking skills/agents into Mistral Vibe.
   --no-claude             Skip linking skills into Claude Code.
-  --no-codex              Skip linking the Nexter agent and its skills into Codex.
+  --no-codex              Skip linking Codex agents and skills.
+  --no-opencode           Skip linking OpenCode skills, agents, and commands globally.
+  --edd-only              Install only the EDD skill and its Codex/OpenCode adapters.
   --no-cursor             Skip linking skills/agents into Cursor (~/.agents, ~/.cursor).
   --cursor-home <path>    Cursor home. Default: ~/.cursor
   --agents-home <path>    Global .agents home. Default: ~/.agents
@@ -121,6 +126,19 @@ while (( $# > 0 )); do
       LINK_CODEX=0
       shift
       ;;
+    --no-opencode)
+      LINK_OPENCODE=0
+      shift
+      ;;
+    --edd-only)
+      EDD_ONLY=1
+      shift
+      ;;
+    --opencode-home)
+      [[ $# -ge 2 ]] || { warn "Missing value for --opencode-home"; exit 1; }
+      OPENCODE_HOME="$2"
+      shift 2
+      ;;
     --no-cursor)
       LINK_CURSOR=0
       shift
@@ -185,18 +203,39 @@ CODEX_SKILLS_DIR="$CODEX_GLOBAL_HOME/skills"
 CODEX_AGENTS_SRC="$REPO_ROOT/.codex/agents"
 CODEX_AGENTS_DIR="$CODEX_GLOBAL_HOME/agents"
 CODEX_AGENT_GENERATOR="$REPO_ROOT/scripts/generate-codex-agent.zsh"
+OPENCODE_AGENTS_SRC="$REPO_ROOT/.opencode/agents"
+OPENCODE_COMMANDS_SRC="$REPO_ROOT/.opencode/commands"
+OPENCODE_SKILLS_SRC="$REPO_ROOT/.agents/skills/edd-loop"
+OPENCODE_AGENTS_DIR="$OPENCODE_HOME/agents"
+OPENCODE_COMMANDS_DIR="$OPENCODE_HOME/commands"
+OPENCODE_SKILLS_DIR="$OPENCODE_HOME/skills"
 CURSOR_AGENT_GENERATOR="$REPO_ROOT/scripts/generate-cursor-agents.zsh"
 CURSOR_AGENTS_SRC="$REPO_ROOT/.cursor/agents"
 AGENTS_GLOBAL_SKILLS_DIR="$AGENTS_GLOBAL_HOME/skills"
 CURSOR_AGENTS_DIR="$CURSOR_HOME/agents"
-CODEX_SKILL_NAMES=(nextjs-ssg nextjs-intl nextjs-tailwind-seo typescript-7)
+CODEX_SKILL_NAMES=(edd-loop nextjs-ssg nextjs-intl nextjs-tailwind-seo typescript-7)
+CODEX_AGENT_NAMES=(nexter.toml edd_verifier.toml)
+EDD_CODEX_SKILL_NAME=edd-loop
+EDD_CODEX_AGENT_NAME=edd_verifier.toml
+OPENCODE_EDD_AGENT_NAMES=(edd-luna-worker.md edd-sol-verifier.md)
+OPENCODE_EDD_COMMAND_NAMES=(edd-loop.md)
 # Antigravity uses a plugin directory — we symlink the whole repo as a plugin.
 # The plugin.json at the repo root tells Antigravity where skills/ and agents/ live.
 
 [[ -d "$SKILLS_SRC" ]] || { warn "Missing directory: $SKILLS_SRC"; exit 1; }
 [[ -d "$AGENTS_SRC" ]] || { warn "Missing directory: $AGENTS_SRC"; exit 1; }
 
-if (( LINK_CODEX )); then
+if (( EDD_ONLY )); then
+  LINK_VSCODE_AGENTS=0
+  LINK_VIBE=0
+  LINK_CLAUDE=0
+  LINK_CURSOR=0
+  LINK_ANTIGRAVITY=0
+  LINK_CODEX=1
+  LINK_OPENCODE=1
+fi
+
+if (( LINK_CODEX && !EDD_ONLY )); then
   [[ -x "$CODEX_AGENT_GENERATOR" ]] || { warn "Missing Codex agent generator: $CODEX_AGENT_GENERATOR"; exit 1; }
   "$CODEX_AGENT_GENERATOR" --check || { warn "Regenerate the Codex agent before installing: scripts/generate-codex-agent.zsh"; exit 1; }
 fi
@@ -204,22 +243,45 @@ if (( LINK_CURSOR )); then
   [[ -x "$CURSOR_AGENT_GENERATOR" ]] || { warn "Missing Cursor agent generator: $CURSOR_AGENT_GENERATOR"; exit 1; }
   "$CURSOR_AGENT_GENERATOR" --check || { warn "Regenerate Cursor agents before installing: scripts/generate-cursor-agents.zsh"; exit 1; }
 fi
+if (( LINK_OPENCODE )); then
+  [[ -d "$OPENCODE_AGENTS_SRC" ]] || { warn "Missing OpenCode agents directory: $OPENCODE_AGENTS_SRC"; exit 1; }
+  [[ -d "$OPENCODE_COMMANDS_SRC" ]] || { warn "Missing OpenCode commands directory: $OPENCODE_COMMANDS_SRC"; exit 1; }
+  [[ -d "$OPENCODE_SKILLS_SRC" ]] || { warn "Missing OpenCode EDD skill source: $OPENCODE_SKILLS_SRC"; exit 1; }
+  if (( EDD_ONLY )); then
+    for opencode_agent_name in "${OPENCODE_EDD_AGENT_NAMES[@]}"; do
+      [[ -f "$OPENCODE_AGENTS_SRC/$opencode_agent_name" ]] || { warn "Missing OpenCode agent source: $OPENCODE_AGENTS_SRC/$opencode_agent_name"; exit 1; }
+    done
+    for opencode_command_name in "${OPENCODE_EDD_COMMAND_NAMES[@]}"; do
+      [[ -f "$OPENCODE_COMMANDS_SRC/$opencode_command_name" ]] || { warn "Missing OpenCode command source: $OPENCODE_COMMANDS_SRC/$opencode_command_name"; exit 1; }
+    done
+  fi
+  run_cmd mkdir -p "$OPENCODE_AGENTS_DIR" "$OPENCODE_COMMANDS_DIR" "$OPENCODE_SKILLS_DIR"
+fi
 
-run_cmd mkdir -p "$COPILOT_SKILLS_DIR" "$COPILOT_AGENTS_DIR"
-if (( LINK_VSCODE_AGENTS )); then
-  run_cmd mkdir -p "$VSCODE_AGENTS_DIR"
-fi
-if (( LINK_VIBE )); then
-  run_cmd mkdir -p "$VIBE_SKILLS_DIR" "$VIBE_AGENTS_DIR"
-fi
-if (( LINK_CLAUDE )); then
-  run_cmd mkdir -p "$CLAUDE_SKILLS_DIR" "$CLAUDE_AGENTS_DIR"
+if (( !EDD_ONLY )); then
+  run_cmd mkdir -p "$COPILOT_SKILLS_DIR" "$COPILOT_AGENTS_DIR"
+  if (( LINK_VSCODE_AGENTS )); then
+    run_cmd mkdir -p "$VSCODE_AGENTS_DIR"
+  fi
+  if (( LINK_VIBE )); then
+    run_cmd mkdir -p "$VIBE_SKILLS_DIR" "$VIBE_AGENTS_DIR"
+  fi
+  if (( LINK_CLAUDE )); then
+    run_cmd mkdir -p "$CLAUDE_SKILLS_DIR" "$CLAUDE_AGENTS_DIR"
+  fi
 fi
 if (( LINK_CODEX )); then
-  [[ -f "$CODEX_AGENTS_SRC/nexter.toml" ]] || { warn "Missing Codex agent source: $CODEX_AGENTS_SRC/nexter.toml"; exit 1; }
-  for skill_name in "${CODEX_SKILL_NAMES[@]}"; do
-    [[ -d "$SKILLS_SRC/$skill_name" ]] || { warn "Missing Codex skill source: $SKILLS_SRC/$skill_name"; exit 1; }
-  done
+  if (( EDD_ONLY )); then
+    [[ -f "$CODEX_AGENTS_SRC/$EDD_CODEX_AGENT_NAME" ]] || { warn "Missing Codex agent source: $CODEX_AGENTS_SRC/$EDD_CODEX_AGENT_NAME"; exit 1; }
+    [[ -d "$SKILLS_SRC/$EDD_CODEX_SKILL_NAME" ]] || { warn "Missing Codex skill source: $SKILLS_SRC/$EDD_CODEX_SKILL_NAME"; exit 1; }
+  else
+    for agent_name in "${CODEX_AGENT_NAMES[@]}"; do
+      [[ -f "$CODEX_AGENTS_SRC/$agent_name" ]] || { warn "Missing Codex agent source: $CODEX_AGENTS_SRC/$agent_name"; exit 1; }
+    done
+    for skill_name in "${CODEX_SKILL_NAMES[@]}"; do
+      [[ -d "$SKILLS_SRC/$skill_name" ]] || { warn "Missing Codex skill source: $SKILLS_SRC/$skill_name"; exit 1; }
+    done
+  fi
   run_cmd mkdir -p "$CODEX_SKILLS_DIR" "$CODEX_AGENTS_DIR"
 fi
 if (( LINK_CURSOR )); then
@@ -276,39 +338,69 @@ link_one() {
   linked=$((linked + 1))
 }
 
-for skill_dir in "$SKILLS_SRC"/*(N/); do
-  link_one "$skill_dir" "$COPILOT_SKILLS_DIR"
-  if (( LINK_VIBE )); then
-    link_one "$skill_dir" "$VIBE_SKILLS_DIR"
-  fi
-  if (( LINK_CURSOR )); then
-    link_one "$skill_dir" "$AGENTS_GLOBAL_SKILLS_DIR"
-  fi
-done
+if (( !EDD_ONLY )); then
+  for skill_dir in "$SKILLS_SRC"/*(N/); do
+    link_one "$skill_dir" "$COPILOT_SKILLS_DIR"
+    if (( LINK_VIBE )); then
+      link_one "$skill_dir" "$VIBE_SKILLS_DIR"
+    fi
+    if (( LINK_CURSOR )); then
+      link_one "$skill_dir" "$AGENTS_GLOBAL_SKILLS_DIR"
+    fi
+  done
+fi
 
 if (( LINK_CODEX )); then
-  for skill_name in "${CODEX_SKILL_NAMES[@]}"; do
-    link_one "$SKILLS_SRC/$skill_name" "$CODEX_SKILLS_DIR"
-  done
-  link_one "$CODEX_AGENTS_SRC/nexter.toml" "$CODEX_AGENTS_DIR"
+  if (( EDD_ONLY )); then
+    link_one "$SKILLS_SRC/$EDD_CODEX_SKILL_NAME" "$CODEX_SKILLS_DIR"
+    link_one "$CODEX_AGENTS_SRC/$EDD_CODEX_AGENT_NAME" "$CODEX_AGENTS_DIR"
+  else
+    for skill_name in "${CODEX_SKILL_NAMES[@]}"; do
+      link_one "$SKILLS_SRC/$skill_name" "$CODEX_SKILLS_DIR"
+    done
+    for agent_name in "${CODEX_AGENT_NAMES[@]}"; do
+      link_one "$CODEX_AGENTS_SRC/$agent_name" "$CODEX_AGENTS_DIR"
+    done
+  fi
+fi
+
+if (( LINK_OPENCODE )); then
+  link_one "$OPENCODE_SKILLS_SRC" "$OPENCODE_SKILLS_DIR"
+  if (( EDD_ONLY )); then
+    for opencode_agent_name in "${OPENCODE_EDD_AGENT_NAMES[@]}"; do
+      link_one "$OPENCODE_AGENTS_SRC/$opencode_agent_name" "$OPENCODE_AGENTS_DIR"
+    done
+    for opencode_command_name in "${OPENCODE_EDD_COMMAND_NAMES[@]}"; do
+      link_one "$OPENCODE_COMMANDS_SRC/$opencode_command_name" "$OPENCODE_COMMANDS_DIR"
+    done
+  else
+    for opencode_agent in "$OPENCODE_AGENTS_SRC"/*.md(.N); do
+      link_one "$opencode_agent" "$OPENCODE_AGENTS_DIR"
+    done
+    for opencode_command in "$OPENCODE_COMMANDS_SRC"/*.md(.N); do
+      link_one "$opencode_command" "$OPENCODE_COMMANDS_DIR"
+    done
+  fi
 fi
 
 if (( LINK_ANTIGRAVITY )); then
   link_one "$REPO_ROOT" "$(dirname "$ANTIGRAVITY_PLUGIN_DIR")"
 fi
 
-for agent_file in "$AGENTS_SRC"/*.agent.md(.N); do
-  link_one "$agent_file" "$COPILOT_AGENTS_DIR"
-  if (( LINK_VSCODE_AGENTS )); then
-    link_one "$agent_file" "$VSCODE_AGENTS_DIR"
-  fi
-  if (( LINK_VIBE )); then
-    link_one "$agent_file" "$VIBE_AGENTS_DIR"
-  fi
-  if (( LINK_CLAUDE )); then
-    link_one "$agent_file" "$CLAUDE_AGENTS_DIR"
-  fi
-done
+if (( !EDD_ONLY )); then
+  for agent_file in "$AGENTS_SRC"/*.agent.md(.N); do
+    link_one "$agent_file" "$COPILOT_AGENTS_DIR"
+    if (( LINK_VSCODE_AGENTS )); then
+      link_one "$agent_file" "$VSCODE_AGENTS_DIR"
+    fi
+    if (( LINK_VIBE )); then
+      link_one "$agent_file" "$VIBE_AGENTS_DIR"
+    fi
+    if (( LINK_CLAUDE )); then
+      link_one "$agent_file" "$CLAUDE_AGENTS_DIR"
+    fi
+  done
+fi
 
 if (( LINK_CLAUDE )) && [[ -d "$CLAUDE_SKILLS_SRC" ]]; then
   for claude_skill in "$CLAUDE_SKILLS_SRC"/*.md(.N); do
@@ -330,8 +422,10 @@ if (( DRY_RUN )); then
 else
   log "Linked: $linked | Replaced: $replaced | Skipped: $skipped"
 fi
-log "Global skills: $COPILOT_SKILLS_DIR"
-log "Global agents: $COPILOT_AGENTS_DIR"
+if (( !EDD_ONLY )); then
+  log "Global skills: $COPILOT_SKILLS_DIR"
+  log "Global agents: $COPILOT_AGENTS_DIR"
+fi
 if (( LINK_VSCODE_AGENTS )); then
   log "VS Code agents: $VSCODE_AGENTS_DIR"
 fi
@@ -344,8 +438,18 @@ if (( LINK_CLAUDE )); then
   log "Claude Code agents: $CLAUDE_AGENTS_DIR"
 fi
 if (( LINK_CODEX )); then
-  log "Codex skills: $CODEX_SKILLS_DIR (Nexter dependencies)"
-  log "Codex agents: $CODEX_AGENTS_DIR (Nexter)"
+  if (( EDD_ONLY )); then
+    log "Codex skills: $CODEX_SKILLS_DIR (EDD only)"
+    log "Codex agents: $CODEX_AGENTS_DIR (EDD verifier only)"
+  else
+    log "Codex skills: $CODEX_SKILLS_DIR (Nexter dependencies, EDD loop)"
+    log "Codex agents: $CODEX_AGENTS_DIR (Nexter, EDD verifier)"
+  fi
+fi
+if (( LINK_OPENCODE )); then
+  log "OpenCode skills: $OPENCODE_SKILLS_DIR (EDD loop)"
+  log "OpenCode agents: $OPENCODE_AGENTS_DIR"
+  log "OpenCode commands: $OPENCODE_COMMANDS_DIR"
 fi
 if (( LINK_CURSOR )); then
   log "Cursor global skills: $AGENTS_GLOBAL_SKILLS_DIR"

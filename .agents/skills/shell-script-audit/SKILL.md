@@ -3,7 +3,6 @@ name: shell-script-audit
 description: "Use when reviewing, auditing, or hardening shell scripts for stability, portability, error handling, edge cases, and best practices. Covers bash and zsh scripts. Do not use for writing new scripts from scratch, non-shell application code, or non-shell languages."
 argument-hint: "Path to script or directory, target shell (bash/zsh), portability scope (macOS, Linux, cross-platform)."
 user-invocable: false
-disable-model-invocation: true
 ---
 
 # Shell Script Audit

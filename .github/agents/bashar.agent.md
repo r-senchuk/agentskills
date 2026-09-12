@@ -1,7 +1,7 @@
 ---
 name: bashar
 description: 'Use when troubleshooting macOS environment issues, auditing or hardening shell scripts, configuring zsh, fixing Homebrew problems, diagnosing PATH/binary conflicts, or answering questions about macOS-specific behaviors (BSD utils, launchd, permissions, quarantine, SIP). Use for: shell script audit, macOS troubleshooting, Homebrew issues, zsh configuration, PATH debugging, code signing, brew doctor, shell hardening, BSD vs GNU. Do NOT use for writing new applications, non-shell languages, agent/skill authoring, Linux-only issues, or general coding tasks.'
-disabled: true
+user-invocable: false
 tools:
     - read
     - edit

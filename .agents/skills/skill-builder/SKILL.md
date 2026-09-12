@@ -3,7 +3,6 @@ name: skill-builder
 description: "Use when creating a new SKILL.md from scratch, auditing an existing skill for gaps or stale content, or refactoring a skill to meet quality standards. Covers web and GitHub research, structure, frontmatter validation, and completion checks. Use when user asks to 'create new skill', 'audit existing skill', 'refactor skill structure', or 'improve skill quality'. Do not use for coding tasks, application debugging, or feature implementation."
 argument-hint: "Skill name or domain, goal (create|audit|refactor), and any constraints or quality bar."
 user-invocable: false
-disable-model-invocation: true
 license: MIT
 compatibility: "Works with any text editor, requires web access for research and YAML validation tools."
 metadata:
@@ -27,7 +26,7 @@ Do NOT use for general coding tasks. Use when the output is a `SKILL.md` file.
 1. **Skill name** (kebab-case, 1–64 chars, matches folder name exactly)
 2. **Goal**: `create`, `audit`, or `refactor`
 3. **Domain summary**: One sentence describing what the skill enables agents to do
-4. **Quality bar**: Target repo (this repo vs. awesome-copilot upstream) — upstream requires evidence of real gap
+4. **Quality bar**: Target repo (this repo vs. awesome-copilot upstream) — upstream requires evidence of a real gap and current validation
 
 ## Procedure
 
@@ -88,7 +87,7 @@ Load `./references/skill-structure.md` for the canonical frontmatter schema and 
 
 **Auditing existing:**
 1. Read the current `SKILL.md` fully
-2. Check against `./references/quality-checklist.md`
+2. Check against `./references/quality-checklist.md` and the current Agent Skills specification
 3. Write a gap report using this format:
 
 | # | Check | Finding | Fix Required |
@@ -117,32 +116,25 @@ NAME=$(grep -m1 "^name:" "$SKILL_ABS" | sed 's/name: *//')
 # 1. Name/folder match
 [ "$FOLDER" = "$NAME" ] && echo "✅ name match" || echo "❌ mismatch: folder=$FOLDER name=$NAME"
 
-# 2. Required frontmatter fields
-for F in name description argument-hint user-invocable; do
+# 2. Required portable frontmatter fields
+for F in name description; do
   grep -q "^$F:" "$SKILL_ABS" && echo "✅ $F" || echo "❌ missing: $F"
 done
 
-# 3. No XML tags in frontmatter (security: forbidden per spec)
-FM=$(sed -n '/^---$/,/^---$/p' "$SKILL_ABS" | head -20)
-echo "$FM" | grep -q '[<>]' && echo "❌ XML tags in frontmatter" || echo "✅ no XML tags"
-
-# 4. No README.md in skill folder
-[ -f "$(dirname "$SKILL_ABS")/README.md" ] && echo "❌ README.md found (remove it)" || echo "✅ no README.md"
-
-# 5. Description has trigger phrase
+# 3. Description has trigger phrase
 grep -m1 "^description:" "$SKILL_ABS" | grep -qi "use when\|when user\|use for"   && echo "✅ description has trigger phrase" || echo "❌ description missing trigger phrase"
 
-# 6. Required sections
+# 4. Required sections
 for S in "When To Use" "Inputs To Collect First" "Procedure" "Completion Checks" "References"; do
   grep -q "^## $S" "$SKILL_ABS" && echo "✅ $S" || echo "❌ missing section: $S"
 done
 
-# 7. Troubleshooting content present
+# 5. Troubleshooting content present
 grep -qi "troubleshoot\|common issue\|error\|fail" "$SKILL_ABS"   && echo "✅ troubleshooting/error content present" || echo "⚠  no troubleshooting content"
 
-# 8. Word count (PDF: keep under 5,000 words)
-WC=$(wc -w < "$SKILL_ABS")
-[ "$WC" -le 5000 ] && echo "✅ $WC words" || echo "❌ $WC words (limit 5000)"
+# 6. Main instructions should remain compact enough for progressive loading
+LINES=$(wc -l < "$SKILL_ABS")
+[ "$LINES" -lt 500 ] && echo "✅ $LINES lines" || echo "❌ $LINES lines (keep under 500)"
 ```
 
 Load `./references/quality-checklist.md` for the full validation matrix including content checks.
@@ -218,18 +210,18 @@ Verifiable success condition.
 ## Completion Checks
 
 - [ ] Folder name exactly matches `name:` frontmatter field
-- [ ] `description` ≥ 10 chars, ≤ 1024 chars, quoted, contains no unescaped colons
-- [ ] `description` contains a "Do not use for" clause to prevent false positives
-- [ ] `argument-hint` is present and lists concrete inputs
+- [ ] `name` is valid Agent Skills syntax and matches the folder
+- [ ] `description` is non-empty, ≤ 1024 chars, and states what the skill does and when to use it
+- [ ] `description` includes a negative boundary when it helps prevent overlap
+- [ ] Any `argument-hint` lists concrete inputs
 - [ ] All 5 required sections present: When To Use, Inputs, Procedure, Completion Checks, References
 - [ ] `When To Use` contains at least one explicit `Do NOT use for` negative case
 - [ ] Each procedure step is expanded in its own `### Step N` subsection under `## Procedure`
-- [ ] SKILL.md body ≤ 500 lines
+- [ ] SKILL.md body < 500 lines
 - [ ] All `./references/<file>` paths resolve to real files
 - [ ] No hardcoded personal paths, API keys, or user-specific values
 - [ ] Skills that duplicate existing model defaults have been removed or strengthened with specific workflow
-- [ ] No XML tags (`< >`) anywhere in the frontmatter block
-- [ ] No `README.md` file inside the skill folder
+- [ ] Invocation fields are intentional; background skills are not disabled by setting both controls
 - [ ] Troubleshooting or error-handling content is present (inline guards, common issues step, or completion check)
 - [ ] Claude Code companion decision made: `.claude/skills/<name>.md` created if user-invokable via CLI, skipped if subagent-only
 

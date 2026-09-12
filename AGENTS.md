@@ -4,7 +4,8 @@
 
 A personal incubator for AI agent skills targeting contribution to [github/awesome-copilot](https://github.com/github/awesome-copilot). Skills are drafted, refined, and validated here before being submitted upstream.
 
-**Primary platforms: OpenCode and Cursor.** Copilot, Mistral Vibe, and Antigravity support is paused (deprecated but not deleted — see `plugin.json` and `scripts/setup-copilot-globals.sh`).
+**Primary platforms: OpenCode and Cursor.** Copilot compatibility is retained through
+the Agent Skills standard; Mistral Vibe and Antigravity are legacy integrations.
 
 ## No Build / Lint / Test / CI
 
@@ -25,7 +26,7 @@ agents -> .github/agents
 
 **Agents:**
 - `.github/agents/<name>.agent.md` — canonical Copilot-format agent briefings
-- `.opencode/agents/<name>.md` — OpenCode subagents (nexter only today)
+- `.opencode/agents/<name>.md` — OpenCode subagents and thin workflow adapters
 - `.cursor/agents/<name>.md` — generated Cursor/cursor-agent subagents (do not edit directly)
 
 After changing `.github/agents/*.agent.md`, run `./scripts/generate-cursor-agents.zsh`.
@@ -33,20 +34,25 @@ After changing `.github/agents/*.agent.md`, run `./scripts/generate-cursor-agent
 ## OpenCode
 
 - **`opencode.json`** — declares `skills.paths: [".agents/skills"]` and `instructions: ["AGENTS.md"]`
+- **`.opencode/agents/` and `.opencode/commands/`** — OpenCode project adapters; the bootstrap can link them to the global OpenCode home
+- **`.agents/skills/edd-loop/`** — canonical EDD skill; the bootstrap links it independently to `~/.config/opencode/skills/edd-loop/`
 - **`.opencode/agents/nexter.md`** — canonical Nexter definition for OpenCode
 
 After editing `opencode.json`, any agent file, or any skill, **quit and restart OpenCode** for changes to take effect.
 
-After changing `.opencode/agents/nexter.md`, run `./scripts/generate-codex-agent.zsh` for the Codex artifact.
+After changing `.github/agents/nexter.agent.md`, run
+`./scripts/generate-codex-agent.zsh` for the Codex artifact. The OpenCode
+`nexter` file is a thin adapter, not the source of the full role instructions.
 
 ## Cursor + cursor-agent CLI
 
 Cursor discovers skills from `.agents/skills/` and subagents from `.cursor/agents/` automatically in both the IDE and `cursor-agent`.
 
-- **Skills** — all folders under `.agents/skills/`; internal skills use `disable-model-invocation: true`
+- **Skills** — all folders under `.agents/skills/`. `user-invocable: false` hides a
+  background skill from the slash menu but keeps it available to the model.
 - **Subagents** — `bashar`, `nexter`, `skiller`, `uix-designer`, `sara` in `.cursor/agents/`
 - **Orchestration** — invoke `/sara` (Custom Mode) for team-lead routing; otherwise use specialist subagents directly
-- **Global install** — `./scripts/setup-copilot-globals.sh` links to `~/.agents/skills/` and `~/.cursor/agents/`
+- **Global install** — `./scripts/setup-copilot-globals.sh` links to `~/.agents/skills/` and `~/.cursor/agents/`; OpenCode EDD adapters and the canonical skill are linked independently under `~/.config/opencode/`
 
 This file (`AGENTS.md`) is loaded as project instructions by Cursor and cursor-agent.
 
@@ -67,7 +73,10 @@ mode: subagent   # subagent | primary | all
 ---
 ```
 
-Currently only `nexter` (mode: subagent) is defined for OpenCode. Legacy `.github/agents/*.agent.md` files are the canonical source for Copilot-format briefings and feed the Cursor generator.
+OpenCode adapters include `nexter` plus the hidden `edd-luna-worker` and
+`edd-sol-verifier` EDD helpers. `.github/agents/*.agent.md` files are the
+canonical role briefings and feed both the Cursor and Codex generators. The
+canonical EDD skill remains `.agents/skills/edd-loop/`.
 
 ## Skill Validation
 
@@ -82,7 +91,13 @@ Every `SKILL.md` must have YAML frontmatter (`name`, `description`) and these se
 4. `## Completion Checks` — `- [ ]` checkboxes
 5. `## References` — relative links
 
-Add `disable-model-invocation: true` when `user-invocable: false` (Cursor slash-only skills).
+Use the invocation fields deliberately:
+
+- Omit both for a normal, discoverable skill.
+- Set `user-invocable: false` for background knowledge that should auto-load but
+  not appear in the slash menu.
+- Set `disable-model-invocation: true` only for an explicitly invoked workflow.
+- Never set both to `true`/`false` respectively: that disables the skill entirely.
 
 See `.github/copilot-instructions.md` for the full schema.
 

@@ -4,7 +4,6 @@ description: "Use when designing the operational wrapper around an AI agent or L
 argument-hint: "Agent framework in use, current architecture (single/multi-agent), deployment target (local/cloud), and which harness components are missing or weak"
 user-invocable: true
 ---
-
 # Harness Engineering
 
 Step-by-step procedure for designing and implementing the operational harness that wraps an AI agent system — the constraints, feedback loops, monitoring, safety guardrails, state management, and verification that make agents reliable in production. Platform-agnostic: works with any agent framework.

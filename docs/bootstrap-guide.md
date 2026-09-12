@@ -1,6 +1,6 @@
 # Global Bootstrap Guide
 
-This repository can serve as your single source of truth for global Codex, Cursor, Copilot, and Mistral Vibe capabilities on macOS.
+This repository can serve as your single source of truth for global OpenCode, Codex, Cursor, Copilot, and Mistral Vibe capabilities on macOS.
 
 ## Bootstrap Script
 
@@ -12,8 +12,11 @@ Use the one-time bootstrap script to symlink all skills and agents:
 The script creates symlinks from this repository to:
 - `~/.agents/skills/` - Cursor/cursor-agent global skills (vendor-neutral)
 - `~/.cursor/agents/` - Cursor subagents (generated from `.github/agents/`)
-- `~/.codex/skills/` - Nexter's four reusable Next.js workflow skills
-- `~/.codex/agents/` - Codex Nexter custom agent
+- `~/.config/opencode/skills/edd-loop/` - canonical EDD skill for global OpenCode
+- `~/.config/opencode/agents/` - OpenCode subagents (from `.opencode/agents/`)
+- `~/.config/opencode/commands/` - OpenCode commands (from `.opencode/commands/`)
+- `~/.codex/skills/` - Nexter workflow skills plus `edd-loop`
+- `~/.codex/agents/` - Codex Nexter and EDD verifier custom agents
 - `~/.copilot/skills/` - Global Copilot skills directory
 - `~/.copilot/agents/` - Global Copilot agents directory  
 - `~/Library/Application Support/Code/User/prompts/agents/` - VS Code prompts profile
@@ -26,24 +29,33 @@ The script creates symlinks from this repository to:
 # 1) Preview only (dry run)
 ./scripts/setup-copilot-globals.sh --dry-run
 
-# 2) Apply links (includes Codex and Mistral Vibe by default)
+# 2) Apply links (includes OpenCode, Codex, and Mistral Vibe by default)
 ./scripts/setup-copilot-globals.sh
 
-# 3) Skip Mistral Vibe linking
+# 3) Use a custom OpenCode home or skip OpenCode
+./scripts/setup-copilot-globals.sh --opencode-home /path/to/opencode
+./scripts/setup-copilot-globals.sh --no-opencode
+
+# 4) Skip Mistral Vibe linking
 ./scripts/setup-copilot-globals.sh --no-vibe
 
-# 4) Use a custom Mistral Vibe home
+# 5) Use a custom Mistral Vibe home
 ./scripts/setup-copilot-globals.sh --vibe-home /path/to/custom/vibe
 
-# 5) Use a custom Codex home or skip Codex / Cursor
+# 6) Use a custom Codex home or skip Codex / Cursor
 ./scripts/setup-copilot-globals.sh --codex-home /path/to/custom/codex
 ./scripts/setup-copilot-globals.sh --no-codex
 ./scripts/setup-copilot-globals.sh --no-cursor
 
-# 6) Replace existing conflicting links/files
+# 7) Install only EDD components into Codex and OpenCode homes
+./scripts/setup-copilot-globals.sh --edd-only \
+  --codex-home /path/to/test/codex \
+  --opencode-home /path/to/test/opencode
+
+# 8) Replace existing conflicting links/files
 ./scripts/setup-copilot-globals.sh --force
 
-# 7) Optional: make it callable globally
+# 9) Optional: make it callable globally
 mkdir -p ~/bin
 ln -sf "$HOME/path/to/agentskills/scripts/setup-copilot-globals.sh" ~/bin/setup-copilot-globals.sh
 ```
@@ -54,6 +66,9 @@ ln -sf "$HOME/path/to/agentskills/scripts/setup-copilot-globals.sh" ~/bin/setup-
 # Check what is currently linked
 ls -la ~/.agents/skills
 ls -la ~/.cursor/agents
+ls -la ~/.config/opencode/skills
+ls -la ~/.config/opencode/agents
+ls -la ~/.config/opencode/commands
 ls -la ~/.copilot/skills
 ls -la ~/.codex/skills
 ls -la ~/.codex/agents
@@ -82,13 +97,21 @@ After setup, any changes you make in this repository are reflected instantly eve
 
 ### Updating Generated Agents
 
-`.opencode/agents/nexter.md` is the canonical Nexter definition for OpenCode/Codex. `.github/agents/*.agent.md` files feed Cursor subagents. Regenerate before bootstrap:
+`.github/agents/nexter.agent.md` is the canonical Nexter briefing and generates
+both Cursor and Codex artifacts. `.opencode/agents/nexter.md`,
+`.opencode/agents/edd-*.md`, and `.opencode/commands/edd-loop.md` are thin
+OpenCode adapters. `.codex/agents/edd_verifier.toml` is the model-neutral Codex
+verifier adapter. Regenerate before a normal bootstrap:
 
 ```bash
 ./scripts/generate-codex-agent.zsh
 ./scripts/generate-cursor-agents.zsh
 ./scripts/setup-copilot-globals.sh
 ```
+
+If the Nexter generator check blocks the full bootstrap but you need to test EDD installation in
+isolation, use `--edd-only`; this scoped path does not bypass Nexter validation
+for the normal bootstrap.
 
 ## Configuration Files
 

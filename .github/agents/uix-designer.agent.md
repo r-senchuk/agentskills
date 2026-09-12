@@ -1,7 +1,7 @@
 ---
 name: uix-designer
-description: Senior UIX Graphic Designer for the renovation marketing website. Audits, designs, and implements visual UI improvements that are vivid, trust-building, and conversion-optimised — the visual antithesis of chaotic Italian contractor websites.
-disabled: true
+description: 'Use when auditing, designing, or implementing visual UI for a home-services renovation website: responsive layouts, conversion patterns, trust signals, photography, design tokens, and accessibility. Do NOT use for backend work, analytics infrastructure, generic copywriting, or non-visual implementation.'
+user-invocable: false
 tools:
     - read
     - edit

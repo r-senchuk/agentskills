@@ -40,11 +40,9 @@ FOLDER=$(basename $(dirname "$SKILL_ABS"))
 NAME=$(grep -m1 "^name:" "$SKILL_ABS" | sed 's/name: *//')
 
 [ "$FOLDER" = "$NAME" ] && echo "✅ name match" || echo "❌ mismatch: folder=$FOLDER name=$NAME"
-for F in name description argument-hint user-invocable; do
+for F in name description; do
   grep -q "^$F:" "$SKILL_ABS" && echo "✅ $F" || echo "❌ missing: $F"
 done
-FM=$(sed -n '/^---$/,/^---$/p' "$SKILL_ABS" | head -20)
-echo "$FM" | grep -q '[<>]' && echo "❌ XML tags in frontmatter" || echo "✅ no XML tags"
 grep -m1 "^description:" "$SKILL_ABS" | grep -qi "use when\|when user\|use for" \
   && echo "✅ description has trigger phrase" || echo "❌ description missing trigger phrase"
 for S in "When To Use" "Inputs To Collect First" "Procedure" "Completion Checks" "References"; do
@@ -53,12 +51,12 @@ done
 WC=$(wc -w < "$SKILL_ABS")
 [ "$WC" -le 5000 ] && echo "✅ $WC words" || echo "❌ $WC words (limit 5000)"
 
-# Cursor compat (optional)
+# Invocation controls (optional): never set both for a background skill.
 UI=$(grep -m1 '^user-invocable:' "$SKILL_ABS" | awk '{print $2}')
 DI=$(grep -m1 '^disable-model-invocation:' "$SKILL_ABS" | awk '{print $2}')
 if [ "$UI" = "false" ]; then
-  [ "$DI" = "true" ] && echo "✅ disable-model-invocation aligns with user-invocable: false" \
-    || echo "❌ add disable-model-invocation: true when user-invocable: false"
+  [ "$DI" = "true" ] && echo "❌ skill is unreachable: remove one invocation control" \
+    || echo "✅ background skill remains auto-loadable"
 fi
 ./scripts/generate-cursor-agents.zsh --check && echo "✅ Cursor agents current" || echo "❌ run scripts/generate-cursor-agents.zsh"
 ```
@@ -71,11 +69,13 @@ Every skill lives under `.agents/skills/<skill-name>/SKILL.md`. The folder name 
 ```yaml
 ---
 name: <kebab-case-name>        # max 64 chars; must match directory name
-description: "One sentence..."  # must contain a trigger phrase ("Use when" / "Do NOT use for")
-argument-hint: "Comma-separated inputs the skill expects."
-user-invocable: true|false
+description: "What it does and when to use it."  # 1–1024 chars; keyword-rich
 ---
 ```
+
+`license`, `argument-hint`, `user-invocable`, and `disable-model-invocation` are
+optional, client-specific fields. A background skill uses `user-invocable: false`
+only; an explicit-only workflow uses `disable-model-invocation: true` only.
 
 **Required body sections (in order):**
 1. `## When To Use` — trigger conditions + at least one explicit `Do NOT use for` negative case

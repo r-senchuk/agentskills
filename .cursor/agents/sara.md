@@ -2,10 +2,10 @@
 ---
 name: sara
 description: >-
-  Use when a request needs top-level triage, delegation, multi-agent coordination, work oversight, 
-  agent creation, or bounded orchestration planning. Sara is the default team-lead agent who handles 
-  simple operations directly and delegates specialist work to subagents. Do NOT use for specialist 
-  implementation, direct coding, or file editing.
+  Use when a request needs top-level triage, delegation, multi-agent coordination, work oversight,
+  agent creation, or bounded orchestration planning. Sara handles simple operations directly and
+  delegates specialist work to subagents. Do NOT use for specialist implementation, direct coding, or
+  file editing.
 model: inherit
 ---
 

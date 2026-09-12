@@ -4,10 +4,11 @@
 
 ```yaml
 ---
-name: "Agent Display Name"        # Optional. Human-readable. Shown in picker.
+name: agent-name                  # Optional. Keep it aligned with the filename when present.
 description: "Use when..."        # Required. Keyword-rich. Primary discovery surface.
 tools: [read, edit, search]       # Optional (omit = defaults). See tool aliases below.
 user-invocable: false             # false = subagent only; true = appears in agent picker
+disable-model-invocation: false   # true = user-selected only; omit for normal subagent routing
 argument-hint: "Task, context"    # Optional. Shown as input prompt for slash invocation.
 model: "Claude Sonnet 4"          # Optional. Use for model-specific routing.
 agents: [agent1, agent2]          # Optional. Restrict which subagents this agent can invoke.
@@ -103,9 +104,9 @@ Follow these rules strictly. Every tool you add broadens the attack surface — 
 
 **Swiss-army smell**: If the list includes `execute`, `web`, AND `agent` at the same time, the agent is likely doing too many things — split the responsibilities.
 
-Validation check:
+Validation check (works with inline or YAML-list tool declarations):
 ```bash
-TOOL_COUNT=$(grep '^tools:' "$AGENT" | grep -oE '\b(read|edit|search|execute|web|agent)\b' | wc -l | tr -d ' ')
+TOOL_COUNT=$(sed -n '/^tools:/,/^---$/p' "$AGENT" | grep -oE '\b(read|edit|search|execute|web|agent)\b' | wc -l | tr -d ' ')
 [ "$TOOL_COUNT" -lt 6 ] && echo "✅ tools=$TOOL_COUNT (focused)" || echo "⚠️  tools=$TOOL_COUNT — verify each is essential"
 ```
 
